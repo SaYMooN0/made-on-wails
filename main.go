@@ -16,9 +16,11 @@ func main() {
 	themeCollection := made.InitializeThemeCollection()
 	defer themeCollection.SaveToFile()
 	err := wails.Run(&options.App{
-		Title:  "Made",
-		Width:  1024,
-		Height: 768,
+		Title:     "Made",
+		Width:     900,
+		Height:    600,
+		MinWidth:  700,
+		MinHeight: 500,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

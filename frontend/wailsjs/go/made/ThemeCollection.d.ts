@@ -4,6 +4,8 @@ import {made} from '../models';
 
 export function CurrentTheme():Promise<made.Theme>;
 
+export function CurrentThemeColors():Promise<{[key: string]: string}>;
+
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentTheme(arg1:made.Theme):Promise<void>;

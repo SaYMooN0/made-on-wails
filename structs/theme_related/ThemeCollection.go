@@ -25,6 +25,28 @@ func (tc *ThemeCollection) CurrentTheme() *Theme {
 	tc.Themes = append(tc.Themes, *defaultTheme)
 	return defaultTheme
 }
+func (tc *ThemeCollection) CurrentThemeColors() map[string]string {
+	current := tc.CurrentTheme()
+	if current == nil {
+		return nil // или возвращаем значения по умолчанию
+	}
+
+	colors := map[string]string{
+		"MainBackColor":      current.MainBack.ToHex(),
+		"SecondBackColor":    current.SecondBack.ToHex(),
+		"ThirdBackColor":     current.ThirdBack.ToHex(),
+		"MainFrontColor":     current.MainFront.ToHex(),
+		"SecondFrontColor":   current.SecondFront.ToHex(),
+		"ThirdFrontColor":    current.ThirdFront.ToHex(),
+		"MainBrightColor":    current.MainBright.ToHex(),
+		"SecondBrightColor":  current.SecondBright.ToHex(),
+		"ThirdBrightColor":   current.ThirdBright.ToHex(),
+		"WarningMainColor":   current.WarningMain.ToHex(),
+		"WarningBrightColor": current.WarningBright.ToHex(),
+	}
+
+	return colors
+}
 
 func (tc *ThemeCollection) SetCurrentTheme(theme Theme) {
 	tc.CurrentThemeName = theme.Name

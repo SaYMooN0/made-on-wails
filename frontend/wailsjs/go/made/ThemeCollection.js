@@ -6,6 +6,10 @@ export function CurrentTheme() {
   return window['go']['made']['ThemeCollection']['CurrentTheme']();
 }
 
+export function CurrentThemeColors() {
+  return window['go']['made']['ThemeCollection']['CurrentThemeColors']();
+}
+
 export function SaveToFile() {
   return window['go']['made']['ThemeCollection']['SaveToFile']();
 }
