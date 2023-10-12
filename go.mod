@@ -1,4 +1,4 @@
-module changeme
+module made
 
 go 1.18
 
