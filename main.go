@@ -3,13 +3,14 @@ package main
 import (
 	"embed"
 	themeRelated "made/src/theme_related"
+	"os"
 
-	// projectRelated "made/src/project_related"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
 
+//go:embed all:frontend/dist
 var assets embed.FS
 
 func main() {
@@ -32,7 +33,11 @@ func main() {
 		},
 	})
 	if err != nil {
-		println("Error:", err.Error())
+		errMessage := "Error: " + err.Error() + "\n"
+		err := os.WriteFile("error.txt", []byte(errMessage), 0644)
+		if err != nil {
+			println("Failed to write to error.txt:", err.Error())
+		}
 	}
 
 }

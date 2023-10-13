@@ -39,8 +39,6 @@ func NewBlockDetailed(id, inGameName string, maxStackSize int, burnTime *int, fi
 		Resistance:    resistance,
 	}
 }
-
-// UnmarshalJSON implements the json.Unmarshaler interface.
 func (b *Block) UnmarshalJSON(data []byte) error {
 	type Alias Block
 	aux := &struct {

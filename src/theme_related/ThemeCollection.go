@@ -21,14 +21,14 @@ func (tc *ThemeCollection) CurrentTheme() *Theme {
 	if len(tc.Themes) > 0 {
 		return &tc.Themes[0]
 	}
-	defaultTheme := tc.defaultDark()
+	defaultTheme := defaultDark()
 	tc.Themes = append(tc.Themes, *defaultTheme)
 	return defaultTheme
 }
 func (tc *ThemeCollection) CurrentThemeColors() map[string]string {
 	current := tc.CurrentTheme()
 	if current == nil {
-		return nil // или возвращаем значения по умолчанию
+		return nil
 	}
 
 	colors := map[string]string{
@@ -59,7 +59,47 @@ func InitializeThemeCollection() *ThemeCollection {
 	return LoadFromFile()
 }
 
-func (tc *ThemeCollection) defaultDark() *Theme {
+func CreateDefaultThemesFile() {
+	themeCollection := &ThemeCollection{}
+	dark := defaultDark()
+	light := defaultLight()
+	themeCollection.Themes = append(themeCollection.Themes, *dark, *light)
+	themeCollection.ThemeNames = append(themeCollection.ThemeNames, dark.Name, light.Name)
+	themeCollection.CurrentThemeName = dark.Name
+	err := themeCollection.SaveToFile()
+	if err != nil {
+		errMessage := "Error in CreateDefaultThemesFile: " + err.Error() + "\n"
+		os.WriteFile("error.txt", []byte(errMessage), 0644)
+	}
+}
+
+func LoadFromFile() *ThemeCollection {
+	data, err := os.ReadFile("themes.madeThemes")
+	if err != nil {
+		errMessage := "Error: LoadFromFile " + err.Error() + "\n"
+		os.WriteFile("error.txt", []byte(errMessage), 0644)
+	}
+	var themes ThemeCollection
+	err = json.Unmarshal(data, &themes)
+	if err != nil {
+		errMessage := "Error: LoadFromFile json " + err.Error() + "\n"
+		os.WriteFile("error.txt", []byte(errMessage), 0644)
+	}
+	return &themes
+}
+
+func (tc *ThemeCollection) SaveToFile() error {
+	data, err := json.MarshalIndent(tc, "", "  ")
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile("themes.madeThemes", data, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func defaultDark() *Theme {
 	return NewTheme(
 		"default dark",
 		FromHex("#272527"),
@@ -76,7 +116,7 @@ func (tc *ThemeCollection) defaultDark() *Theme {
 	)
 }
 
-func (tc *ThemeCollection) defaultLight() *Theme {
+func defaultLight() *Theme {
 	return NewTheme(
 		"default light",
 		FromHex("#E0E1DD"),
@@ -91,37 +131,4 @@ func (tc *ThemeCollection) defaultLight() *Theme {
 		FromHex("#7E032A"),
 		FromHex("#930336"),
 	)
-}
-func CreateDefaultThemesFile() {
-	themeCollection := &ThemeCollection{}
-	dark := themeCollection.defaultDark()
-	light := themeCollection.defaultLight()
-	themeCollection.Themes = append(themeCollection.Themes, *dark, *light)
-	themeCollection.ThemeNames = append(themeCollection.ThemeNames, dark.Name, light.Name)
-	themeCollection.CurrentThemeName = dark.Name
-	themeCollection.SaveToFile()
-}
-
-func LoadFromFile() *ThemeCollection {
-	data, err := os.ReadFile("themes.madeThemes")
-	if err != nil {
-		panic(err)
-	}
-	var themes ThemeCollection
-	err = json.Unmarshal(data, &themes)
-	if err != nil {
-		panic(err)
-	}
-	return &themes
-}
-
-func (tc *ThemeCollection) SaveToFile() {
-	data, err := json.MarshalIndent(tc, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	err = os.WriteFile("themes.madeThemes", data, 0644)
-	if err != nil {
-		panic(err)
-	}
 }

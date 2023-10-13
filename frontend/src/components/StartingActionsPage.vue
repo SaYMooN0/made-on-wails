@@ -52,22 +52,23 @@ export default {
         };
     },
     created() {
-        // Fetch the data from your services/APIs when the component is created
-        this.pinnedProjects = this.fetchPinnedProjects();
-        this.projects = this.fetchProjects();
+        // this.pinnedProjects = this.fetchPinnedProjects();
+        // this.projects = this.fetchProjects();
     },
     methods: {
         projectItemClicked(FolderPath) {
-            const selectedProject = this.projects.find(i => i.PathToFolder === FolderPath);
-            // Assuming you use Vue Router for navigation
-            this.$router.push("/projectPage");
+            // const selectedProject = this.projects.find(i => i.PathToFolder === FolderPath);
+           
+            // this.$router.push("/projectPage");
         },
         openProjectItemClicked() {
-            const pathToProject = this.chooseProject();
-            if (pathToProject) {
-                const selectedProject = this.projects.find(i => i.FullPath === pathToProject);
-                this.$router.push("/projectPage");
-            }
+
+
+            // const pathToProject = this.chooseProject();
+            // if (pathToProject) {
+            //     const selectedProject = this.projects.find(i => i.FullPath === pathToProject);
+            //     this.$router.push("/projectPage");
+            // }
         },
         fetchPinnedProjects() {
             // Fetch your pinned projects from your services/APIs

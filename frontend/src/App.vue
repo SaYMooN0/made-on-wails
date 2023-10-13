@@ -43,6 +43,7 @@ export default {
                 document.documentElement.style.setProperty('--warning-main', theme.WarningMainColor);
                 document.documentElement.style.setProperty('--warning-bright', theme.WarningBrightColor);
             });
+            console.log('bindTheme');
         }
     }
 }
