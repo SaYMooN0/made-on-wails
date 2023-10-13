@@ -10,7 +10,8 @@
 
         <div class="action-btns-container">
             <p class="work-starting-text">Start working</p>
-            <ActionButton link="/createNewProject" name="Create new project"
+            <ActionButton link="/ProjectCreationPage" name="Create new project"
+                @createNewProject="$emit('createNewProject')"
                 info="Open already existing mod pack folder and start using Made in it">
                 <svg class="action-icon" viewBox="0 0 24 24" fill="none">
                     <path
@@ -37,8 +38,9 @@
 </template>
   
 <script>
-import ActionButton from './ActionButton.vue';
 import ProjectItem from './ProjectItem.vue';
+import ActionButton from './ActionButton.vue';
+
 
 export default {
     components: {
@@ -58,12 +60,9 @@ export default {
     methods: {
         projectItemClicked(FolderPath) {
             // const selectedProject = this.projects.find(i => i.PathToFolder === FolderPath);
-           
             // this.$router.push("/projectPage");
         },
         openProjectItemClicked() {
-
-
             // const pathToProject = this.chooseProject();
             // if (pathToProject) {
             //     const selectedProject = this.projects.find(i => i.FullPath === pathToProject);

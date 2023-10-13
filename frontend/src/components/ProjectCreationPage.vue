@@ -1,0 +1,272 @@
+<template>
+    <form class="input-container" id="newProjectForm" @submit.prevent="creationFormOnsubmit">
+        <header class="new-project-header">Set up new project</header>
+        <p class="new-line">
+            <label class="new-project-label">Project path: </label>
+        </p>
+        <p class="new-line">
+            <input class="new-project-input" type="text" id="path-input" required autocomplete="off" v-model="folderPath"
+                :name="currentDate + 'FolderPath'">
+            <button id="openFileExplorerBtn" class="open-file-explorer-btn" type="button" @click="fillForm">...</button>
+        </p>
+        <p id="warning" class="warning"></p>
+        <p class="new-line">
+            <label class="new-project-label">Name: </label>
+        </p>
+        <p class="new-line">
+            <input class="new-project-input" type="text" id="name-input" required autocomplete="off" v-model="name"
+                :name="currentDate + 'Name'">
+        </p>
+        <p class="new-line">
+            <label class="new-project-label">Version: </label>
+        </p>
+        <p class="new-line">
+            <input class="new-project-input" type="text" id="version-input" required autocomplete="off" v-model="version"
+                :name="currentDate + 'Version'">
+        </p>
+        <p class="new-line">
+            <label class="new-project-label">Mod loader: </label>
+        </p>
+        <p class="new-line">
+            <select v-model="modLoader" class="loader-select" required id="loader-input">
+                <option v-for="loader in loaders" :key="loader" :value="loader">{{ loader }}</option>
+            </select>
+        </p>
+        <button class="create-btn" type="submit">Create</button>
+    </form>
+
+    <a class="cancel-btn no-underline" @click="cancelCreation">Cancel</a>
+
+    <dialog class="warning-dialog">
+        <p class="warning-dialog-p" id="warningDialogString"></p>
+        <div class="warning-dialog-btns-container">
+            <p></p>
+            <button id="openGithubBtn" class="warning-dialog-btn-open">Github</button>
+            <button id="closeWarningDialog" class="warning-dialog-btn-ok" @click="closeWarningDialog">Ok</button>
+        </div>
+    </dialog>
+</template>
+  
+<script>
+export default {
+    data() {
+        return {
+            folderPath: '',
+            name: '',
+            version: '',
+            modLoader: 'Forge',
+            loaders: ['Forge',"Fabric"]
+        };
+    },
+    methods: {
+        fillForm() {
+            alert("fill form")
+        },
+        creationFormOnsubmit() {
+            alert("creationFormOnsubmit")
+        },
+        closeWarningDialog() {
+            alert("closeWarningDialog")
+        },
+        cancelCreation() {
+            this.$emit('goBack');
+        }
+    }
+};
+</script>
+
+<style scoped>
+.input-container {
+    margin-top: calc(9vh - 0.55vw);
+    margin-left: 5vw;
+}
+
+.new-project-header {
+    display: inline-block;
+    color: var(--front);
+    font-family: 'Figtree';
+    letter-spacing: 2px;
+    font-size: calc(2.3vh + 1.1vw + 6px);
+    font-weight: 500;
+    height: calc(8vh + 25px);
+}
+
+.new-line {
+    margin-top: calc(3vh - 3px);
+    align-items: center;
+    display: flex;
+}
+
+.new-project-label {
+    display: inline-block;
+    color: var(--front);
+    font-family: 'Figtree';
+    letter-spacing: 1px;
+    font-size: calc(0.68vh + 0.38vw + 10px);
+    font-weight: 200;
+}
+
+.new-project-input {
+    height: calc(1.7vh + 7px + 0.12vw);
+    width: calc(38vw + 180px + 9vh);
+    background-color: var(--back-2);
+    border: 1px solid transparent;
+    border-radius: calc(1px + 0.04vw + 0.1vh);
+    margin-top: calc(-0.5vh - 10px);
+    font-family: 'Figtree';
+    font-size: calc(0.49vh + 0.5vw + 4px);
+    font-weight: 300;
+    color: var(--front);
+}
+
+input:focus {
+    outline: none;
+    background-color: var(--back-3);
+}
+
+.open-file-explorer-btn {
+    height: calc(1.65vh + 12px + 0.1vw);
+    width: calc(10px + 0.8vw + 1.4vh);
+    align-self: center;
+    background-color: var(--back-2);
+    border: 1px solid transparent;
+    border-radius: calc(1px + 0.06vw + 0.12vh);
+    margin-left: calc(5px + 0.5vw);
+    margin-top: calc(-0.6vh - 10px);
+    color: var(--front);
+    font-size: calc(0.53vh + 0.72vw + 9px);
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-family: 'Figtree';
+    padding-left: 9px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: calc(0.14vh + 0.11vw + 3px);
+}
+
+.open-file-explorer-btn:hover {
+    background-color: var(--back-3);
+    cursor: pointer;
+}
+
+.create-btn {
+    position: absolute;
+    bottom: calc(10px + 2vh);
+    right: calc(13px + 1vw + 0.8vh);
+    height: calc(18px + 1.8vh + 0.3vw);
+    width: calc(36px + 1vh + 3.9vw);
+    background-color: var(--back-3);
+    border: none;
+    font-family: 'Figtree';
+    font-size: calc(0.33vh + 0.48vw + 8px);
+    font-weight: 200;
+    color: var(--front);
+    border: 1px solid transparent;
+    border-radius: calc(1px + 0.04vw + 0.1vh)
+}
+
+.create-btn:hover {
+    background-color: var(--bright-2);
+    cursor: pointer;
+}
+
+.cancel-btn {
+    position: absolute;
+    bottom: calc(10px + 2vh);
+    right: calc(1vh + 57px + 6vw);
+    height: calc(18px + 1.8vh + 0.3vw);
+    width: calc(36px + 1vh + 3.9vw);
+    background-color: var(--back-3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Figtree';
+    font-size: calc(0.33vh + 0.48vw + 8px);
+    font-weight: 200;
+    color: var(--front);
+    border: 1px solid transparent;
+    border-radius: calc(1px + 0.04vw + 0.1vh)
+}
+
+.cancel-btn:hover {
+    background-color: var(--bright-2);
+    cursor: pointer;
+}
+
+.warning {
+    font-family: 'Figtree';
+    color: var(--warning-main);
+    font-size: calc(0.54vh + 0.53vw + 7px);
+    font-weight: 200;
+    width: calc(42vw + 200px + 9vh);
+    margin-top: calc(1vh - 18px + 0.15vw);
+}
+
+.loader-select {
+    color: var(--front);
+    background-color: var(--back-2);
+    height: calc(0.8vh + 19px + 0.4vw);
+    width: calc(30px + 6vw + 1vh);
+    font-size: calc(0.48vh + 0.52vw + 8px);
+    font-family: 'Figtree';
+    margin-top: calc(-0.8vh - 6px);
+    outline: none;
+    border: 1px solid transparent;
+    border-radius: calc(1px + 0.04vw + 0.1vh);
+}
+
+.warning-dialog {
+    position: absolute;
+    top: 0;
+    bottom: 14%;
+    width: calc(200px + 32%);
+    background-color: var(--back-2);
+    border-radius: calc(0.35vh + 0.35vw + 7px);
+    border-width: calc(0.05vh + 0.05vw + 4px);
+    border-color: var(--warning-bright);
+    padding-top: 0;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.warning-dialog-p {
+    font-family: 'Figtree';
+    color: var(--front);
+    font-size: calc(0.6vh + 0.55vw + 6px);
+    font-weight: 200;
+    width: 100%;
+    text-align: justify;
+}
+
+.warning-dialog:focus {
+    outline: none;
+}
+
+.warning-dialog-btns-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr calc(36px + 1vh + 3.9vw) calc(36px + 1vh + 3.9vw);
+    column-gap: calc(1vw + 5px);
+}
+
+.warning-dialog-btns-container button {
+    width: 100%;
+    height: calc(18px + 1.8vh + 0.3vw);
+    background-color: var(--back-3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Figtree';
+    font-size: calc(0.33vh + 0.48vw + 8px);
+    font-weight: 200;
+    color: var(--front);
+    border: 1px solid transparent;
+    border-radius: calc(1px + 0.04vw + 0.1vh)
+}
+
+.warning-dialog-btns-container button:hover {
+    background-color: var(--bright-2);
+    cursor: pointer;
+}
+</style>

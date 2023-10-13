@@ -2,25 +2,18 @@ package projectrelated
 
 import (
 	"fmt"
+	src "made/src"
 	"time"
-)
-
-type ActionType int
-
-// you'll have to define the ActionType enumeration values
-const (
-	ActionTypeCraftingTableAdd ActionType = iota
-	// ... other values
 )
 
 type HistoryItem struct {
 	Arguments  map[string]string
 	FilePath   string
 	ActionID   string
-	ActionType ActionType
+	ActionType src.ActionType
 }
 
-func NewHistoryItem(arguments map[string]string, filePath, actionID string, actionType ActionType) *HistoryItem {
+func NewHistoryItem(arguments map[string]string, filePath, actionID string, actionType src.ActionType) *HistoryItem {
 	return &HistoryItem{
 		Arguments:  arguments,
 		FilePath:   filePath,
@@ -44,7 +37,7 @@ func (h *HistoryItem) HistoryItemLabel() string {
 		}
 	}
 
-	if h.ActionType == ActionTypeCraftingTableAdd {
+	if h.ActionType == src.CraftingTableAdd {
 		shape := "shaped"
 		if isShapeless, ok := h.Arguments["isShapeless"]; ok && isShapeless == "true" {
 			shape = "shapeless"

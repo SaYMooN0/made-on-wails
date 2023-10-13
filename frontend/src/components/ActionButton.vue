@@ -1,10 +1,5 @@
 <template>
-  <div v-if="link" class="action-btn no-underline" :href="link">
-    <div class="action-name">{{ name }}</div>
-    <slot></slot>
-    <label class="action-info">{{ info }}</label>
-  </div>
-  <div v-else class="action-btn" :id="btnId" @click="clicked">
+  <div class="action-btn" :id="btnId" @click="navigateToLink">
     <div class="action-name">{{ name }}</div>
     <slot></slot>
     <label class="action-info">{{ info }}</label>
@@ -16,8 +11,10 @@
 export default {
   props: ['link', 'name', 'svgPath', 'info', 'btnId'],
   methods: {
-    clicked() {
-      this.$emit('onclick');
+    navigateToLink() {
+      if (this.link === "/ProjectCreationPage") {
+        this.$emit('createNewProject');
+      }
     }
   }
 }

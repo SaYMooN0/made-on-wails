@@ -1,23 +1,30 @@
 <template>
     <div>
         <div v-if="currentPage === 'startingActions'">
-            <StartingActionsPage />
+            <StartingActionsPage @createNewProject="currentPage = 'projectCreationPage'" />
         </div>
         <div v-if="currentPage === 'settings'">
             <SettigsPage @goBack="currentPage = 'startingActions'" />
         </div>
+        <div v-if="currentPage === 'projectCreationPage'">
+            <ProjectCreationPage @goBack="currentPage = 'startingActions'"  />
+        </div>
     </div>
 </template>
+
   
 <script>
 import StartingActionsPage from './components/StartingActionsPage.vue';
 import SettigsPage from './components/SettigsPage.vue';
+import ProjectCreationPage  from './components/ProjectCreationPage.vue';
+
 import { CurrentThemeColors } from "../wailsjs/go/made/ThemeCollection";
 
 export default {
     components: {
         StartingActionsPage,
-        SettigsPage
+        SettigsPage,
+        ProjectCreationPage
     },
     data() {
         return {
@@ -30,7 +37,6 @@ export default {
     methods: {
         bindTheme() {
             CurrentThemeColors().then((theme) => {
-                console.log(theme);
                 document.documentElement.style.setProperty('--back', theme.MainBackColor);
                 document.documentElement.style.setProperty('--back-2', theme.SecondBackColor);
                 document.documentElement.style.setProperty('--back-3', theme.ThirdBackColor);
@@ -43,7 +49,6 @@ export default {
                 document.documentElement.style.setProperty('--warning-main', theme.WarningMainColor);
                 document.documentElement.style.setProperty('--warning-bright', theme.WarningBrightColor);
             });
-            console.log('bindTheme');
         }
     }
 }
