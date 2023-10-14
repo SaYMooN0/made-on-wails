@@ -1,10 +1,14 @@
 package projectrelated
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	src "made/src"
 	minecraft "made/src/minecraft_related"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -88,7 +92,7 @@ func NewMadeProject(name, fullPath, pathToFolder, version string, loader src.Loa
 		Loader:                loader,
 		CreationDate:          currentTime,
 		LastUpdated:           currentTime,
-		Settings:              ProjectSettings{}, // Assuming default initialization is fine
+		Settings:              ProjectSettings{ShowWarningWhenDeletingAction: true}, // Assuming default initialization is fine
 		History:               []HistoryItem{},
 		Mods:                  modList,
 		SuggestionsCollection: NewSuggestionsCollection(loader, modList), // Assuming you have a constructor for this
@@ -109,4 +113,199 @@ func NewMadeProjectWithParams(name, fullPath, pathToFolder, version string, load
 		Mods:                  mods,
 		SuggestionsCollection: NewSuggestionsCollection(loader, mods), // Assuming you have a constructor for this
 	}
+}
+func (mp *MadeProject) AddNewRecipe(actionType src.ActionType, arguments map[string]string) *HistoryItem {
+	mp.LastUpdated = time.Now()
+	historyItem := HandleActionWithoutId(actionType, arguments, mp.PathToFolder)
+	if historyItem != nil {
+		mp.History = append(mp.History, *historyItem)
+	}
+	mp.SaveToFile() // Assuming you have a SaveToFile method on MadeProject in Go
+	return historyItem
+}
+
+func (mp *MadeProject) ChangeAction(actionId, filePath string, actionType src.ActionType, arguments map[string]string) {
+	// Assuming you've translated ProjectManager.CurrentProject.DeleteActionById to a suitable Go version
+	DeleteAction(actionId, filePath)
+	mp.LastUpdated = time.Now()
+	historyItem := HandleAction(actionType, arguments, mp.PathToFolder, actionId)
+	if historyItem != nil {
+		mp.History = append(mp.History, *historyItem)
+	}
+	mp.SaveToFile()
+}
+func (mp *MadeProject) DeleteAction(actionId, filePath string) {
+	fullPathToFile := filepath.Join(mp.PathToFolder, filepath.FromSlash(filePath))
+	if mp.TryDeleteHistoryItemByActionId(actionId) {
+		DeleteAction(actionId, fullPathToFile)
+	}
+	mp.SaveToFile()
+}
+
+func (mp *MadeProject) TryDeleteHistoryItemByActionId(actionId string) bool {
+	for i, item := range mp.History {
+		if item.ActionID == actionId {
+			mp.History = append(mp.History[:i], mp.History[i+1:]...)
+			return true
+		}
+	}
+	return false
+}
+func (mp *MadeProject) GetAllItems() []src.IdNamePair {
+	var results []src.IdNamePair
+	for _, mod := range mp.Mods {
+		for _, item := range mod.Items {
+			results = append(results, src.IdNamePair{Id: mod.Id + ":" + item.Id, InGameName: item.InGameName})
+		}
+	}
+	return results
+}
+
+func (mp *MadeProject) GetAllBlocks() []src.IdNamePair {
+	var results []src.IdNamePair
+	for _, mod := range mp.Mods {
+		for _, block := range mod.Blocks {
+			results = append(results, src.IdNamePair{Id: mod.Id + ":" + block.Id, InGameName: block.InGameName})
+		}
+	}
+	return results
+}
+
+func (mp *MadeProject) GetAllTags() []src.IdNamePair {
+	var results []src.IdNamePair
+	for _, mod := range mp.Mods {
+		for _, tag := range mod.Tags {
+			results = append(results, src.IdNamePair{Id: "#" + mod.Id + ":" + tag.Id, InGameName: tag.InGameName})
+		}
+	}
+	return results
+}
+
+func (mp *MadeProject) GetAllMods() []src.IdNamePair {
+	var results []src.IdNamePair
+	for _, mod := range mp.Mods {
+		results = append(results, src.IdNamePair{Id: mod.Id, InGameName: mod.InGameName})
+	}
+	return results
+}
+
+func (mp *MadeProject) GetAllProcessingTypes() []src.IdNamePair {
+	var results []src.IdNamePair
+	seen := make(map[src.IdNamePair]bool)
+	for _, mod := range mp.Mods {
+		for _, supportedType := range mod.SupportedTypes {
+			pair := src.IdNamePair{Id: supportedType.Id, InGameName: supportedType.InGameName}
+			if _, exists := seen[pair]; !exists {
+				results = append(results, pair)
+				seen[pair] = true
+			}
+		}
+	}
+	return results
+}
+func (mp *MadeProject) AddNewItem(itemIdString, inGameName string) string {
+	parts := strings.Split(itemIdString, ":")
+	modString := parts[0]
+	itemId := parts[1]
+
+	var mod *minecraft.Mod
+	for _, m := range mp.Mods {
+		if m.Id == modString {
+			mod = &m
+			break
+		}
+	}
+
+	if mod == nil {
+		mod = &minecraft.Mod{Id: modString}
+		mod.Items = append(mod.Items, minecraft.Item{Id: itemId, InGameName: inGameName})
+		mp.Mods = append(mp.Mods, *mod)
+	} else {
+		for _, item := range mod.Items {
+			if item.Id == inGameName {
+				return fmt.Sprintf("Mod with id %s already contains this item", mod.Id)
+			}
+		}
+		mod.Items = append(mod.Items, minecraft.Item{Id: itemId, InGameName: inGameName})
+	}
+	mp.SaveToFile()
+	return ""
+}
+
+func (mp *MadeProject) EditCollectionItem(oldItem, newItem, newInGameName string) string {
+	processResult := mp.AddNewItem(newItem, newInGameName)
+	if processResult != "" {
+		return processResult
+	}
+	processResult = mp.DeleteItemFromCollection(oldItem)
+	if processResult != "" {
+		return processResult
+	}
+	return ""
+}
+
+func (mp *MadeProject) DeleteItemFromCollection(itemToDelete string) string {
+	item := mp.GetItemById(itemToDelete)
+	if item == nil {
+		return fmt.Sprintf("No item with id %s found", itemToDelete)
+	}
+
+	modString := strings.Split(itemToDelete, ":")[0]
+	var mod *minecraft.Mod
+	for _, m := range mp.Mods {
+		if m.Id == modString {
+			mod = &m
+			break
+		}
+	}
+
+	if mod != nil {
+		for i, itm := range mod.Items {
+			if itm.Id == item.Id {
+				mod.Items = append(mod.Items[:i], mod.Items[i+1:]...)
+				break
+			}
+		}
+		mp.SaveToFile()
+		return ""
+	}
+	return fmt.Sprintf("No mod with id %s found", modString)
+}
+
+func (mp *MadeProject) GetItemById(itemIdString string) *minecraft.Item {
+	parts := strings.Split(itemIdString, ":")
+	modString := parts[0]
+	itemId := parts[1]
+
+	for _, mod := range mp.Mods {
+		if mod.Id == modString {
+			for _, item := range mod.Items {
+				if item.Id == itemId {
+					return &item
+				}
+			}
+		}
+	}
+	return nil
+}
+func (mp *MadeProject) GetItemImgPathById(id string) string {
+	i := mp.GetItemById(id)
+	if i == nil || strings.Split(id, ":")[0] != kubejsModId {
+		return ""
+	}
+	texturePath := src.GetFullTextureItemPath()
+	return filepath.Join(mp.PathToFolder, texturePath, i.GetImagePath())
+}
+func (mp *MadeProject) GetItemImgInBase64(itemId string) string {
+	imagePath := mp.GetItemImgPathById(itemId)
+	if imagePath == "" {
+		return ""
+	}
+
+	data, err := os.ReadFile(imagePath)
+	if err != nil {
+		return ""
+	}
+
+	return base64.StdEncoding.EncodeToString(data)
 }

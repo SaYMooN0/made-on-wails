@@ -1,5 +1,5 @@
 <template>
-  <div class="link-button" @click="navigateToLink" :class="iconColor">
+  <div class="link-button" :class="iconColor">
     <div class="icon-container">
       <slot></slot>
     </div>
@@ -8,29 +8,14 @@
 
 <script>
 export default {
-  props: ['link', 'iconColor'],
-  methods: {
-    navigateToLink() {
-      if (this.link === "/Settings") {
-        this.$emit('createNewProject');
-      }
-      else if
-        (this.link === "/Github") {
-        window.open("https://github.com/SaYMooN0/made-on-wails");
-      }
-      else if
-        (this.link === "/MadeInfo") {
-        this.$emit('madeInfo');
-      }
-    }
-  }
+  props: ['iconColor'],
 }
 </script>
 <style scoped>
 .link-button {
   background-color: var(--back-2);
   border: 0 solid transparent;
-  height: calc(26px + 0.7vw + 0.7vh);
+  height: calc(24px + 0.7vw + 0.7vh);
   aspect-ratio: 1/1;
   cursor: pointer;
   border-radius: calc(0.17vw + 0.17vh + 4px);
@@ -46,8 +31,9 @@ export default {
   background-color: var(--back-3);
 
 }
+
 .fill:hover {
-  fill: var(--front-3); 
+  fill: var(--front-3);
 
 }
 
@@ -55,6 +41,7 @@ export default {
   stroke: var(--front-3);
 
 }
+
 .stroke {
   stroke: var(--front);
 }
@@ -62,8 +49,9 @@ export default {
 .fill {
   fill: var(--front);
 }
+
 .icon-container {
-  height: calc(1px + 90%);
+  height: 92%;
   aspect-ratio: 1/1;
   overflow: hidden;
   transition: 0.08s;
@@ -73,5 +61,4 @@ export default {
 .icon-container>svg {
   max-width: 100%;
   max-height: 100%;
-}
-</style>
+}</style>
