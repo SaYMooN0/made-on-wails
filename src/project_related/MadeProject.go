@@ -36,7 +36,7 @@ func (mp *MadeProject) SaveToFile() error {
 }
 
 func CreateFromFile(filePath string) (*MadeProject, error) {
-	data, err := os.ReadFile(filePath) // Update this line as well
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}

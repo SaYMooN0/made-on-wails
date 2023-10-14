@@ -9,10 +9,10 @@
   
 <script>
 export default {
-  props: ['link', 'name', 'svgPath', 'info', 'btnId'],
+  props: ['link', 'name', 'info', 'btnId'],
   methods: {
     navigateToLink() {
-      if (this.link === "/ProjectCreationPage") {
+      if (this.link === "/projectCreation") {
         this.$emit('createNewProject');
       }
     }

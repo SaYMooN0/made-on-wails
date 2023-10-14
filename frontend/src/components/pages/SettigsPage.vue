@@ -11,7 +11,7 @@
 export default {
   methods: {
     backToMain() {
-      this.$emit('goBack'); // когда пользователь нажимает кнопку "Назад", это событие будет передаваться в App.vue
+      this.$emit('goBack');
     }
   }
 }
