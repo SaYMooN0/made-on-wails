@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	projectRelated "made/src/project_related"
 	themeRelated "made/src/theme_related"
 	"os"
 
@@ -16,6 +17,9 @@ var assets embed.FS
 func main() {
 	app := NewApp()
 	themeCollection := themeRelated.InitializeThemeCollection()
+	projectManager := projectRelated.InitializeProjectManager()
+	defer themeCollection.SaveToFile()
+	defer projectManager.SaveToFile()
 	err := wails.Run(&options.App{
 		Title:     "Made",
 		Width:     900,
@@ -26,10 +30,11 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+		OnStartup:        projectManager.SetStartupOnContext,
 		Bind: []interface{}{
 			app,
 			themeCollection,
+			projectManager,
 		},
 	})
 	if err != nil {

@@ -1,4 +1,4 @@
-package made
+package themerelated
 
 type Theme struct {
 	Name          string `json:"Name"`

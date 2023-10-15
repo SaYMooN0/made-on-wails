@@ -1,4 +1,4 @@
-package made
+package themerelated
 
 import (
 	"fmt"

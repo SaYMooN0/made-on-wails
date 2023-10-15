@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	FileExtension = ".madeProject"
-	kubejsModId   = "kubejs"
+	MadeProjectFileExt = ".madeProject"
+	KubejsModId        = "kubejs"
 )
 
 type MadeProject struct {
@@ -120,12 +120,11 @@ func (mp *MadeProject) AddNewRecipe(actionType src.ActionType, arguments map[str
 	if historyItem != nil {
 		mp.History = append(mp.History, *historyItem)
 	}
-	mp.SaveToFile() // Assuming you have a SaveToFile method on MadeProject in Go
+	mp.SaveToFile()
 	return historyItem
 }
 
 func (mp *MadeProject) ChangeAction(actionId, filePath string, actionType src.ActionType, arguments map[string]string) {
-	// Assuming you've translated ProjectManager.CurrentProject.DeleteActionById to a suitable Go version
 	DeleteAction(actionId, filePath)
 	mp.LastUpdated = time.Now()
 	historyItem := HandleAction(actionType, arguments, mp.PathToFolder, actionId)
@@ -290,7 +289,7 @@ func (mp *MadeProject) GetItemById(itemIdString string) *minecraft.Item {
 }
 func (mp *MadeProject) GetItemImgPathById(id string) string {
 	i := mp.GetItemById(id)
-	if i == nil || strings.Split(id, ":")[0] != kubejsModId {
+	if i == nil || strings.Split(id, ":")[0] != KubejsModId {
 		return ""
 	}
 	texturePath := src.GetFullTextureItemPath()

@@ -1,4 +1,4 @@
-package made
+package themerelated
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ func (tc *ThemeCollection) CurrentTheme() *Theme {
 	if len(tc.Themes) > 0 {
 		return &tc.Themes[0]
 	}
-	defaultTheme := defaultDark()
+	defaultTheme := DefaultDark()
 	tc.Themes = append(tc.Themes, *defaultTheme)
 	return defaultTheme
 }
@@ -61,8 +61,8 @@ func InitializeThemeCollection() *ThemeCollection {
 
 func CreateDefaultThemesFile() {
 	themeCollection := &ThemeCollection{}
-	dark := defaultDark()
-	light := defaultLight()
+	dark := DefaultDark()
+	light := DefaultLight()
 	themeCollection.Themes = append(themeCollection.Themes, *dark, *light)
 	themeCollection.ThemeNames = append(themeCollection.ThemeNames, dark.Name, light.Name)
 	themeCollection.CurrentThemeName = dark.Name
@@ -99,7 +99,7 @@ func (tc *ThemeCollection) SaveToFile() error {
 	}
 	return nil
 }
-func defaultDark() *Theme {
+func DefaultDark() *Theme {
 	return NewTheme(
 		"default dark",
 		FromHex("#272527"),
@@ -116,7 +116,7 @@ func defaultDark() *Theme {
 	)
 }
 
-func defaultLight() *Theme {
+func DefaultLight() *Theme {
 	return NewTheme(
 		"default light",
 		FromHex("#E0E1DD"),

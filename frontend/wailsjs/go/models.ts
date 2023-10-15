@@ -1,4 +1,4 @@
-export namespace made {
+export namespace themerelated {
 	
 	export class Theme {
 	    Name: string;

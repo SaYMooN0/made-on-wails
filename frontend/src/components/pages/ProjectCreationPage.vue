@@ -7,7 +7,8 @@
         <p class="new-line">
             <input class="new-project-input" type="text" id="path-input" required autocomplete="off" v-model="folderPath"
                 :name="currentDate + 'FolderPath'">
-            <button id="openFileExplorerBtn" class="open-file-explorer-btn" type="button" @click="fillForm">...</button>
+            <button id="openFileExplorerBtn" class="open-file-explorer-btn" type="button"
+                @click="openFolderSelectionDialog">...</button>
         </p>
         <p id="warning" class="warning"></p>
         <p class="new-line">
@@ -48,6 +49,9 @@
 </template>
   
 <script>
+import { ChooseFolderForNewProject, GetInformationToFillCreationForm } from "../../../wailsjs/go/projectrelated/ProjectManager";
+
+
 export default {
     data() {
         return {
@@ -55,12 +59,19 @@ export default {
             name: '',
             version: '',
             modLoader: 'Forge',
-            loaders: ['Forge',"Fabric"]
+            loaders: ['Forge', "Fabric"]
         };
     },
     methods: {
-        fillForm() {
-            alert("fill form")
+        openFolderSelectionDialog() {
+            console.log('pressed');
+            ChooseFolderForNewProject().then((folder) => {
+                console.log(folder);
+                GetInformationToFillCreationForm(folder).then((inf) => {
+                    console.log(inf);
+                });
+            });
+
         },
         creationFormOnsubmit() {
             alert("creationFormOnsubmit")

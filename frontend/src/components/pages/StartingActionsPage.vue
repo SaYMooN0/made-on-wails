@@ -53,7 +53,6 @@
                     stroke-width="1.5" />
             </svg>
         </LinkButton>
-
     </div>
 </template>
   
