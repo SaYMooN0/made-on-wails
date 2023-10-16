@@ -66,11 +66,24 @@ export default {
         openFolderSelectionDialog() {
             console.log('pressed');
             ChooseFolderForNewProject().then((folder) => {
-                console.log(folder);
                 GetInformationToFillCreationForm(folder).then((inf) => {
-                    console.log(inf);
+                    if (inf.Version != null) {
+                        this.fillForm(inf);
+                    }
+                    else {
+                        this.showFormFillingWarning();
+                    }
+
                 });
             });
+        },
+        fillForm(inf) {
+            this.folderPath = inf.FolderPath;
+            this.name = inf.Name;
+            this.version = inf.Version;
+            this.modLoader = this.loaders[inf.ModLoader];
+        },
+        showFormFillingWarning() {
 
         },
         creationFormOnsubmit() {

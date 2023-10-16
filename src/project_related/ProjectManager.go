@@ -139,7 +139,6 @@ func (pm *ProjectManager) ChooseProject() string {
 
 	projectFile, err := runtime.OpenFileDialog(context.Background(), dialogOptions)
 	if err != nil {
-		// Обработайте ошибку, если нужно
 		return ""
 	}
 	pm.AddProjectToCollectionIfNeeded(projectFile)
@@ -151,19 +150,16 @@ func (pm *ProjectManager) GetInformationToFillCreationForm(folderPath string) Pr
 	info := ProjectCreationInformation{
 		FolderPath: folderPath,
 	}
-
 	if _, err := os.Stat(fullPath); os.IsNotExist(err) {
 		return info
 	}
-
 	contents, err := os.ReadFile(fullPath)
 	if err != nil {
 		return info
 	}
-
 	info.Name = filepath.Base(folderPath)
+	version := getInJsonValueOf("minecraftVersion", string(contents))
 
-	version := getSubstringBetween(string(contents), "\"minecraftVersion\":", ",")
 	if version != "" {
 		info.Version = strings.Map(func(r rune) rune {
 			if unicode.IsDigit(r) || r == '.' {
@@ -173,26 +169,37 @@ func (pm *ProjectManager) GetInformationToFillCreationForm(folderPath string) Pr
 		}, version)
 	}
 
-	loaderName := getSubstringBetween(string(contents), "\"name\":", "\",")
-	if loaderName != "" {
-		loader := strings.Split(loaderName, "-")[0]
-		loaderEnum, err := src.StringToLoader(loader)
-		if err == nil {
-			*info.ModLoader = loaderEnum
+	loaderString := getInJsonValueOf("name", string(contents))
+
+	if loaderString != "" {
+		loaderString := getPureLoaderValue(loaderString)
+		if loaderString != "" {
+			loader, err := src.StringToLoader(loaderString)
+			fmt.Println(loader, err)
+			if err == nil {
+				info.ModLoader = &loader
+			}
 		}
 	}
-
 	return info
 }
-func getSubstringBetween(str, start, end string) string {
-	s := strings.Index(str, start)
-	if s == -1 {
+func getPureLoaderValue(input string) string {
+	endIndex := strings.Index(input, "-")
+	if endIndex == -1 {
 		return ""
 	}
-	s += len(start)
-	e := strings.Index(str[s:], end)
-	if e == -1 {
+	return input[:endIndex]
+}
+func getInJsonValueOf(key string, jsonData string) string {
+	searchFor := "\"" + key + "\": \""
+	startIndex := strings.Index(jsonData, searchFor)
+	if startIndex == -1 {
 		return ""
 	}
-	return strings.TrimSpace(str[s : s+e])
+	jsonData = jsonData[startIndex+len(searchFor):]
+	endIndex := strings.Index(jsonData, "\"")
+	if endIndex == -1 {
+		return ""
+	}
+	return jsonData[:endIndex]
 }

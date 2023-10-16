@@ -25,8 +25,8 @@ const (
 	Type
 )
 const (
-	Fabric Loader = iota
-	Forge
+	Forge Loader = iota
+	Fabric
 )
 
 func StringToLoader(loaderString string) (Loader, error) {
