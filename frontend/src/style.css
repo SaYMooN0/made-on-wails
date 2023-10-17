@@ -1,6 +1,7 @@
 body {
     margin: 0;
 }
+
 @font-face {
     font-family: 'Figtree';
     src: url('./assets/fonts/Figtree.ttf');
@@ -11,6 +12,14 @@ body {
     font-family: 'Bahnschrift';
     src: url('./assets/fonts/Bahnschrift.ttf');
 }
-.no-underline{
-    text-decoration:none;
+
+.no-underline {
+    text-decoration: none;
+}
+
+.non-selectable {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }

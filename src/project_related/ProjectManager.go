@@ -159,7 +159,6 @@ func (pm *ProjectManager) GetInformationToFillCreationForm(folderPath string) Pr
 	}
 	info.Name = filepath.Base(folderPath)
 	version := getInJsonValueOf("minecraftVersion", string(contents))
-
 	if version != "" {
 		info.Version = strings.Map(func(r rune) rune {
 			if unicode.IsDigit(r) || r == '.' {
@@ -175,7 +174,6 @@ func (pm *ProjectManager) GetInformationToFillCreationForm(folderPath string) Pr
 		loaderString := getPureLoaderValue(loaderString)
 		if loaderString != "" {
 			loader, err := src.StringToLoader(loaderString)
-			fmt.Println(loader, err)
 			if err == nil {
 				info.ModLoader = &loader
 			}
@@ -194,7 +192,11 @@ func getInJsonValueOf(key string, jsonData string) string {
 	searchFor := "\"" + key + "\": \""
 	startIndex := strings.Index(jsonData, searchFor)
 	if startIndex == -1 {
-		return ""
+		searchFor = "\"" + key + "\":\""
+		startIndex = strings.Index(jsonData, searchFor)
+		if startIndex == -1 {
+			return ""
+		}
 	}
 	jsonData = jsonData[startIndex+len(searchFor):]
 	endIndex := strings.Index(jsonData, "\"")

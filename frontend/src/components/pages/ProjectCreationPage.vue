@@ -1,28 +1,36 @@
+
+  <!-- <dialog class="warning-dialog">
+        <p class="warning-dialog-p" id="warningDialogString"></p>
+        <div class="warning-dialog-btns-container">
+            <p></p>
+            <button id="openGithubBtn" class="warning-dialog-btn-open">Github</button>
+            <button id="closeWarningDialog" class="warning-dialog-btn-ok" @click="closeWarningDialog">Ok</button>
+        </div>
+    </dialog> -->
 <template>
     <form class="input-container" id="newProjectForm" @submit.prevent="creationFormOnsubmit">
-        <header class="new-project-header">Set up new project</header>
+        <label class="new-project-header">Set up new project</label>
         <p class="new-line">
             <label class="new-project-label">Project path: </label>
         </p>
         <p class="new-line">
             <input class="new-project-input" type="text" id="path-input" required autocomplete="off" v-model="folderPath"
                 :name="currentDate + 'FolderPath'">
-            <button id="openFileExplorerBtn" class="open-file-explorer-btn" type="button"
+            <button id="openFileExplorerBtn" class="open-file-explorer-btn non-selectable" type="button"
                 @click="openFolderSelectionDialog">...</button>
         </p>
-        <p id="warning" class="warning"></p>
         <p class="new-line">
             <label class="new-project-label">Name: </label>
         </p>
         <p class="new-line">
-            <input class="new-project-input" type="text" id="name-input" required autocomplete="off" v-model="name"
+            <input class="new-project-input" type="text" required autocomplete="off" v-model="name"
                 :name="currentDate + 'Name'">
         </p>
         <p class="new-line">
             <label class="new-project-label">Version: </label>
         </p>
         <p class="new-line">
-            <input class="new-project-input" type="text" id="version-input" required autocomplete="off" v-model="version"
+            <input class="new-project-input" type="text" required autocomplete="off" v-model="version"
                 :name="currentDate + 'Version'">
         </p>
         <p class="new-line">
@@ -34,66 +42,89 @@
             </select>
         </p>
         <button class="create-btn" type="submit">Create</button>
-    </form>
 
+    </form>
+    <p class="warning">{{ warning }}</p>
     <a class="cancel-btn no-underline" @click="cancelCreation">Cancel</a>
 
-    <dialog class="warning-dialog">
-        <p class="warning-dialog-p" id="warningDialogString"></p>
-        <div class="warning-dialog-btns-container">
-            <p></p>
-            <button id="openGithubBtn" class="warning-dialog-btn-open">Github</button>
-            <button id="closeWarningDialog" class="warning-dialog-btn-ok" @click="closeWarningDialog">Ok</button>
-        </div>
-    </dialog>
+
+    <ErrorDialog ref="supportErrDialog">
+        <p>
+            You are trying to create a project to work with {{modLoader}} for {{ version }} minecraft version, but unfortunately kubejs does not support this version, therefore Made also cannot work with this version. If you are sure that kubejs supports {{ version }} {{ modLoader }} let us know on the issues page on github.
+        </p>
+    </ErrorDialog>
 </template>
   
 <script>
 import { ChooseFolderForNewProject, GetInformationToFillCreationForm } from "../../../wailsjs/go/projectrelated/ProjectManager";
-
-
+import ErrorDialog from '../modalDialogs/ErrorDialog.vue';
+const kjsForgeVersions = ["1.16.1", "1.16.2", "1.16.3", "1.16.4", "1.16.5", "1.18", "1.18.1", "1.18.1", "1.18.2", "1.19", "1.19.2"];
+const kjsFabricVersions = ["1.18.2", "1.19", "1.19.2"];
 export default {
+    components: {
+        ErrorDialog
+    },
     data() {
         return {
             folderPath: '',
             name: '',
             version: '',
             modLoader: 'Forge',
-            loaders: ['Forge', "Fabric"]
+            loaders: ['Forge', "Fabric"],
+            showSupportErrDialog: false,
+            warning: '',
         };
     },
     methods: {
         openFolderSelectionDialog() {
-            console.log('pressed');
+            this.warning = '';
             ChooseFolderForNewProject().then((folder) => {
-                GetInformationToFillCreationForm(folder).then((inf) => {
-                    if (inf.Version != null) {
-                        this.fillForm(inf);
-                    }
-                    else {
-                        this.showFormFillingWarning();
-                    }
+                if (folder != '') {
+                    GetInformationToFillCreationForm(folder).then((inf) => {
+                        this.folderPath = inf.FolderPath;
+                        console.log(inf);
+                        if (inf.Version != '') {
+                            this.fillForm(inf);
+                        }
+                        else {
+                            this.warning = '!Warning! The folder with the modpack that you are trying to open is most likely created not with CurseForge.\
+                        To avoid errors in Made and the modpack itself, it is recommended to recreate your modpack using CurseForge';
+                        }
 
-                });
+                    });
+                }
             });
         },
         fillForm(inf) {
-            this.folderPath = inf.FolderPath;
             this.name = inf.Name;
             this.version = inf.Version;
             this.modLoader = this.loaders[inf.ModLoader];
         },
-        showFormFillingWarning() {
-
-        },
         creationFormOnsubmit() {
-            alert("creationFormOnsubmit")
+            if (this.isVersionSupported()) {
+                alert("sup");
+            } else {
+                this.$refs.supportErrDialog.showDialog();
+            }
         },
         closeWarningDialog() {
             alert("closeWarningDialog")
         },
         cancelCreation() {
             this.$emit('goBack');
+        },
+        isVersionSupported() {
+            if (this.modLoader == "Forge") {
+                if (kjsForgeVersions.includes(this.version)) {
+                    return true;
+                }
+            }
+            else if (this.modLoader == "Fabric") {
+                if (kjsFabricVersions.includes(this.version)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 };
@@ -101,7 +132,7 @@ export default {
 
 <style scoped>
 .input-container {
-    margin-top: calc(9vh - 0.55vw);
+    margin-top: calc(7vh - 0.6vw);
     margin-left: 5vw;
 }
 
@@ -109,10 +140,10 @@ export default {
     display: inline-block;
     color: var(--front);
     font-family: 'Figtree';
-    letter-spacing: 2px;
-    font-size: calc(2.3vh + 1.1vw + 6px);
+    letter-spacing: 1px;
+    font-size: calc(2.3vh + 1.1vw + 11px);
     font-weight: 500;
-    height: calc(8vh + 25px);
+    margin-bottom: calc(10px + 1%);
 }
 
 .new-line {
@@ -131,14 +162,14 @@ export default {
 }
 
 .new-project-input {
-    height: calc(1.7vh + 7px + 0.12vw);
-    width: calc(38vw + 180px + 9vh);
+    height: calc(2vh + 9px + 0.15vw);
+    width: calc(38vw + 260px + 5vh);
     background-color: var(--back-2);
     border: 1px solid transparent;
     border-radius: calc(1px + 0.04vw + 0.1vh);
     margin-top: calc(-0.5vh - 10px);
     font-family: 'Figtree';
-    font-size: calc(0.49vh + 0.5vw + 4px);
+    font-size: calc(0.5vh + 0.5vw + 6px);
     font-weight: 300;
     color: var(--front);
 }
@@ -150,7 +181,7 @@ input:focus {
 
 .open-file-explorer-btn {
     height: calc(1.65vh + 12px + 0.1vw);
-    width: calc(10px + 0.8vw + 1.4vh);
+    width: calc(16px + 0.7vw + 1.3vh);
     align-self: center;
     background-color: var(--back-2);
     border: 1px solid transparent;
@@ -158,7 +189,7 @@ input:focus {
     margin-left: calc(5px + 0.5vw);
     margin-top: calc(-0.6vh - 10px);
     color: var(--front);
-    font-size: calc(0.53vh + 0.72vw + 9px);
+    font-size: calc(0.53vh + 0.72vw + 11px);
     font-weight: 900;
     letter-spacing: 2px;
     font-family: 'Figtree';
@@ -218,15 +249,6 @@ input:focus {
     cursor: pointer;
 }
 
-.warning {
-    font-family: 'Figtree';
-    color: var(--warning-main);
-    font-size: calc(0.54vh + 0.53vw + 7px);
-    font-weight: 200;
-    width: calc(42vw + 200px + 9vh);
-    margin-top: calc(1vh - 18px + 0.15vw);
-}
-
 .loader-select {
     color: var(--front);
     background-color: var(--back-2);
@@ -240,57 +262,18 @@ input:focus {
     border-radius: calc(1px + 0.04vw + 0.1vh);
 }
 
-.warning-dialog {
+.warning {
     position: absolute;
-    top: 0;
-    bottom: 14%;
-    width: calc(200px + 32%);
-    background-color: var(--back-2);
-    border-radius: calc(0.35vh + 0.35vw + 7px);
-    border-width: calc(0.05vh + 0.05vw + 4px);
-    border-color: var(--warning-bright);
-    padding-top: 0;
-    padding-left: 1%;
-    padding-right: 1%;
-}
-
-.warning-dialog-p {
+    bottom: calc(20px + 8%);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(34vw + 250px + 4vh);
+    max-width: 90%;
+    text-align: center;
     font-family: 'Figtree';
-    color: var(--front);
-    font-size: calc(0.6vh + 0.55vw + 6px);
+    color: var(--warning-bright);
+    font-size: calc(1vh + 0.35vw + 7px);
     font-weight: 200;
-    width: 100%;
-    text-align: justify;
-}
 
-.warning-dialog:focus {
-    outline: none;
-}
-
-.warning-dialog-btns-container {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr calc(36px + 1vh + 3.9vw) calc(36px + 1vh + 3.9vw);
-    column-gap: calc(1vw + 5px);
-}
-
-.warning-dialog-btns-container button {
-    width: 100%;
-    height: calc(18px + 1.8vh + 0.3vw);
-    background-color: var(--back-3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Figtree';
-    font-size: calc(0.33vh + 0.48vw + 8px);
-    font-weight: 200;
-    color: var(--front);
-    border: 1px solid transparent;
-    border-radius: calc(1px + 0.04vw + 0.1vh)
-}
-
-.warning-dialog-btns-container button:hover {
-    background-color: var(--bright-2);
-    cursor: pointer;
 }
 </style>
