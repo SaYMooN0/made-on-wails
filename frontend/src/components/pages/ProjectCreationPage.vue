@@ -48,21 +48,19 @@
     <a class="cancel-btn no-underline" @click="cancelCreation">Cancel</a>
 
 
-    <ErrorDialog ref="supportErrDialog">
-        <p>
-            You are trying to create a project to work with {{modLoader}} for {{ version }} minecraft version, but unfortunately kubejs does not support this version, therefore Made also cannot work with this version. If you are sure that kubejs supports {{ version }} {{ modLoader }} let us know on the issues page on github.
-        </p>
-    </ErrorDialog>
+    <ErrDialogWithGithub ref="supportErrDialog"
+        :errorText="`You are trying to create a project to work with ${modLoader} for ${version} minecraft version, but unfortunately kubejs does not support this version, therefore Made also cannot work with this version. If you are sure that kubejs supports ${version} ${modLoader} let us know on the issues page on github.`">
+    </ErrDialogWithGithub>
 </template>
   
 <script>
 import { ChooseFolderForNewProject, GetInformationToFillCreationForm } from "../../../wailsjs/go/projectrelated/ProjectManager";
-import ErrorDialog from '../modalDialogs/ErrorDialog.vue';
+import ErrDialogWithGithub from '../modalDialogs/ErrDialogWithGithub.vue';
 const kjsForgeVersions = ["1.16.1", "1.16.2", "1.16.3", "1.16.4", "1.16.5", "1.18", "1.18.1", "1.18.1", "1.18.2", "1.19", "1.19.2"];
 const kjsFabricVersions = ["1.18.2", "1.19", "1.19.2"];
 export default {
     components: {
-        ErrorDialog
+        ErrDialogWithGithub
     },
     data() {
         return {
@@ -82,7 +80,6 @@ export default {
                 if (folder != '') {
                     GetInformationToFillCreationForm(folder).then((inf) => {
                         this.folderPath = inf.FolderPath;
-                        console.log(inf);
                         if (inf.Version != '') {
                             this.fillForm(inf);
                         }
