@@ -1,12 +1,3 @@
-
-  <!-- <dialog class="warning-dialog">
-        <p class="warning-dialog-p" id="warningDialogString"></p>
-        <div class="warning-dialog-btns-container">
-            <p></p>
-            <button id="openGithubBtn" class="warning-dialog-btn-open">Github</button>
-            <button id="closeWarningDialog" class="warning-dialog-btn-ok" @click="closeWarningDialog">Ok</button>
-        </div>
-    </dialog> -->
 <template>
     <form class="input-container" id="newProjectForm" @submit.prevent="creationFormOnsubmit">
         <label class="new-project-header">Set up new project</label>
@@ -48,19 +39,22 @@
     <a class="cancel-btn no-underline" @click="cancelCreation">Cancel</a>
 
 
-    <ErrDialogWithGithub ref="supportErrDialog"
-        :errorText="`You are trying to create a project to work with ${modLoader} for ${version} minecraft version, but unfortunately kubejs does not support this version, therefore Made also cannot work with this version. If you are sure that kubejs supports ${version} ${modLoader} let us know on the issues page on github.`">
-    </ErrDialogWithGithub>
+    <ErrDialogWithGithub ref="errDialogWithGithub" :errorText="`${errDialogWithGithubText}`"> </ErrDialogWithGithub>
+    <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`"></ErrorDialog>
 </template>
   
 <script>
-import { ChooseFolderForNewProject, GetInformationToFillCreationForm } from "../../../wailsjs/go/projectrelated/ProjectManager";
+import { ChooseFolderForNewProject, GetInformationToFillCreationForm, AnyMadeProjectFilesInFolder, CreateProject, SetCurrentProjectByFolder } from "../../../wailsjs/go/projectrelated/ProjectManager";
 import ErrDialogWithGithub from '../modalDialogs/ErrDialogWithGithub.vue';
+import ErrorDialog from '../modalDialogs/ErrorDialog.vue';
+
 const kjsForgeVersions = ["1.16.1", "1.16.2", "1.16.3", "1.16.4", "1.16.5", "1.18", "1.18.1", "1.18.1", "1.18.2", "1.19", "1.19.2"];
 const kjsFabricVersions = ["1.18.2", "1.19", "1.19.2"];
+const forbiddenNameChars = /[<>:"/\\|?*\x00-\x1F]/;
 export default {
     components: {
-        ErrDialogWithGithub
+        ErrDialogWithGithub,
+        ErrorDialog
     },
     data() {
         return {
@@ -69,8 +63,9 @@ export default {
             version: '',
             modLoader: 'Forge',
             loaders: ['Forge', "Fabric"],
-            showSupportErrDialog: false,
             warning: '',
+            errDialogWithGithubText: '',
+            errDialogText: '',
         };
     },
     methods: {
@@ -78,6 +73,11 @@ export default {
             this.warning = '';
             ChooseFolderForNewProject().then((folder) => {
                 if (folder != '') {
+                    AnyMadeProjectFilesInFolder(folder).then((anyProjectInFolder) => {
+                        if (anyProjectInFolder) {
+                            this.warning = "!Warning! There is already a .madeProject file in this folder. You can open it by going to the starting actions page, or if you want to create a project from scratch, please delete the previous project in this folder";
+                        }
+                    });
                     GetInformationToFillCreationForm(folder).then((inf) => {
                         this.folderPath = inf.FolderPath;
                         if (inf.Version != '') {
@@ -98,11 +98,36 @@ export default {
             this.modLoader = this.loaders[inf.ModLoader];
         },
         creationFormOnsubmit() {
-            if (this.isVersionSupported()) {
-                alert("sup");
-            } else {
-                this.$refs.supportErrDialog.showDialog();
+            if (forbiddenNameChars.test(this.name)) {
+                this.errDialogText = `You can't have <, >, :, ", /, \\, |, ?, * in your project name`;
+                this.$refs.errDialog.showDialog();
+                return;
             }
+            AnyMadeProjectFilesInFolder(this.folderPath).then((anyProjectInFolder) => {
+                if (anyProjectInFolder) {
+                    this.errDialogText = `Made failed to create file in folder with path:\n${folderPath}\nPlease sure there that the folder with this path exists and there is no .madeProject files. If such a file exists, you can open it by going to the starting actions page, or if you want to create a project from scratch, please delete the previous project in this folder`;
+                    this.$refs.errDialog.showDialog();
+                    return;
+                }
+                if (this.isVersionSupported()) {
+                    CreateProject(this.name, this.folderPath, this.version, this.loaders.indexOf(this.modLoader)).then((creationResult) => {
+                        if (creationResult === "") {
+                            SetCurrentProjectByFolder(this.folderPath).then(() => {
+                                this.$emit('goToProjectPage');
+                            })
+                        }
+                        else {
+                            this.errDialogWithGithubText = `An error \n${creationResult}\n occurred while creating the project. Please report it to the github issues page`;
+                            this.$refs.errDialogWithGithub.showDialog();
+                        }
+                    })
+                } else {
+                    this.errDialogWithGithubText = `You are trying to create a project to work with ${modLoader} for ${version} minecraft version, but unfortunately kubejs does not support this version, therefore Made also cannot work with this version. If you are sure that kubejs supports ${version} ${modLoader} let us know on the issues page on github.`;
+                    this.$refs.errDialogWithGithub.showDialog();
+
+                }
+
+            });
         },
         closeWarningDialog() {
             alert("closeWarningDialog")
@@ -122,7 +147,7 @@ export default {
                 }
             }
             return false;
-        }
+        },
     }
 };
 </script>
@@ -138,13 +163,13 @@ export default {
     color: var(--front);
     font-family: 'Figtree';
     letter-spacing: 1px;
-    font-size: calc(2.3vh + 1.1vw + 11px);
+    font-size: calc(2.4vh + 1.1vw + 12px);
     font-weight: 500;
     margin-bottom: calc(10px + 1%);
 }
 
 .new-line {
-    margin-top: calc(3vh - 3px);
+    margin-top: calc(2.8vh - 3px);
     align-items: center;
     display: flex;
 }
@@ -154,19 +179,19 @@ export default {
     color: var(--front);
     font-family: 'Figtree';
     letter-spacing: 1px;
-    font-size: calc(0.68vh + 0.38vw + 10px);
+    font-size: calc(0.68vh + 0.38vw + 13px);
     font-weight: 200;
 }
 
 .new-project-input {
-    height: calc(2vh + 9px + 0.15vw);
+    height: calc(2vh + 6px + 0.12vw);
     width: calc(38vw + 260px + 5vh);
     background-color: var(--back-2);
     border: 1px solid transparent;
     border-radius: calc(1px + 0.04vw + 0.1vh);
     margin-top: calc(-0.5vh - 10px);
     font-family: 'Figtree';
-    font-size: calc(0.5vh + 0.5vw + 6px);
+    font-size: calc(0.85vh + 0.3vw + 6px);
     font-weight: 300;
     color: var(--front);
 }

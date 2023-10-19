@@ -8,10 +8,13 @@
             <SettigsPage @goBack="currentPage = 'startingActions'" />
         </div>
         <div v-if="currentPage === 'projectCreation'">
-            <ProjectCreationPage @goBack="currentPage = 'startingActions'" />
+            <ProjectCreationPage @goBack="currentPage = 'startingActions'" @goToProjectPage="currentPage = 'projectEditing'"/>
         </div>
         <div v-if="currentPage === 'madeInfo'">
             <MadeInfoPage @goBack="currentPage = 'startingActions'" />
+        </div>
+        <div v-if="currentPage === 'projectEditing'">
+            <ProjectPage @goBack="currentPage = 'startingActions'"/>
         </div>
     </div>
 </template>
@@ -22,6 +25,8 @@ import StartingActionsPage from './components/pages/StartingActionsPage.vue';
 import SettigsPage from './components/pages/SettigsPage.vue';
 import ProjectCreationPage from './components/pages/ProjectCreationPage.vue';
 import MadeInfoPage from './components/pages/MadeInfoPage.vue';
+import ProjectPage from './components/pages/ProjectPage.vue';
+
 
 import { CurrentThemeColors } from "../wailsjs/go/themerelated/ThemeCollection";
 
@@ -30,7 +35,8 @@ export default {
         StartingActionsPage,
         SettigsPage,
         ProjectCreationPage,
-        MadeInfoPage
+        MadeInfoPage,
+        ProjectPage
     },
     data() {
         return {

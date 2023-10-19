@@ -18,6 +18,10 @@ export function ChooseProject() {
   return window['go']['projectrelated']['ProjectManager']['ChooseProject']();
 }
 
+export function CreateProject(arg1, arg2, arg3, arg4) {
+  return window['go']['projectrelated']['ProjectManager']['CreateProject'](arg1, arg2, arg3, arg4);
+}
+
 export function GetInformationToFillCreationForm(arg1) {
   return window['go']['projectrelated']['ProjectManager']['GetInformationToFillCreationForm'](arg1);
 }
@@ -26,6 +30,6 @@ export function SaveToFile() {
   return window['go']['projectrelated']['ProjectManager']['SaveToFile']();
 }
 
-export function TryCreateProject(arg1, arg2, arg3, arg4) {
-  return window['go']['projectrelated']['ProjectManager']['TryCreateProject'](arg1, arg2, arg3, arg4);
+export function SetCurrentProjectByFolder(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['SetCurrentProjectByFolder'](arg1);
 }

@@ -38,6 +38,7 @@ export default {
 }
 
 .error-text {
+    white-space: pre-line;
     font-family: 'Figtree';
     color: var(--front);
     font-size: calc(0.6vh + 0.55vw + 6px);

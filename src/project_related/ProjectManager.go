@@ -73,20 +73,34 @@ func (pm *ProjectManager) SaveToFile() {
 	}
 }
 
-func (pm *ProjectManager) TryCreateProject(name, pathToFolder, version string, loader src.Loader) bool {
+func (pm *ProjectManager) CreateProject(name, pathToFolder, version string, loader src.Loader) string {
 	fullPath := filepath.Join(pathToFolder, name+MadeProjectFileExt)
 
-	if _, err := os.Stat(pathToFolder); os.IsNotExist(err) {
-		return false
+	if _, err := os.Stat(pathToFolder); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Sprintf("path does not exist: %s", pathToFolder)
+		}
+		return fmt.Sprintf("error checking path: %s", err)
 	}
 
 	project := NewMadeProject(name, fullPath, pathToFolder, version, loader)
-	project.SaveToFile()
+	if err := project.SaveToFile(); err != nil {
+		return fmt.Sprintf("error saving project to file: %s", err)
+	}
 	pm.ProjectLinks = append(pm.ProjectLinks, project.FullPath)
-
 	pm.SaveToFile()
-	return true
+	return ""
 }
+
+func (pm *ProjectManager) SetCurrentProjectByFolder(folderPath string) {
+	for _, project := range pm.Projects {
+		if project.PathToFolder == folderPath {
+			pm.CurrentProject = project
+			break
+		}
+	}
+}
+
 func (pm *ProjectManager) AnyMadeProjectFilesInFolder(pathToFolder string) bool {
 	if _, err := os.Stat(pathToFolder); os.IsNotExist(err) {
 		return false
