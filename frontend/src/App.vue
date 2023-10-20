@@ -2,7 +2,7 @@
     <div>
         <div v-if="currentPage === 'startingActions'">
             <StartingActionsPage @createNewProject="currentPage = 'projectCreation'"
-                @changeToInfo="currentPage = 'madeInfo'" @changeToSettings="currentPage = 'settings'" />
+                @changeToInfo="currentPage = 'madeInfo'" @changeToSettings="currentPage = 'settings'"  @goToProjectPage="currentPage = 'projectEditing'"/>
         </div>
         <div v-if="currentPage === 'settings'">
             <SettigsPage @goBack="currentPage = 'startingActions'" />

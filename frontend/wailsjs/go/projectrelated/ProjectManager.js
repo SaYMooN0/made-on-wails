@@ -22,8 +22,16 @@ export function CreateProject(arg1, arg2, arg3, arg4) {
   return window['go']['projectrelated']['ProjectManager']['CreateProject'](arg1, arg2, arg3, arg4);
 }
 
+export function CurrentProject() {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProject']();
+}
+
 export function GetInformationToFillCreationForm(arg1) {
   return window['go']['projectrelated']['ProjectManager']['GetInformationToFillCreationForm'](arg1);
+}
+
+export function GetProjects() {
+  return window['go']['projectrelated']['ProjectManager']['GetProjects']();
 }
 
 export function SaveToFile() {

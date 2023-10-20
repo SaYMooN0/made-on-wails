@@ -1,3 +1,191 @@
+export namespace minecraftrelated {
+	
+	export class Block {
+	    id: string;
+	    inGameName: string;
+	    maxStackSize: number;
+	    burnTime?: number;
+	    fireResistant: boolean;
+	    hardness: number;
+	    resistance: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Block(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.inGameName = source["inGameName"];
+	        this.maxStackSize = source["maxStackSize"];
+	        this.burnTime = source["burnTime"];
+	        this.fireResistant = source["fireResistant"];
+	        this.hardness = source["hardness"];
+	        this.resistance = source["resistance"];
+	    }
+	}
+	export class Item {
+	    Id: string;
+	    InGameName: string;
+	    MaxStackSize: number;
+	    BurnTime?: number;
+	    FireResistant: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new Item(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Id = source["Id"];
+	        this.InGameName = source["InGameName"];
+	        this.MaxStackSize = source["MaxStackSize"];
+	        this.BurnTime = source["BurnTime"];
+	        this.FireResistant = source["FireResistant"];
+	    }
+	}
+	export class ProcessingType {
+	    id: string;
+	    inGameName: string;
+	    isSupportedByMade: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ProcessingType(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.inGameName = source["inGameName"];
+	        this.isSupportedByMade = source["isSupportedByMade"];
+	    }
+	}
+	export class Tag {
+	    id: string;
+	    inGameName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Tag(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.inGameName = source["inGameName"];
+	    }
+	}
+	export class Mod {
+	    id: string;
+	    inGameName: string;
+	    items: Item[];
+	    blocks: Block[];
+	    tags: Tag[];
+	    supportedTypes: ProcessingType[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Mod(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.inGameName = source["inGameName"];
+	        this.items = this.convertValues(source["items"], Item);
+	        this.blocks = this.convertValues(source["blocks"], Block);
+	        this.tags = this.convertValues(source["tags"], Tag);
+	        this.supportedTypes = this.convertValues(source["supportedTypes"], ProcessingType);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+
+}
+
+export namespace projectrelated {
+	
+	export class ProjectSettings {
+	    showWarningWhenDeletingAction: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ProjectSettings(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.showWarningWhenDeletingAction = source["showWarningWhenDeletingAction"];
+	    }
+	}
+	export class MadeProject {
+	    Name: string;
+	    FullPath: string;
+	    PathToFolder: string;
+	    Version: string;
+	    Loader: number;
+	    // Go type: time
+	    CreationDate: any;
+	    // Go type: time
+	    LastUpdated: any;
+	    Settings: ProjectSettings;
+	    History: HistoryItem[];
+	    Mods: minecraftrelated.Mod[];
+	
+	    static createFrom(source: any = {}) {
+	        return new MadeProject(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Name = source["Name"];
+	        this.FullPath = source["FullPath"];
+	        this.PathToFolder = source["PathToFolder"];
+	        this.Version = source["Version"];
+	        this.Loader = source["Loader"];
+	        this.CreationDate = this.convertValues(source["CreationDate"], null);
+	        this.LastUpdated = this.convertValues(source["LastUpdated"], null);
+	        this.Settings = this.convertValues(source["Settings"], ProjectSettings);
+	        this.History = this.convertValues(source["History"], HistoryItem);
+	        this.Mods = this.convertValues(source["Mods"], minecraftrelated.Mod);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+
+}
+
 export namespace themerelated {
 	
 	export class Theme {

@@ -2,20 +2,33 @@
   <div class="project-item" @click="projectItemClicked(project.PathToFolder)">
     <label class="project-text-name">{{ project.Name }}</label>
     <label class="project-text-path">{{ project.FullPath }}</label>
-    <svg class="project-more-button" fill="#000000" version="1.1" viewBox="0 0 342.382 342.382" xml:space="preserve">
-                <path d="M45.225,125.972C20.284,125.972,0,146.256,0,171.191c0,24.94,20.284,45.219,45.225,45.219c24.926,0,45.219-20.278,45.219-45.219C90.444,146.256,70.151,125.972,45.225,125.972z" />
-                <path d="M173.409,125.972c-24.938,0-45.225,20.284-45.225,45.219c0,24.94,20.287,45.219,45.225,45.219c24.936,0,45.226-20.278,45.226-45.219C218.635,146.256,198.345,125.972,173.409,125.972z" />
-                <path d="M297.165,125.972c-24.932,0-45.222,20.284-45.222,45.219c0,24.94,20.29,45.219,45.222,45.219 c24.926,0,45.217-20.278,45.217-45.219C342.382,146.256,322.091,125.972,297.165,125.972z" />
-            </svg>
+    <svg class="project-more-button" fill="#000000" version="1.1" viewBox="0 0 342.382 342.382" xml:space="preserve"
+      @click="projectItemMoreButtonClicked($event, project.PathToFolder)">
+      <path
+        d="M45.225,125.972C20.284,125.972,0,146.256,0,171.191c0,24.94,20.284,45.219,45.225,45.219c24.926,0,45.219-20.278,45.219-45.219C90.444,146.256,70.151,125.972,45.225,125.972z" />
+      <path
+        d="M173.409,125.972c-24.938,0-45.225,20.284-45.225,45.219c0,24.94,20.287,45.219,45.225,45.219c24.936,0,45.226-20.278,45.226-45.219C218.635,146.256,198.345,125.972,173.409,125.972z" />
+      <path
+        d="M297.165,125.972c-24.932,0-45.222,20.284-45.222,45.219c0,24.94,20.29,45.219,45.222,45.219 c24.926,0,45.217-20.278,45.217-45.219C342.382,146.256,322.091,125.972,297.165,125.972z" />
+    </svg>
     <label class="project-text-version">{{ project.Loader }} {{ project.Version }}</label>
   </div>
 </template>
   
 <script>
+import {SetCurrentProjectByFolder } from "../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: ['project'],
   methods: {
     projectItemClicked(path) {
+      SetCurrentProjectByFolder(path).then(() => {
+        this.$emit('goToProjectPage');
+      })
+    },
+    projectItemMoreButtonClicked(e, path) {
+      e.stopPropagation();
+      console.log(path);
+     
     }
   }
 }
@@ -86,19 +99,25 @@ export default {
   margin-left: 24%;
   margin-top: calc(1px + 5%);
   grid-area: more;
-  width: calc(1.3vw + 9px);
+  width: calc(1.5vw + 9px);
   aspect-ratio: 1/1;
   cursor: pointer;
-  cursor: pointer;
+  padding: calc(1px + 4%);
+  border-radius: calc(0.12vw + 0.07vh + 3px);
 }
 
 .project-more-button path {
   fill: var(--front-2);
+
 }
 
 .project-more-button:hover path {
-  fill: var(--bright-2);
+  fill: var(--bright);
 
+}
+
+.project-more-button:hover {
+  background-color: var(--back-3);
 }
 
 .corrupted-sign {

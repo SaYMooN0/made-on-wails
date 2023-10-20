@@ -13,7 +13,11 @@ export function ChooseProject():Promise<string>;
 
 export function CreateProject(arg1:string,arg2:string,arg3:string,arg4:src.Loader):Promise<string>;
 
+export function CurrentProject():Promise<projectrelated.MadeProject>;
+
 export function GetInformationToFillCreationForm(arg1:string):Promise<projectrelated.ProjectCreationInformation>;
+
+export function GetProjects():Promise<Array<projectrelated.MadeProject>>;
 
 export function SaveToFile():Promise<void>;
 

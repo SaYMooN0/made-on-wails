@@ -19,26 +19,29 @@ type ProjectManager struct {
 	ProjectLinks       []string        `json:"_projectLinks"`
 	PinnedProjectLinks []string        `json:"_pinnedProjectLinks"`
 	Projects           []MadeProject   `json:"-"`
-	CurrentProject     MadeProject     `json:"-"`
+	currentProject     MadeProject     `json:"-"`
 	ctx                context.Context `json:"-"`
 }
 
+func (pm *ProjectManager) CurrentProject() MadeProject {
+	fmt.Println(pm.currentProject)
+	return pm.currentProject
+}
 func InitializeProjectManager() *ProjectManager {
 	if _, err := os.Stat(linksFileName); os.IsNotExist(err) {
 		return &ProjectManager{}
 
 	}
-
 	data, _ := os.ReadFile(linksFileName)
 	pm := &ProjectManager{}
 	json.Unmarshal(data, pm)
-
+	pm.Projects = pm.GetProjects()
 	return pm
 }
 func (pm *ProjectManager) SetStartupOnContext(ctx context.Context) {
 	pm.ctx = ctx
 }
-func (pm *ProjectManager) getProjects() []MadeProject {
+func (pm *ProjectManager) GetProjects() []MadeProject {
 	var projects []MadeProject
 
 	for _, projectString := range pm.ProjectLinks {
@@ -47,7 +50,6 @@ func (pm *ProjectManager) getProjects() []MadeProject {
 			projects = append(projects, *project)
 		}
 	}
-
 	return projects
 }
 
@@ -68,7 +70,7 @@ func (pm *ProjectManager) SaveToFile() {
 	data, _ := json.MarshalIndent(pm, "", "  ")
 	os.WriteFile(linksFileName, data, 0644)
 
-	for _, project := range pm.getProjects() {
+	for _, project := range pm.GetProjects() {
 		project.SaveToFile()
 	}
 }
@@ -93,12 +95,14 @@ func (pm *ProjectManager) CreateProject(name, pathToFolder, version string, load
 }
 
 func (pm *ProjectManager) SetCurrentProjectByFolder(folderPath string) {
-	for _, project := range pm.Projects {
+
+	for _, project := range pm.GetProjects() {
 		if project.PathToFolder == folderPath {
-			pm.CurrentProject = project
+			pm.currentProject = project
 			break
 		}
 	}
+
 }
 
 func (pm *ProjectManager) AnyMadeProjectFilesInFolder(pathToFolder string) bool {
