@@ -24,7 +24,6 @@ export default {
     cursor: pointer;
     margin-left: 2.5%;
     border: 1px solid transparent;
-    transition: 0.12s;
 }
 
 .left-panel-btn:hover {

@@ -2,24 +2,24 @@
     <div>
         <div v-if="currentPage === 'startingActions'">
             <StartingActionsPage @createNewProject="currentPage = 'projectCreation'"
-                @changeToInfo="currentPage = 'madeInfo'" @changeToSettings="currentPage = 'settings'"  @goToProjectPage="currentPage = 'projectEditing'"/>
+                @changeToInfo="currentPage = 'madeInfo'" @changeToSettings="currentPage = 'settings'"
+                @goToProjectPage="currentPage = 'projectEditing'" />
         </div>
         <div v-if="currentPage === 'settings'">
             <SettigsPage @goBack="currentPage = 'startingActions'" />
         </div>
         <div v-if="currentPage === 'projectCreation'">
-            <ProjectCreationPage @goBack="currentPage = 'startingActions'" @goToProjectPage="currentPage = 'projectEditing'"/>
+            <ProjectCreationPage @goBack="currentPage = 'startingActions'"
+                @goToProjectPage="currentPage = 'projectEditing'" />
         </div>
         <div v-if="currentPage === 'madeInfo'">
             <MadeInfoPage @goBack="currentPage = 'startingActions'" />
         </div>
         <div v-if="currentPage === 'projectEditing'">
-            <ProjectPage @goBack="currentPage = 'startingActions'"/>
+            <ProjectPage @goBack="currentPage = 'startingActions'" />
         </div>
     </div>
 </template>
-
-  
 <script>
 import StartingActionsPage from './components/pages/StartingActionsPage.vue';
 import SettigsPage from './components/pages/SettigsPage.vue';

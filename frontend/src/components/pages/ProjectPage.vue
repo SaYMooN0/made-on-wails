@@ -1,6 +1,6 @@
 <template>
   <div id="action-choosing-container" class="action-choosing-part">
-    <LeftPanelButton buttonLabel="Modify recipes" @createTab="console.log('Modify recipes')">
+    <LeftPanelButton buttonLabel="Modify recipes" @createTab="modifyRecipesTab">
       <svg fill="#000000" class="left-panel-btn-icon left-panel-btn-icon-big left-panel-btn-icon-fill" version="1.1"
         viewBox="0 0 452.025 452.025" xml:space="preserve">
         <path d="M147.912,363.325c-4.7-4.7-12.3-4.7-17,0c-4.7,4.7-4.7,12.3,0,17l13.6,13.6h-55.2c-35.9,0-65-29.2-65-65v-40.3
@@ -143,19 +143,31 @@
       </LeftPanelButton>
     </div>
   </div>
-  <div class="modification-part" id="containerForPages">
-    <ul id="sortable" class="tabsContainer">
-    </ul>
+  <div class="main-content-part">
+    <TabsContainer :tabs="tabsList" @change="activeTab = $event" :activeTabId="activeTab" />
+    <div v-for="tab in tabsList" :key="tab.id" v-show="activeTab === tab.id" class="tabs-content-part">
+      <component :is="tab.component"></component>
+    </div>
+
   </div>
+
   <!-- <button @click="backToMain">Назад</button> -->
 </template>
   
 <script>
 import { CurrentProject } from "../../../wailsjs/go/projectrelated/ProjectManager";
 import LeftPanelButton from '../LeftPanelButton.vue';
+import TabsContainer from '../ProjectPageTabsContainer.vue';
+import Welcome from '../projectPageTabs/Welcome.vue';
+import ModifyRecipes from '../projectPageTabs/ModifyRecipes.vue';
+
+import { ref } from 'vue';
 export default {
   components: {
-    LeftPanelButton
+    LeftPanelButton,
+    TabsContainer,
+    Welcome,
+    ModifyRecipes
   },
   data() {
     return {
@@ -172,11 +184,38 @@ export default {
     fetchProject() {
       CurrentProject().then((projectToFetch) => {
         this.project = projectToFetch;
-        console.log(projectToFetch);
-        console.log(this.project);
       });
     },
+    modifyRecipesTab() {
+      this.addNewTab('recipes', "Recipes", 'ModifyRecipes');
+    }
   },
+  setup() {
+    const tabsList = ref([
+      { id: 'welcome', name: 'Welcome', component: Welcome },
+    ]);
+    const activeTab = ref('welcome');
+    const addNewTab = (id, name, component) => {
+      if (!id || !name || !component) {
+        console.error("Error in project page");
+        return;
+      }
+      const existingTab = tabsList.value.find(tab => tab.id === id);
+      if (existingTab) {
+        activeTab.value = id;
+      } else {
+        const newTab = { id, name, component };
+        tabsList.value.push(newTab);
+        activeTab.value = id;
+      }
+    };
+
+    return {
+      activeTab,
+      tabsList,
+      addNewTab
+    };
+  }
 }
 </script>
 <style scoped>
@@ -185,79 +224,8 @@ body {
   margin: 0;
 }
 
-#sortable {
-  width: 100%;
-  max-width: 100%;
-  margin-left: 0;
-  padding: 0;
-  font-size: 0;
-  list-style-type: none;
-  white-space: nowrap;
-  overflow-y: auto;
-}
-
-
-#sortable::-webkit-scrollbar {
-  height: calc(40% + 9px);
-}
-
-#sortable::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background-color: var(--front-2);
-}
-
-#sortable::-webkit-scrollbar {
-  width: calc(0.3vw + 6px);
-  max-width: calc(9px);
-}
-
-#sortable::-webkit-scrollbar-thumb:hover {
-  background-color: var(--bright);
-}
-
-
-.tab-item {
-  font-size: calc(0.22vh + 0.3vw + 10px);
-  font-weight: 400;
-  background-color: var(--back-2);
-  border: calc(0.04vw + 1px) solid var(--back-3);
-  float: left;
-  height: calc(0.8vh + 22px);
-  display: inline-flex;
-  padding-right: 0;
-  transition: background-color 0.08s;
-}
-
-.tab-item path {
-  display: none;
-}
-
-.tab-item:hover {
-  background-color: var(--back-3);
-}
-
-.tab-item:hover path {
-  display: block;
-}
-
-.tab-item label {
-  height: 100%;
-  text-decoration: none;
-  align-self: center;
-  color: var(--front);
-  font-family: 'Bahnschrift';
-  display: flex;
-  align-items: center;
-  padding-left: calc(0.3vw + 5px);
-}
-
-.tabsContainer {
-  margin-top: calc(6px + 0.4vh);
-  background-color: var(--back-2);
-  height: calc(0.8vh + 24px);
-  list-style-type: none;
-  padding: 0;
-  overflow: hidden;
+.tabs-content-part {
+  height: calc(97vh - 44px);
 }
 
 .action-choosing-part {
@@ -269,19 +237,19 @@ body {
   left: 0;
 }
 
-.modification-part {
+.main-content-part {
   position: absolute;
   top: 0;
   right: 0;
   width: calc(96vw - 100px - 7vh);
-  max-width: calc(96vw - 100px - 7vh);
   height: 100vh;
 }
+
 .bottom-action-btns-container {
-    position: absolute;
-    width: 100%;
-    bottom: calc(1vh - 4px);
-    display: flex;
-    flex-direction: column;
+  position: absolute;
+  width: 100%;
+  bottom: calc(1vh - 4px);
+  display: flex;
+  flex-direction: column;
 }
 </style>
