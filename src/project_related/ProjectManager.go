@@ -24,7 +24,6 @@ type ProjectManager struct {
 }
 
 func (pm *ProjectManager) CurrentProject() MadeProject {
-	fmt.Println(pm.currentProject)
 	return pm.currentProject
 }
 func InitializeProjectManager() *ProjectManager {

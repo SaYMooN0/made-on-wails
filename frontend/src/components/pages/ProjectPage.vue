@@ -25,7 +25,7 @@
       </svg>
     </LeftPanelButton>
 
-    <LeftPanelButton buttonLabel="Modify items" @createTab="console.log('Modify items')">
+    <LeftPanelButton buttonLabel="Modify items" @createTab="modifyItemsTab">
       <svg fill="#000000" version="1.1" class="left-panel-btn-icon left-panel-btn-icon-fill" viewBox="0 0 593.321 593.321"
         xml:space="preserve">
         <g>
@@ -80,14 +80,14 @@
         </g>
       </svg>
     </LeftPanelButton>
-    <LeftPanelButton buttonLabel="Modify blocks" @createTab="console.log('Modify blocks')">
+    <LeftPanelButton buttonLabel="Modify blocks" @createTab="modifyBlocksTab">
       <svg class="left-panel-btn-icon-stroke left-panel-btn-icon" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 7.5L11.6078 3.22062C11.7509 3.14014 11.8224 3.09991 11.8982 3.08414C11.9654 3.07019 12.0346 3.07019 12.1018 3.08414C12.1776 3.09991 12.2491 3.14014 12.3922 3.22062L20 7.5M4 7.5V16.0321C4 16.2025 4 16.2876 4.02499 16.3637C4.04711 16.431 4.08326 16.4928 4.13106 16.545C4.1851 16.6041 4.25933 16.6459 4.40779 16.7294L12 21M4 7.5L12 11.5M12 21L19.5922 16.7294C19.7407 16.6459 19.8149 16.6041 19.8689 16.545C19.9167 16.4928 19.9529 16.431 19.975 16.3637C20 16.2876 20 16.2025 20 16.0321V7.5M12 21V11.5M20 7.5L12 11.5"
           stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </LeftPanelButton>
-    <LeftPanelButton buttonLabel="Modify tags" @createTab="console.log('Modify tags')">
+    <LeftPanelButton buttonLabel="Modify tags" @createTab="modifyTagsTab">
       <svg class="left-panel-btn-icon left-panel-btn-icon-stroke" viewBox="0 0 24 24" fill="none">
         <path d="M10.6923 6L7.69231 19M6.38462 9.5H18.8847M16.1924 6L13.1924 19M5 15.5H17.5001" stroke="#000000"
           stroke-width="1.55" stroke-linecap="round" />
@@ -113,7 +113,7 @@
       </svg>
     </LeftPanelButton>
     <div class="bottom-action-btns-container">
-      <LeftPanelButton buttonLabel="Collections" @createTab="console.log('Collections')">
+      <LeftPanelButton buttonLabel="Collections" @createTab="collectionsTab">
         <svg class="left-panel-btn-icon left-panel-btn-icon-fill" viewBox="0 0 16 16" fill="none">
           <g fill="#000000">
             <path
@@ -124,7 +124,7 @@
           </g>
         </svg>
       </LeftPanelButton>
-      <LeftPanelButton buttonLabel="History" @createTab="console.log('History')">
+      <LeftPanelButton buttonLabel="History" @createTab="historyTab">
         <svg class="left-panel-btn-icon left-panel-btn-icon-fill" viewBox="0 0 16 16">
           <path
             d="M1.5 1.25a.75.75 0 011.5 0v1.851A7 7 0 111 8a.75.75 0 011.5 0 5.5 5.5 0 101.725-4H5.75a.75.75 0 010 1.5h-3.5a.75.75 0 01-.75-.75v-3.5z" />
@@ -133,7 +133,7 @@
             d="M8.25 4a.75.75 0 01.75.75v3.763l1.805.802a.75.75 0 01-.61 1.37l-2.25-1A.75.75 0 017.5 9V4.75A.75.75 0 018.25 4z" />
         </svg>
       </LeftPanelButton>
-      <LeftPanelButton buttonLabel="Settings" @createTab="console.log('Settings')">
+      <LeftPanelButton buttonLabel="Settings" @createTab="settingsTab">
         <svg class="left-panel-btn-icon left-panel-btn-icon-fill left-panel-btn-icon-stroke" viewBox="0 0 24 24">
           <path stroke-width="0.34" fill-rule="evenodd" clip-rule="evenodd"
             d="M12 8.25C9.92894 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92894 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25ZM9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z" />
@@ -143,15 +143,16 @@
       </LeftPanelButton>
     </div>
   </div>
+
   <div class="main-content-part">
-    <TabsContainer :tabs="tabsList" @change="activeTab = $event" :activeTabId="activeTab" />
-    <div v-for="tab in tabsList" :key="tab.id" v-show="activeTab === tab.id" class="tabs-content-part">
-      <component :is="tab.component"></component>
+    <TabsContainer :tabs="tabsList" @remove="removeTab" :activeTabId="activeTab"
+      @update:activeTabId="activeTab = $event" />
+    <div class="tabs-content-part">
+      <div v-for="tab in tabsList" :key="tab.id" v-show="activeTab === tab.id">
+        <component :is="tab.component"></component>
+      </div>
     </div>
-
   </div>
-
-  <!-- <button @click="backToMain">Назад</button> -->
 </template>
   
 <script>
@@ -160,14 +161,30 @@ import LeftPanelButton from '../LeftPanelButton.vue';
 import TabsContainer from '../ProjectPageTabsContainer.vue';
 import Welcome from '../projectPageTabs/Welcome.vue';
 import ModifyRecipes from '../projectPageTabs/ModifyRecipes.vue';
+import ModifyItems from '../projectPageTabs/ModifyItems.vue';
+import ModifyBlocks from '../projectPageTabs/ModifyBlocks.vue';
+import ModifyTags from '../projectPageTabs/ModifyTags.vue';
+import Collections from '../projectPageTabs/Collections.vue';
+import History from '../projectPageTabs/History.vue';
+import Settings from '../projectPageTabs/Settings.vue';
 
 import { ref } from 'vue';
+
+const WELCOME_TAB = { id: 'welcome', name: 'Welcome', component: Welcome };
+
 export default {
+  emits: ['goBack'],
   components: {
     LeftPanelButton,
     TabsContainer,
     Welcome,
-    ModifyRecipes
+    ModifyRecipes,
+    ModifyItems,
+    ModifyBlocks,
+    ModifyTags,
+    Collections,
+    History,
+    Settings
   },
   data() {
     return {
@@ -186,38 +203,56 @@ export default {
         this.project = projectToFetch;
       });
     },
-    modifyRecipesTab() {
-      this.addNewTab('recipes', "Recipes", 'ModifyRecipes');
-    }
+    modifyRecipesTab() { this.addNewTab('recipes', "Recipes", 'ModifyRecipes'); },
+    modifyItemsTab() { this.addNewTab('items', "Items", 'ModifyItems'); },
+    modifyBlocksTab() { this.addNewTab('blocks', "Blocks", 'ModifyBlocks'); },
+    modifyTagsTab() { this.addNewTab('tags', "Tags", 'ModifyTags'); },
+    settingsTab() { this.addNewTab('settings', "Settings", 'Settings'); },
+    historyTab() { this.addNewTab('history', "History", 'History'); },
+    collectionsTab() { this.addNewTab('collections', "Collections", 'Collections'); }
   },
   setup() {
-    const tabsList = ref([
-      { id: 'welcome', name: 'Welcome', component: Welcome },
-    ]);
-    const activeTab = ref('welcome');
+    const tabsList = ref([WELCOME_TAB]);
+    const activeTab = ref(WELCOME_TAB.id);
+
     const addNewTab = (id, name, component) => {
-      if (!id || !name || !component) {
-        console.error("Error in project page");
-        return;
-      }
       const existingTab = tabsList.value.find(tab => tab.id === id);
-      if (existingTab) {
+      if (!existingTab) {
+        tabsList.value.push({ id, name, component });
+      }
+      nextTick(() => {
         activeTab.value = id;
-      } else {
-        const newTab = { id, name, component };
-        tabsList.value.push(newTab);
-        activeTab.value = id;
+      });
+    };
+
+    const addWelcomeTab = () => {
+      tabsList.value.push(WELCOME_TAB);
+      activeTab.value = WELCOME_TAB.id;
+    };
+
+    const removeTab = (id) => {
+      const tabIndex = tabsList.value.findIndex(tab => tab.id === id);
+      if (tabIndex !== -1) {
+        tabsList.value.splice(tabIndex, 1);
+        if (activeTab.value === id) {
+          activeTab.value = tabsList.value.length ? tabsList.value[0].id : null;
+        }
+      }
+      if (tabsList.value.length === 0) {
+        addWelcomeTab();
       }
     };
 
     return {
       activeTab,
       tabsList,
-      addNewTab
+      addNewTab,
+      removeTab
     };
   }
 }
 </script>
+
 <style scoped>
 body {
   background-color: var(--back);

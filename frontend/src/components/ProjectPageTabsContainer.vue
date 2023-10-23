@@ -1,15 +1,15 @@
 <template>
   <div class="tabs-container">
-    <VueDraggableNext v-model="tabsList" class="tab-list">
-      <ProjectPageTab v-for="tab in tabsList" :key="tab.id" :tab="tab" @select="setActiveTab"
+    <VueDraggableNext :list="tabsList" @update:list="updateTabs" class="tab-list">
+      <ProjectPageTab v-for="tab in tabsList" :key="tab.id" :tab="tab" @select="setActiveTab" @remove="removeTab"
         :isActive="activeTabId === tab.id" />
     </VueDraggableNext>
   </div>
 </template>
 
 <script>
-import { ref, toRefs } from 'vue';
-import { VueDraggableNext } from 'vue-draggable-next'
+import { ref, shallowRef } from 'vue';
+import { VueDraggableNext } from 'vue-draggable-next';
 import ProjectPageTab from './ProjectPageTab.vue';
 
 export default {
@@ -19,17 +19,31 @@ export default {
   },
   props: ['tabs', 'activeTabId'],
   setup(props, { emit }) {
-    const { tabs, activeTabId } = toRefs(props);
 
-    const tabsList = ref(tabs.value);
-
+    const tabsList = shallowRef(props.tabs);
+    const activeTabId = ref(props.activeTabId);
     const setActiveTab = (tabId) => {
-      emit('change', tabId);
+      activeTabId.value = tabId;
+      emit('update:activeTabId', tabId);
+    };
+    const removeTab = (tabId) => {
+      const index = tabsList.value.findIndex(tab => tab.id === tabId);
+      if (index !== -1) {
+        tabsList.value.splice(index, 1);
+      }
+      emit('remove', tabId);
+    };
+    const updateTabs = (newList) => {
+      tabsList.value = [...newList];
+      emit('update:tabs', tabsList.value);
     };
 
     return {
       tabsList,
-      setActiveTab
+      activeTabId,
+      setActiveTab,
+      removeTab,
+      updateTabs
     };
   }
 }
@@ -48,6 +62,7 @@ export default {
   height: calc(0.8vh + 24px);
   padding: 0;
 }
+
 .tabs-container::-webkit-scrollbar {
   height: calc(40% + 9px);
 }
