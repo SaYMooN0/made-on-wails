@@ -10,6 +10,7 @@
     </svg>
   </div>
 </template>
+
 <script>
 export default {
   props: ['tab', 'isActive'],

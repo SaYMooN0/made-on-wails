@@ -220,11 +220,8 @@ export default {
       if (!existingTab) {
         tabsList.value.push({ id, name, component });
       }
-      nextTick(() => {
-        activeTab.value = id;
-      });
+      activeTab.value = id;
     };
-
     const addWelcomeTab = () => {
       tabsList.value.push(WELCOME_TAB);
       activeTab.value = WELCOME_TAB.id;
