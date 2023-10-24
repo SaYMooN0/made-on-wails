@@ -1,5 +1,5 @@
 <template>
-    <div class="left-panel-btn" @click="leftPanelButtonClick()">
+    <div class="left-panel-btn non-selectable" @click="leftPanelButtonClick()">
         <slot></slot>
         <label class="left-panel-label">{{ buttonLabel }}</label>
     </div>

@@ -230,15 +230,23 @@ export default {
     const removeTab = (id) => {
       const tabIndex = tabsList.value.findIndex(tab => tab.id === id);
       if (tabIndex !== -1) {
-        tabsList.value.splice(tabIndex, 1);
+        // Если удаляемая вкладка активна, измените активную вкладку
         if (activeTab.value === id) {
-          activeTab.value = tabsList.value.length ? tabsList.value[0].id : null;
+          if (tabsList.value[tabIndex + 1]) { // Если существует следующая вкладка
+            activeTab.value = tabsList.value[tabIndex + 1].id;
+          } else if (tabsList.value[tabIndex - 1]) { // Иначе если существует предыдущая вкладка
+            activeTab.value = tabsList.value[tabIndex - 1].id;
+          } else { // Если других вкладок нет
+            activeTab.value = null;
+          }
+        }
+        tabsList.value.splice(tabIndex, 1);
+        if (tabsList.value.length === 0) {
+          addWelcomeTab();
         }
       }
-      if (tabsList.value.length === 0) {
-        addWelcomeTab();
-      }
     };
+
 
     return {
       activeTab,
