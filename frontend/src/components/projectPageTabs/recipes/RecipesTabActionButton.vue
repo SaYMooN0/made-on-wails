@@ -24,26 +24,26 @@ export default {
 <style scoped>
 .action-button {
     box-sizing: border-box;
-    height: calc(5vh + 2.1vw + 60px);
-    width: calc(10vw + 2vh + 100px);
+    height: calc(5vh + 2.1vw + 64px);
+    width: calc(9vw + 2vh + 120px);
     display: grid;
-    grid-template-rows: 4fr 7fr;
+    grid-template-rows: 5fr 7fr;
     border: calc(0.12vw + 0.12vh) solid var(--front);
     border-radius: calc(0.25vw + 0.25vh + 8px);
     padding: 1vh;
     cursor: pointer;
-    transition: 0.1s;
+    transition: 0.12s;
 }
 
 .action-button:hover {
-    transform: scale(1.03);
+    transform: scale(1.035);
     background-color: var(--back-2);
 }
 
 .action-button-main-label {
     color: var(--front-3);
     font-family: 'Figtree';
-    font-size: calc(0.7vh + 0.82vw + 6px);
+    font-size: calc(0.7vh + 0.82vw + 8px);
     text-align: center;
     display: flex;
     align-items: center;

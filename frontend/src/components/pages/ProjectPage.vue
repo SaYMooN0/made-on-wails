@@ -160,13 +160,15 @@ import { CurrentProject } from "../../../wailsjs/go/projectrelated/ProjectManage
 import LeftPanelButton from '../LeftPanelButton.vue';
 import TabsContainer from '../ProjectPageTabsContainer.vue';
 import Welcome from '../projectPageTabs/Welcome.vue';
-import ModifyRecipes from '../projectPageTabs/ModifyRecipes.vue';
+import ModifyRecipes from '../projectPageTabs/recipes/ModifyRecipes.vue';
 import ModifyItems from '../projectPageTabs/ModifyItems.vue';
 import ModifyBlocks from '../projectPageTabs/ModifyBlocks.vue';
 import ModifyTags from '../projectPageTabs/ModifyTags.vue';
 import Collections from '../projectPageTabs/Collections.vue';
 import History from '../projectPageTabs/History.vue';
 import Settings from '../projectPageTabs/Settings.vue';
+import NewRecipe from '../projectPageTabs/recipes/NewRecipeTab.vue';
+
 
 import { ref } from 'vue';
 
@@ -184,7 +186,8 @@ export default {
     ModifyTags,
     Collections,
     History,
-    Settings
+    Settings,
+    NewRecipe
   },
   data() {
     return {
@@ -209,7 +212,8 @@ export default {
     modifyTagsTab() { this.addNewTab('tags', "Tags", 'ModifyTags'); },
     settingsTab() { this.addNewTab('settings', "Settings", 'Settings'); },
     historyTab() { this.addNewTab('history', "History", 'History'); },
-    collectionsTab() { this.addNewTab('collections', "Collections", 'Collections'); }
+    collectionsTab() { this.addNewTab('collections', "Collections", 'Collections'); },
+    changeToRecipeCreationTab() { this.addNewTab('new-recipe', "New recipe", 'NewRecipe'); this.removeTab('recipes'); }
   },
   setup() {
     const tabsList = ref([WELCOME_TAB]);
@@ -230,13 +234,12 @@ export default {
     const removeTab = (id) => {
       const tabIndex = tabsList.value.findIndex(tab => tab.id === id);
       if (tabIndex !== -1) {
-        // Если удаляемая вкладка активна, измените активную вкладку
         if (activeTab.value === id) {
-          if (tabsList.value[tabIndex + 1]) { // Если существует следующая вкладка
+          if (tabsList.value[tabIndex + 1]) {
             activeTab.value = tabsList.value[tabIndex + 1].id;
-          } else if (tabsList.value[tabIndex - 1]) { // Иначе если существует предыдущая вкладка
+          } else if (tabsList.value[tabIndex - 1]) {
             activeTab.value = tabsList.value[tabIndex - 1].id;
-          } else { // Если других вкладок нет
+          } else {
             activeTab.value = null;
           }
         }
@@ -254,7 +257,12 @@ export default {
       addNewTab,
       removeTab
     };
-  }
+  },
+  provide() {
+    return {
+      createNewRecipeTab: this.changeToRecipeCreationTab,
+    };
+  },
 }
 </script>
 

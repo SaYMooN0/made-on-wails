@@ -14,35 +14,33 @@
 </template>
 
 <script>
-import RecipesTabActionButton from '../tabsComponents/RecipesTabActionButton.vue';
+import RecipesTabActionButton from './RecipesTabActionButton.vue';
 
 export default {
     components: {
         RecipesTabActionButton
     },
+    inject: ['createNewRecipeTab'],
     methods: {
         createActionOnClick() {
-
+            this.createNewRecipeTab();
         },
         deleteActionOnClick() {
-
         },
         changeActionOnClick() {
-
         },
         moddedActionOnClick() {
-
         },
         groupActionOnClick() {
-
         }
     }
 }
+
 </script>
 <style scoped>
 .action-buttons-container {
     position: absolute;
-    top: 50%;
+    top: 52%;
     transform: translateY(-50%);
     display: flex;
     flex-wrap: wrap;
