@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit" class="furnace-form">
+    <form @submit.prevent="handleSubmit">
         <p class="input-line">
             <label class="default-input-label"> input: </label>
             <input class="default-input" type="text" v-model="inputValue">
@@ -10,7 +10,7 @@
         </p>
         <div class="furnace-radios-container">
             <label class="furnace-additional-type-label">Additional</label>
-            <label v-for="type in radioTypes" :key="type.value" class="default-radio-container">
+            <label v-for="type in radioTypes" :key="type.value" class="default-radio-container" >
                 <input class="default-radio" type="radio" name="furnace-type-choice" :value="type.value"
                     v-model="specialTypeValue">
                 <span class="default-radio-label">{{ type.label }}</span>

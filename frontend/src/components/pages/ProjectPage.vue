@@ -148,7 +148,7 @@
     <TabsContainer :tabs="tabsList" @remove="removeTab" :activeTabId="activeTab"
       @update:activeTabId="activeTab = $event" />
     <div class="tabs-content-part">
-      <div v-for="tab in tabsList" :key="tab.id" v-show="activeTab === tab.id">
+      <div v-for="tab in tabsList" :key="tab.id" v-show="activeTab === tab.id" style="height: 100%;">
         <component :is="tab.component"></component>
       </div>
     </div>
@@ -167,7 +167,7 @@ import ModifyTags from '../projectPageTabs/ModifyTags.vue';
 import Collections from '../projectPageTabs/Collections.vue';
 import History from '../projectPageTabs/History.vue';
 import Settings from '../projectPageTabs/Settings.vue';
-import NewRecipe from '../projectPageTabs/recipes/NewRecipeTab.vue';
+import NewRecipe from '../projectPageTabs/recipes/creationTab/NewRecipeTab.vue';
 
 
 import { ref } from 'vue';
@@ -273,7 +273,7 @@ body {
 }
 
 .tabs-content-part {
-  height: calc(97vh - 44px);
+  height: calc(96vh - 50px);
 }
 
 .action-choosing-part {

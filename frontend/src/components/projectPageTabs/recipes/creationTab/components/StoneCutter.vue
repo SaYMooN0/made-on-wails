@@ -1,24 +1,34 @@
 <template>
-    <form @submit.prevent="handleSubmit" class="stonecutter-form">
-      <p class="input-line">
-        <label class="default-input-label"> input: </label>
-        <input class="default-input" type="text" v-model="inputValue">
-      </p>
-    </form>
-  </template>
+  <form @submit.prevent="handleSubmit">
+    <DefLine labelText="input:">
+      <DefInput />
+    </DefLine>
+    <DefLine labelText="output:">
+      <DefInput />
+      <input class="default-input-num" type="number">
+    </DefLine>
+  </form>
+</template>
   
-  <script>
-  export default {
-    props: ['formArguments', 'actionId', 'path'],
-    computed: {
-      inputValue() {
-        return this.formArguments && this.formArguments.input ? this.formArguments.input : '';
-      },
+<script>
+import DefLine from './../../../../default/DefLine.vue';
+import DefInput from './../../../../default/DefInput.vue';
+
+export default {
+  props: ['formArguments', 'actionId', 'path'],
+  computed: {
+    inputValue() {
+      return this.formArguments && this.formArguments.input ? this.formArguments.input : '';
     },
-    methods: {
-      handleSubmit(event) {
-      }
+  },
+  methods: {
+    handleSubmit() {
     }
+  },
+  components: {
+    DefLine,
+    DefInput
   }
-  </script>
+}
+</script>
   

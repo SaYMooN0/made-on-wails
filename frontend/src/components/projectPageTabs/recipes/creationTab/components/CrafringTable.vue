@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit" class="crafting-table-form">
+    <form @submit.prevent="handleSubmit">
       <div class="crafting-grid">
         <div v-for="row in 3" :key="'row' + row" class="crafting-row">
           <input 
