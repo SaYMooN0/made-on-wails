@@ -20,6 +20,10 @@ export default {
 <style scoped>
 .line
 {
+    width: calc(100px + 60%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     
 }
 .label-text {

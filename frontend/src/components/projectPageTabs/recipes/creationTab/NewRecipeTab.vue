@@ -36,11 +36,9 @@ export default {
     height: 100%;
 }
 .recpe-content{
-    width: calc(100% - 4vw - 20px);
     display: flex;
-    padding-left: calc(4vw + 20px);
     padding-top: 2%;
-    padding-bottom: 6%;
+    height: calc(90vh - 4vw - 22px);
 }
 .type-select {
     height: calc(1vh + 25px + 0.6vw);

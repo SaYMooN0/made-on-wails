@@ -1,5 +1,5 @@
 <template>
-  <input type="text" class="default-input" @input="handleInput" />
+  <input type="text" class="default-input" @input="handleInputEvent" />
 </template>
 
 <script>
@@ -11,12 +11,13 @@ export default {
     }
   },
   methods: {
-    handleInput() {
+    handleInputEvent() {
       if (this.suggestion === 'item') {
         console.log('item');
       } else if (this.suggestion === 'type') {
         console.log('type');
       }
+      this.$emit('input', this.inputValue);
     }
   }
 }
@@ -25,7 +26,7 @@ export default {
 <style scoped>
 .default-input {
   height: calc(1.6vh + 8px + 0.25vw);
-  width: calc(20vw + 60px + 1vh);
+  width: calc(22vw + 70px + 1vh);
   background-color: var(--back-2);
   border: 1px solid transparent;
   border-radius: calc(2px + 0.05vw + 0.1vh);
@@ -33,8 +34,8 @@ export default {
   font-size: calc(0.88vh + 0.6vw + 7px);
   font-weight: 300;
   color: var(--front);
-  padding-left: calc(1px + 0.25vw + 0.25vh);
-  padding-right: calc(1px + 0.25vw + 0.25vh);
+  padding-left: calc(1px + 0.2vw + 0.2vh);
+  padding-right: calc(1px + 0.2vw + 0.2vh);
 }
 
 .default-input:focus {
