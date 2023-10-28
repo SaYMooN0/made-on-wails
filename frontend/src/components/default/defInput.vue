@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="text" class="default-input" @input="this.showSuggestions = true;" ref="inputRef"
+    <input type="text" class="default-input" @input="handleInput" ref="inputRef"
       @focus="showSuggestions = true; activeIndex = 0" @keydown="handleKeydown" v-model="inputValue" />
     <div v-if="showSuggestions && filteredSuggestions.length" class="suggestions-list">
       <div v-for="(suggestion, index) in filteredSuggestions" :key="suggestion" @click.stop="setActiveSuggestion(index)"
@@ -18,11 +18,15 @@ export default {
     suggestionType: {
       type: String,
       default: 'none'
+    },
+    value: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      inputValue: '',
+      inputValue: this.value,
       showSuggestions: false,
       activeIndex: 0
     };
@@ -47,6 +51,11 @@ export default {
     }
   },
   methods: {
+    handleInput(event) {
+      this.showSuggestions = true;
+      this.inputValue = event.target.value;
+      this.$emit('updateValue', this.inputValue);
+    },
     ensureActiveItemVisible() {
       const activeItem = this.$refs[`suggestion-${this.activeIndex}`][0];
       if (activeItem) {
@@ -65,8 +74,9 @@ export default {
       this.activeIndex = index;
     },
     selectSuggestion(suggestion) {
-      this.inputValue = suggestion;
       this.showSuggestions = false;
+      this.inputValue = suggestion;
+      this.$emit('updateValue', this.inputValue);
     },
     handleOutsideClick(event) {
       const inputContains = this.$refs.inputRef && this.$refs.inputRef.contains(event.target);

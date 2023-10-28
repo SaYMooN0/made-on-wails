@@ -7,7 +7,7 @@
     methods: {
       handleInputEvent(event) {
         const inputValue = parseFloat(event.target.value);
-        this.$emit('input', isNaN(inputValue) ? null : inputValue);
+        this.$emit('updateValue', isNaN(inputValue) ? null : inputValue);
       }
     }
   }

@@ -1,15 +1,15 @@
 <template>
   <form @submit.prevent="handleSubmit" class="form-container">
     <DefLine labelText="input:">
-      <DefInput ref="inputRef" :value="inputRef" suggestion-type="item" />
+      <DefInput :value="initialInput" @updateValue="this.inputValue = $event" suggestion-type="item" />
     </DefLine>
     <DefLine labelText="output:">
-      <DefInput ref="outputRef" :value="outputRef" suggestion-type="item" />
+      <DefInput :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
     </DefLine>
     <DefLine labelText="output count:">
-      <DefInputNum ref="outputCountRef" :value="outputCountRef" />
+      <DefInputNum :value="initialOutputCount" @updateValue="this.outputCountValue = $event" />
     </DefLine>
-    <DefSave @click="logValues" :submitText="submitTextValue" />
+    <DefSave :submitText="submitTextValue" />
   </form>
 </template>
   
@@ -20,23 +20,16 @@ import DefInputNum from './../../../../default/DefInputNum.vue';
 import DefSave from './../../../../default/DefSave.vue';
 
 export default {
-  data() {
-    return {
-      inputRef: this.inputValue,
-      outputRef: this.outputValue,
-      outputCountRef: this.outputCountValue
-    }
-  },
   props: {
-    inputValue: {
+    initialInput: {
       type: String,
       default: ''
     },
-    outputValue: {
+    initialOuput: {
       type: String,
       default: ''
     },
-    outputCountValue: {
+    initialOutputCount: {
       type: Number,
       default: 1
     },
@@ -45,12 +38,21 @@ export default {
       default: 'Save'
     }
   },
+  data() {
+    return {
+      inputValue: this.initialInput,
+      outputValue: this.initialOutput,
+      outputCountValue: this.initialOutputCount,
+      submitText: this.submitTextValue
+    };
+  },
   methods: {
     handleSubmit() {
-      console.log(this.$refs.inputRef.$el.value);
-      console.log(this.$refs.outputRef.$el.value);
-      console.log(this.$refs.outputCountRef.$el.value);
+      console.log(this.inputValue);
+      console.log(this.outputValue);
+      console.log(this.outputCountValue);
     },
+
   },
   components: {
     DefLine,
