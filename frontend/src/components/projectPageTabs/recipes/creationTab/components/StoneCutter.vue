@@ -1,15 +1,15 @@
 <template>
   <form @submit.prevent="handleSubmit" class="form-container">
     <DefLine labelText="input:">
-      <DefInput ref="inputRef" :value="inputRef" suggestion="item" />
+      <DefInput ref="inputRef" :value="inputRef" suggestion-type="item" />
     </DefLine>
     <DefLine labelText="output:">
-        <DefInput ref="outputRef" :value="outputRef" suggestion="item" />
+      <DefInput ref="outputRef" :value="outputRef" suggestion-type="item" />
     </DefLine>
     <DefLine labelText="output count:">
-        <DefInputNum ref="outputCountRef" :value="outputCountRef"/>
+      <DefInputNum ref="outputCountRef" :value="outputCountRef" />
     </DefLine>
-    <DefSave @click="logValues" :submitText="submitTextValue"/>
+    <DefSave @click="logValues" :submitText="submitTextValue" />
   </form>
 </template>
   
@@ -28,9 +28,6 @@ export default {
     }
   },
   props: {
-    formArguments: Object,
-    actionId: [String, Number],
-    path: String,
     inputValue: {
       type: String,
       default: ''
@@ -50,19 +47,16 @@ export default {
   },
   methods: {
     handleSubmit() {
-    },
-    logValues() {
-      // console.log(this.input);
       console.log(this.$refs.inputRef.$el.value);
       console.log(this.$refs.outputRef.$el.value);
       console.log(this.$refs.outputCountRef.$el.value);
-    }
+    },
   },
   components: {
     DefLine,
     DefInput,
     DefInputNum,
-    DefSave 
+    DefSave
   }
 }
 </script>
