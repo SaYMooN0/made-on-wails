@@ -42,7 +42,7 @@
     <ErrDialogWithGithub ref="errDialogWithGithub" :errorText="`${errDialogWithGithubText}`"> </ErrDialogWithGithub>
     <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`"></ErrorDialog>
 </template>
-  
+
 <script>
 import { ChooseFolderForNewProject, GetInformationToFillCreationForm, AnyMadeProjectFilesInFolder, CreateProject, SetCurrentProjectByFolder } from "../../../wailsjs/go/projectrelated/ProjectManager";
 import ErrDialogWithGithub from '../modalDialogs/ErrDialogWithGithub.vue';

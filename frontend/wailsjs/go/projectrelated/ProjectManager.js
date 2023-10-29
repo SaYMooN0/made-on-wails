@@ -26,6 +26,10 @@ export function CurrentProject() {
   return window['go']['projectrelated']['ProjectManager']['CurrentProject']();
 }
 
+export function CurrentProjectGetItemsTypeSuggestion(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProjectGetItemsTypeSuggestion'](arg1);
+}
+
 export function GetInformationToFillCreationForm(arg1) {
   return window['go']['projectrelated']['ProjectManager']['GetInformationToFillCreationForm'](arg1);
 }

@@ -8,7 +8,7 @@
         <div class='recpe-content'>
             <CrafringTable v-if="selectedType === 'crafting-table'" />
             <Furnace v-if="selectedType === 'furnace'" />
-            <Stonecutter v-if="selectedType === 'stonecutter'" initial-input="hahah" />
+            <Stonecutter v-if="selectedType === 'stonecutter'"/>
         </div>
     </div>
 </template>

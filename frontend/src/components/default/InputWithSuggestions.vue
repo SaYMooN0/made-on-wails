@@ -1,7 +1,7 @@
 <template>
   <div>
     <input type="text" class="default-input" @input="handleInput" ref="inputRef"
-      @focus="showSuggestions = true; activeIndex = 0" @keydown="handleKeydown" v-model="inputValue" />
+      @focus="showSuggestions = true; activeIndex = 0" v-model="inputValue" />
     <div v-if="showSuggestions && filteredSuggestions.length" class="suggestions-list">
       <div v-for="(suggestion, index) in filteredSuggestions" :key="suggestion" @click.stop="setActiveSuggestion(index)"
         @dblclick="selectSuggestion(suggestion)" :ref="`suggestion-${index}`"
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { CurrentProjectGetItemsTypeSuggestion } from "../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: {
     suggestionType: {
@@ -28,26 +29,28 @@ export default {
     return {
       inputValue: this.value,
       showSuggestions: false,
-      activeIndex: 0
+      activeIndex: 0,
+      suggestionItems: []
     };
+  },
+  watch: {
+    inputValue: {
+      handler: function (newValue) {
+        if (this.suggestionType == "item") {
+          CurrentProjectGetItemsTypeSuggestion(newValue.toLowerCase()).then((resievedSuggestions) => {
+            this.suggestionItems = resievedSuggestions;
+          });
+        }
+      },
+      immediate: true
+    }
   },
   computed: {
     filteredSuggestions() {
-      const lowerCaseInput = this.inputValue.toLowerCase();
-      let suggestionItems = [];
       if (this.suggestionType == "type") {
-        suggestionItems = [
-          "typqdf", "dsdsa", "dsda", "iopjqwdopdsop", "cczxczxc"
-        ];
+        return ["typqdf", "dsdsa", "dsda", "iopjqwdopdsop", "cczxczxc"];
       }
-      else if (this.suggestionType == "item") {
-        suggestionItems = [
-          'Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grape', 'Kiwi', 'Lemon',
-          'Mango', 'Nectarine', 'Orange', 'Papaya', 'Quince', 'Raspberry', 'Strawberry',
-          'Tangerine', 'Ugli Fruit', 'Vanilla', 'Watermelon', 'Xigua', 'Yuzu'
-        ];
-      }
-      return suggestionItems.filter(item => item.toLowerCase().includes(lowerCaseInput));
+      return this.suggestionItems;
     }
   },
   methods: {
@@ -124,9 +127,11 @@ export default {
   },
   mounted() {
     document.addEventListener("click", this.handleOutsideClick);
+    document.addEventListener("keydown", this.handleKeydown);  // Добавьте эту строку
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleOutsideClick);
+    document.removeEventListener("keydown", this.handleKeydown);  // Добавьте эту строку
   },
 }
 </script>

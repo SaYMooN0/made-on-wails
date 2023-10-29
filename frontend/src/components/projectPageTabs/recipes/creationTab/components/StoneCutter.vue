@@ -1,10 +1,10 @@
 <template>
   <form @submit.prevent="handleSubmit" class="form-container">
     <DefLine labelText="input:">
-      <DefInput :value="initialInput" @updateValue="this.inputValue = $event" suggestion-type="item" />
+      <InputWithSuggestions :value="initialInput" @updateValue="this.inputValue = $event" suggestion-type="item" />
     </DefLine>
     <DefLine labelText="output:">
-      <DefInput :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
+      <InputWithSuggestions :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
     </DefLine>
     <DefLine labelText="output count:">
       <DefInputNum :value="initialOutputCount" @updateValue="this.outputCountValue = $event" />
@@ -15,7 +15,7 @@
   
 <script>
 import DefLine from './../../../../default/DefLine.vue';
-import DefInput from './../../../../default/DefInput.vue';
+import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue';
 import DefInputNum from './../../../../default/DefInputNum.vue';
 import DefSave from './../../../../default/DefSave.vue';
 
@@ -56,7 +56,7 @@ export default {
   },
   components: {
     DefLine,
-    DefInput,
+    InputWithSuggestions,
     DefInputNum,
     DefSave
   }

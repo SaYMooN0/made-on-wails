@@ -16,19 +16,19 @@ const (
 	MadeProjectFileExt = ".madeProject"
 	KubejsModId        = "kubejs"
 )
+const TagChar byte = '#'
 
 type MadeProject struct {
-	Name                  string                 `json:"Name"`
-	FullPath              string                 `json:"FullPath"`
-	PathToFolder          string                 `json:"PathToFolder"`
-	Version               string                 `json:"Version"`
-	Loader                src.Loader             `json:"Loader"`
-	CreationDate          time.Time              `json:"CreationDate"`
-	LastUpdated           time.Time              `json:"LastUpdated"`
-	Settings              ProjectSettings        `json:"Settings"`
-	History               []HistoryItem          `json:"History"`
-	Mods                  []minecraft.Mod        `json:"Mods"`
-	SuggestionsCollection *SuggestionsCollection `json:"-"`
+	Name         string          `json:"Name"`
+	FullPath     string          `json:"FullPath"`
+	PathToFolder string          `json:"PathToFolder"`
+	Version      string          `json:"Version"`
+	Loader       src.Loader      `json:"Loader"`
+	CreationDate time.Time       `json:"CreationDate"`
+	LastUpdated  time.Time       `json:"LastUpdated"`
+	Settings     ProjectSettings `json:"Settings"`
+	History      []HistoryItem   `json:"History"`
+	Mods         []minecraft.Mod `json:"Mods"`
 }
 
 func (mp *MadeProject) SaveToFile() error {
@@ -58,12 +58,13 @@ func NewMadeProject(name, fullPath, pathToFolder, version string, loader src.Loa
 
 	minecraftMod := minecraft.NewMod("minecraft", "Minecraft")
 	minecraftMod.Items = append(minecraftMod.Items,
-		*minecraft.NewItemWithName("stone", "Stone"),
-		*minecraft.NewItemWithName("granite", "Granite"),
-		*minecraft.NewItemWithName("dirt", "Dirt"),
-		*minecraft.NewItemWithName("andesite", "Andesite"),
-		*minecraft.NewItemWithName("sand", "Sand"),
+		*minecraft.NewItemWithName("redstone", "Redstone"),
 	)
+	minecraftMod.Blocks = append(minecraftMod.Blocks,
+		*minecraft.NewBlockWithName("granite", "Granite"),
+		*minecraft.NewBlockWithName("dirt", "Dirt"),
+		*minecraft.NewBlockWithName("andesite", "Andesite"),
+		*minecraft.NewBlockWithName("sand", "Sand"))
 	minecraftMod.SupportedTypes = append(minecraftMod.SupportedTypes,
 		*minecraft.NewProcessingType("shapeless", "Shapeless crafting", true),
 		*minecraft.NewProcessingType("minecraft:campfire_cooking", "Campfire cooking", true),
@@ -85,33 +86,31 @@ func NewMadeProject(name, fullPath, pathToFolder, version string, loader src.Loa
 	}
 
 	return &MadeProject{
-		Name:                  name,
-		FullPath:              fullPath,
-		PathToFolder:          pathToFolder,
-		Version:               version,
-		Loader:                loader,
-		CreationDate:          currentTime,
-		LastUpdated:           currentTime,
-		Settings:              ProjectSettings{ShowWarningWhenDeletingAction: true}, // Assuming default initialization is fine
-		History:               []HistoryItem{},
-		Mods:                  modList,
-		SuggestionsCollection: NewSuggestionsCollection(loader, modList), // Assuming you have a constructor for this
+		Name:         name,
+		FullPath:     fullPath,
+		PathToFolder: pathToFolder,
+		Version:      version,
+		Loader:       loader,
+		CreationDate: currentTime,
+		LastUpdated:  currentTime,
+		Settings:     ProjectSettings{ShowWarningWhenDeletingAction: true}, // Assuming default initialization is fine
+		History:      []HistoryItem{},
+		Mods:         modList,
 	}
 }
 
 func NewMadeProjectWithParams(name, fullPath, pathToFolder, version string, loader src.Loader, creationDate, lastUpdated time.Time, settings ProjectSettings, history []HistoryItem, mods []minecraft.Mod) *MadeProject {
 	return &MadeProject{
-		Name:                  name,
-		FullPath:              fullPath,
-		PathToFolder:          pathToFolder,
-		Version:               version,
-		Loader:                loader,
-		CreationDate:          creationDate,
-		LastUpdated:           lastUpdated,
-		Settings:              settings,
-		History:               history,
-		Mods:                  mods,
-		SuggestionsCollection: NewSuggestionsCollection(loader, mods), // Assuming you have a constructor for this
+		Name:         name,
+		FullPath:     fullPath,
+		PathToFolder: pathToFolder,
+		Version:      version,
+		Loader:       loader,
+		CreationDate: creationDate,
+		LastUpdated:  lastUpdated,
+		Settings:     settings,
+		History:      history,
+		Mods:         mods,
 	}
 }
 func (mp *MadeProject) AddNewRecipe(actionType src.ActionType, arguments map[string]string) *HistoryItem {
@@ -307,4 +306,67 @@ func (mp *MadeProject) GetItemImgInBase64(itemId string) string {
 	}
 
 	return base64.StdEncoding.EncodeToString(data)
+}
+func (mp *MadeProject) GetItemsTypeSuggestion(input string) []string {
+	if input == "" {
+		return []string{}
+	}
+
+	if !strings.Contains(input, ":") {
+		var suggestions []string
+		for _, mod := range mp.Mods {
+			if strings.HasPrefix(input, string(TagChar)) {
+				if strings.Contains(mod.Id, strings.TrimPrefix(input, string(TagChar))) {
+					suggestions = append(suggestions, string(TagChar)+mod.Id)
+				}
+			} else {
+				if strings.Contains(mod.Id, input) {
+					suggestions = append(suggestions, mod.Id)
+				}
+			}
+		}
+		return suggestions
+	}
+
+	mod := getModFromInput(mp.Mods, input)
+	if mod == nil {
+		return []string{}
+	}
+
+	afterModIDString := strings.Split(input, ":")[1]
+
+	if input[0] == TagChar {
+		var tagSuggestions []string
+		for _, tag := range mod.Tags {
+			if strings.Contains(tag.Id, afterModIDString) {
+				tagSuggestions = append(tagSuggestions, string(TagChar)+mod.Id+":"+tag.Id)
+			}
+		}
+		return tagSuggestions
+	}
+
+	var itemSuggestions []string
+	for _, item := range mod.Items {
+		if strings.Contains(item.Id, afterModIDString) {
+			itemSuggestions = append(itemSuggestions, mod.Id+":"+item.Id)
+		}
+	}
+	for _, block := range mod.Blocks {
+		if strings.Contains(block.Id, afterModIDString) {
+			itemSuggestions = append(itemSuggestions, mod.Id+":"+block.Id)
+		}
+	}
+	return itemSuggestions
+}
+func getModFromInput(mods []minecraft.Mod, input string) *minecraft.Mod {
+	if len(input) > 0 && input[0] == TagChar {
+		input = input[1:]
+	}
+	modID := strings.Split(input, ":")[0]
+	for _, mod := range mods {
+		if mod.Id == modID {
+			return &mod
+		}
+	}
+	return nil
 }
