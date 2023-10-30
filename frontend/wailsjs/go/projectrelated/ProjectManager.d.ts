@@ -15,6 +15,8 @@ export function CreateProject(arg1:string,arg2:string,arg3:string,arg4:src.Loade
 
 export function CurrentProject():Promise<projectrelated.MadeProject>;
 
+export function CurrentProjectAddNewRecipe(arg1:src.ActionType,arg2:{[key: string]: string}):Promise<projectrelated.HistoryItem>;
+
 export function CurrentProjectGetItemsTypeSuggestion(arg1:string):Promise<Array<string>>;
 
 export function GetInformationToFillCreationForm(arg1:string):Promise<projectrelated.ProjectCreationInformation>;

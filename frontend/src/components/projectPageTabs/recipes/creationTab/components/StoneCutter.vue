@@ -9,8 +9,9 @@
     <DefLine labelText="output count:">
       <DefInputNum :value="initialOutputCount" @updateValue="this.outputCountValue = $event" />
     </DefLine>
-    <DefSave :submitText="submitTextValue" />
+    <DefSave :submitText="submitText" />
   </form>
+  <InvalidInputDialog ref="errDialog" :errorText="`${errDialogText}`"></InvalidInputDialog>
 </template>
   
 <script>
@@ -18,7 +19,7 @@ import DefLine from './../../../../default/DefLine.vue';
 import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue';
 import DefInputNum from './../../../../default/DefInputNum.vue';
 import DefSave from './../../../../default/DefSave.vue';
-
+import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
 export default {
   props: {
     initialInput: {
@@ -33,9 +34,9 @@ export default {
       type: Number,
       default: 1
     },
-    submitTextValue: {
-      type: String,
-      default: 'Save'
+    isNew: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -43,14 +44,45 @@ export default {
       inputValue: this.initialInput,
       outputValue: this.initialOutput,
       outputCountValue: this.initialOutputCount,
-      submitText: this.submitTextValue
+      errDialogText: '',
     };
+  },
+  computed: {
+    submitText() {
+      return this.isNew ? 'Save changes' : 'Save to file';
+    }
   },
   methods: {
     handleSubmit() {
-      console.log(this.inputValue);
-      console.log(this.outputValue);
-      console.log(this.outputCountValue);
+      this.errDialogText = "";
+
+      if (!this.inputValue) {
+        this.errDialogText = "Input field is empty. ";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      if (!this.outputValue) {
+        this.errDialogText = "Output field is empty. ";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      if (this.outputCountValue === null || this.outputCountValue === '') {
+        this.errDialogText = "Output count field is empty. ";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      if (this.outputCountValue > 128 || this.outputCountValue < 1) {
+        this.errDialogText = "Output count cannot be more than 128 or less than 1";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      const type = 'StonecutterAdd'
+      let formArgs = {
+        input: this.inputValue,
+        output: this.outputValue,
+        outputCount: this.outputCountValue
+      };
+      console.log(formArgs);
     },
 
   },
@@ -58,7 +90,8 @@ export default {
     DefLine,
     InputWithSuggestions,
     DefInputNum,
-    DefSave
+    DefSave,
+    InvalidInputDialog
   }
 }
 </script>

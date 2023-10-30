@@ -36,6 +36,7 @@ export default {
   watch: {
     inputValue: {
       handler: function (newValue) {
+        this.suggestionItems=[];
         if (this.suggestionType == "item") {
           CurrentProjectGetItemsTypeSuggestion(newValue.toLowerCase()).then((resievedSuggestions) => {
             this.suggestionItems = resievedSuggestions;

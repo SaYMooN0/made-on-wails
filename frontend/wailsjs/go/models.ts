@@ -120,6 +120,7 @@ export namespace minecraftrelated {
 
 export namespace projectrelated {
 	
+	
 	export class ProjectSettings {
 	    showWarningWhenDeletingAction: boolean;
 	

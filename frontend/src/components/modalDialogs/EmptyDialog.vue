@@ -13,6 +13,12 @@ export default {
       isOpen: false
     }
   },
+  mounted() {
+    document.addEventListener('keydown', this.handleKeydown);
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.handleKeydown);
+  },
   methods: {
     showModal() {
       this.isOpen = true;
@@ -23,6 +29,11 @@ export default {
     close() {
       this.isOpen = false;
       this.$refs.dialogRef.close();
+    },
+    handleKeydown(event) {
+      if (event.key === 'Escape' && this.isOpen) {
+        this.close();
+      }
     }
   }
 }
