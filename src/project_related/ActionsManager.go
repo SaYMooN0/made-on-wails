@@ -22,7 +22,7 @@ func HandleAction(actionType src.ActionType, arguments map[string]string, projec
 	var historyItem *HistoryItem
 
 	switch actionType {
-	case src.StonecutterAdd:
+	case src.StoneCutterAdd:
 		contentToWrite = fmt.Sprintf("event.stonecutting('%s','%s')", returnItemWithCount(arguments["output"], arguments["outputCount"]), arguments["input"])
 	case src.FurnaceOnlyAdd:
 		contentToWrite = fmt.Sprintf("event.smelting('%s', '%s')", arguments["output"], arguments["input"])

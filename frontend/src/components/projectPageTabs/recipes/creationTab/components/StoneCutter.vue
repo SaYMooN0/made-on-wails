@@ -20,13 +20,14 @@ import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue
 import DefInputNum from './../../../../default/DefInputNum.vue';
 import DefSave from './../../../../default/DefSave.vue';
 import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
+import { CurrentProjectAddNewRecipe, CurrentProjectChangeAction } from "../../../../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: {
     initialInput: {
       type: String,
       default: ''
     },
-    initialOuput: {
+    initialOutput: {
       type: String,
       default: ''
     },
@@ -36,8 +37,16 @@ export default {
     },
     isNew: {
       type: Boolean,
-      default: false
-    }
+      default: true
+    },
+    filePath: {
+      type: String,
+      default: ''
+    },
+    actionId: {
+      type: Number,
+      default: 0
+    },
   },
   data() {
     return {
@@ -49,7 +58,7 @@ export default {
   },
   computed: {
     submitText() {
-      return this.isNew ? 'Save changes' : 'Save to file';
+      return this.isNew ? 'Save to file' : 'Save changes';
     }
   },
   methods: {
@@ -76,16 +85,40 @@ export default {
         this.$refs.errDialog.showDialog();
         return;
       }
-      const type = 'StonecutterAdd'
+      const type = 'StoneCutterAdd'
       let formArgs = {
         input: this.inputValue,
         output: this.outputValue,
-        outputCount: this.outputCountValue
+        outputCount: this.outputCountValue.toString()
       };
-      console.log(formArgs);
+
+      if (this.isNew) {
+        let properties;
+        console.log(type, formArgs);
+        CurrentProjectAddNewRecipe(type, formArgs).then((historyItem) => {
+          console.log(historyItem);
+          properties = {
+            initialInput: this.inputValue,
+            initialOutput: this.outputValue,
+            initialOutputCount: this.outputCountValue,
+            filePath: historyItem.FilePath,
+            actionId: historyItem.ActionID,
+            isNew: false
+          };
+          this.newStoneCutterRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
+        });
+      }
+      else {
+        console.log("change");
+        // CurrentProjectChangeAction(type, formArgs).then((historyItem) => {
+        //   console.log(historyItem);
+        // });
+      }
+
     },
 
   },
+  inject: ['newStoneCutterRecipeSaved'],
   components: {
     DefLine,
     InputWithSuggestions,
@@ -98,9 +131,9 @@ export default {
 
 <style scoped>
 .form-container {
-  padding-top: calc(2vw + 10px + 10vh);
+  padding-top: calc(2vw + 10px + 20vh);
   padding-left: calc(4vw + 20px + 2vh);
-  width: 100%;
+  width: calc(100% - 4vw - 20px - 2vh);
   display: block;
 }
 </style>

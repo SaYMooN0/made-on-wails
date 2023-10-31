@@ -34,13 +34,20 @@ export default {
 <style scoped>
 .tab-content{
     height: 100%;
+    width: 100%;
+    display: flex;
+    
 }
 .recpe-content{
     display: flex;
-    padding-top: 2%;
+    justify-content: center;
+    /* height: 100%; */
+    width: 100%;
+    /* padding-top: 2%; */
     height: calc(90vh - 4vw - 22px);
 }
 .type-select {
+    position: absolute;
     height: calc(1vh + 25px + 0.6vw);
     width: calc(80px + 7vw + 2vh);
     font-size: calc(0.78vh + 0.58vw + 7px);

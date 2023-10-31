@@ -30,6 +30,10 @@ export function CurrentProjectAddNewRecipe(arg1, arg2) {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectAddNewRecipe'](arg1, arg2);
 }
 
+export function CurrentProjectChangeAction(arg1, arg2, arg3, arg4) {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProjectChangeAction'](arg1, arg2, arg3, arg4);
+}
+
 export function CurrentProjectGetItemsTypeSuggestion(arg1) {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectGetItemsTypeSuggestion'](arg1);
 }

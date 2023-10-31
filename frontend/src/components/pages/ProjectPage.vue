@@ -149,7 +149,7 @@
       @update:activeTabId="activeTab = $event" />
     <div class="tabs-content-part">
       <div v-for="tab in tabsList" :key="tab.id" v-show="activeTab === tab.id" style="height: 100%;">
-        <component :is="tab.component"></component>
+        <component :is="tab.component" v-bind="tab.props"></component>
       </div>
     </div>
   </div>
@@ -168,9 +168,10 @@ import Collections from '../projectPageTabs/Collections.vue';
 import History from '../projectPageTabs/History.vue';
 import Settings from '../projectPageTabs/Settings.vue';
 import NewRecipe from '../projectPageTabs/recipes/creationTab/NewRecipeTab.vue';
-
+import StoneCutter from "../projectPageTabs/recipes/creationTab/components/StoneCutter.vue";
 
 import { ref } from 'vue';
+
 
 const WELCOME_TAB = { id: 'welcome', name: 'Welcome', component: Welcome };
 
@@ -187,7 +188,8 @@ export default {
     Collections,
     History,
     Settings,
-    NewRecipe
+    NewRecipe,
+    StoneCutter
   },
   data() {
     return {
@@ -213,16 +215,20 @@ export default {
     settingsTab() { this.addNewTab('settings', "Settings", 'Settings'); },
     historyTab() { this.addNewTab('history', "History", 'History'); },
     collectionsTab() { this.addNewTab('collections', "Collections", 'Collections'); },
-    changeToRecipeCreationTab() { this.addNewTab('new-recipe', "New recipe", 'NewRecipe'); this.removeTab('recipes'); }
+    changeToRecipeCreationTab() { this.addNewTab('new-recipe', "New recipe", 'NewRecipe'); this.removeTab('recipes'); },
+    newStoneCutterRecipeSaved(newTabId, newTabName, oldTabId, properties) {
+      this.addNewTab(`action:${newTabId}`, newTabName, "StoneCutter", properties);
+      this.removeTab(oldTabId);
+    }
   },
   setup() {
     const tabsList = ref([WELCOME_TAB]);
     const activeTab = ref(WELCOME_TAB.id);
-
-    const addNewTab = (id, name, component) => {
+    const addNewTab = (id, name, component, props = {}) => {
       const existingTab = tabsList.value.find(tab => tab.id === id);
       if (!existingTab) {
-        tabsList.value.push({ id, name, component });
+        props.tabId = id;
+        tabsList.value.push({ id, name, component, props });
       }
       activeTab.value = id;
     };
@@ -261,6 +267,7 @@ export default {
   provide() {
     return {
       createNewRecipeTab: this.changeToRecipeCreationTab,
+      newStoneCutterRecipeSaved: this.newStoneCutterRecipeSaved,
     };
   },
 }
@@ -274,6 +281,7 @@ body {
 
 .tabs-content-part {
   height: calc(96vh - 50px);
+ 
 }
 
 .action-choosing-part {

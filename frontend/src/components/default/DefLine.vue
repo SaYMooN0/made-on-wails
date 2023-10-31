@@ -20,7 +20,7 @@ export default {
 <style scoped>
 .line
 {
-    width: calc(100px + 60%);
+    width: calc(100px + 64%);
     display: flex;
     align-items: center;
     justify-content: space-between;
