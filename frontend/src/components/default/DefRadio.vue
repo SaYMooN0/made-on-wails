@@ -1,9 +1,11 @@
 <template>
     <label class="default-radio-container">
-    <input class="default-radio" type="radio" :name="name" :value="value" :checked="isChecked"> 
+        <input class="default-radio" type="radio" :name="name" :value="value" v-model="internalValue" @change="updateValue">
         <span class="default-radio-label">{{ spanText }}</span>
     </label>
 </template>
+
+
 
 <script>
 export default {
@@ -16,13 +18,28 @@ export default {
             type: String,
             required: true
         },
-        isChecked: {
-            type: Boolean,
-            default: false
+        modelValue: {
+            type: String,
+            default: ""
         },
         spanText: {
             type: String,
             default: ''
+        }
+    },
+    computed: {
+        internalValue: {
+            get() {
+                return this.modelValue;
+            },
+            set(val) {
+                this.$emit('update:modelValue', val);
+            }
+        }
+    },
+    methods: {
+        updateValue() {
+            this.$emit('update:modelValue', this.value);
         }
     }
 }
@@ -37,7 +54,7 @@ export default {
     padding-left: calc(24px + 0.55vw + 0.55vh);
     position: relative;
     cursor: pointer;
-    width:100%;
+    width: 100%;
     display: flex;
     align-items: center;
 }
@@ -54,11 +71,12 @@ export default {
     border-radius: 50%;
     background-color: var(--back-3);
 }
+
 .default-radio-label {
     color: var(--front);
     font-family: 'Figtree';
     font-weight: 600;
-    font-size: calc(1vw + 7px);
+    font-size: calc(0.9vh + 0.71vw + 8px);
     white-space: nowrap;
 }
 
@@ -70,12 +88,11 @@ export default {
     color: var(--front-2);
 }
 
-.default-radio:checked + .default-radio-label {
+.default-radio:checked+.default-radio-label {
     color: var(--front-3);
 }
 
-    .default-radio:checked + .default-radio-label::before {
-        border-color: var(--front-3);
-    }
-
+.default-radio:checked+.default-radio-label::before {
+    border-color: var(--front-3);
+}
 </style>
