@@ -41,9 +41,7 @@ export default {
 .recpe-content{
     display: flex;
     justify-content: center;
-    /* height: 100%; */
     width: 100%;
-    /* padding-top: 2%; */
     height: calc(90vh - 4vw - 22px);
 }
 .type-select {

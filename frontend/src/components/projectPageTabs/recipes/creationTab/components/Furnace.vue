@@ -11,7 +11,6 @@
                 <DefRadio name="additional" value="furnaceOnly" spanText="None" v-model="furnaceTypeValue" />
                 <DefRadio name="additional" value="furnaceAndSmoker" spanText="Smoker" v-model="furnaceTypeValue" />
                 <DefRadio name="additional" value="furnaceAndBlast" spanText="Blast Furnace" v-model="furnaceTypeValue" />
-
             </div>
         </DefLine>
         <DefSave :submitText="submitText" />
@@ -23,7 +22,6 @@
 import DefLine from './../../../../default/DefLine.vue';
 import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue';
 import DefRadio from './../../../../default/DefRadio.vue';
-
 import DefSave from './../../../../default/DefSave.vue';
 import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
 export default {
