@@ -1,15 +1,33 @@
 <template>
   <form @submit.prevent="handleSubmit" class="form-container">
     <div class='crafting-table-letters-zone'>
-    <DefCheckBox :name="isShapeless" class="is-shapeless-checkbox"/>
-       <!-- <div class='crafting-table-letters-container'>${letterDivs}</div>
-      <button type='button' onclick="addNewLetterForCraftingRecipe(event)" class='add-new-letter-button'>
+      <DefCheckBox :name="isShapeless" class="is-shapeless-checkbox" />
+      <div class='crafting-table-letters-container'>
+        <div v-for="(item, index) in letterItems" :key="index" class='crafting-table-letter-item'>
+          <label class='letter-label'>{{ item.letter }}</label>
+          <input type='text' class='item-for-letter-input' v-model="item.value" data-suggestions />
+          <div class='letter-delete-button-container' @click="removeLetter(index)">
+            <svg class='letter-delete-button' viewBox='0 0 24 24' fill='none'>
+              <path d='M20.5001 6H3.5' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round' />
+              <path
+                d='M18.8332 8.5L18.3732 15.3991C18.1962 18.054 18.1077 19.3815 17.2427 20.1907C16.3777 21 15.0473 21 12.3865 21H11.6132C8.95235 21 7.62195 21 6.75694 20.1907C5.89194 19.3815 5.80344 18.054 5.62644 15.3991L5.1665 8.5'
+                stroke='#1C274C' stroke-width='1.5' stroke-linecap='round' />
+              <path d='M9.5 11L10 16' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round' />
+              <path d='M14.5 11L14 16' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round' />
+              <path
+                d='M6.5 6C6.55588 6 6.58382 6 6.60915 5.99936C7.43259 5.97849 8.15902 5.45491 8.43922 4.68032C8.44784 4.65649 8.45667 4.62999 8.47434 4.57697L8.57143 4.28571C8.65431 4.03708 8.69575 3.91276 8.75071 3.8072C8.97001 3.38607 9.37574 3.09364 9.84461 3.01877C9.96213 3 10.0932 3 10.3553 3H13.6447C13.9068 3 14.0379 3 14.1554 3.01877C14.6243 3.09364 15.03 3.38607 15.2493 3.8072C15.3043 3.91276 15.3457 4.03708 15.4286 4.28571L15.5257 4.57697C15.5433 4.62992 15.5522 4.65651 15.5608 4.68032C15.841 5.45491 16.5674 5.97849 17.3909 5.99936C17.4162 6 17.4441 6 17.5 6'
+                stroke='#1C274C' stroke-width='1.5' />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <button type='button' @click="addNewLetterForCraftingRecipe" class='add-new-letter-button'>
         Add letter
         <svg viewBox="0 0 24 24" class='add-new-letter-button-icon'>
           <line x1="12" x2="12" y1="19" y2="5" />
           <line x1="5" x2="19" y1="12" y2="12" />
         </svg>
-      </button> -->
+      </button>
     </div>
     <div class='crafting-table-grid-zone'>
       <div class='clear-letters-button' onclick='clearLetters()'>Clear letters</div>
@@ -18,14 +36,12 @@
           ${gridItems}
         </div>
       </div>
-      <div class="crafting-table-output-div">
-        <DefLine labelText="output:">
-          <InputWithSuggestions :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
-        </DefLine>
-        <DefLine labelText="output count:">
-          <DefInputNum :value="initialOutputCount" @updateValue="this.outputCountValue = $event" />
-        </DefLine>
-      </div>
+      <DefLine labelText="output:">
+        <InputWithSuggestions :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
+      </DefLine>
+      <DefLine labelText="output count:" style="margin-top: 0;">
+        <DefInputNum :value="initialOutputCount" @updateValue="this.outputCountValue = $event" />
+      </DefLine>
     </div>
     <DefSave :submitText="submitText" />
   </form>
@@ -57,6 +73,10 @@ export default {
       type: Boolean,
       default: false
     },
+    letterItemDictionary: {
+      type: Object,
+      default: () => ({}),
+    },
     isNew: {
       type: Boolean,
       default: true
@@ -76,6 +96,7 @@ export default {
       isShapelessValue: this.isShapelessType,
       outputCountValue: this.initialOutputCount,
       errDialogText: '',
+      letterItems: [],
     };
   },
   computed: {
@@ -84,7 +105,33 @@ export default {
   methods: {
     handleSubmit(event) {
 
-    }
+    },
+    addNewLetterForCraftingRecipe() {
+      const currentChars = this.letterItems.map(item => item.letter);
+      let nextChar = null;
+      for (let i = 0; i < 9; i++) {
+        const potentialChar = String.fromCharCode('a'.charCodeAt(0) + i).toUpperCase();
+        if (!currentChars.includes(potentialChar)) {
+          nextChar = potentialChar;
+          break;
+        }
+      }
+
+      if (!nextChar || this.letterItems.length >= 9) {
+        this.errDialogText = 'You can`t add more than 9 letters';
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+
+      this.letterItems.push({
+        letter: nextChar,
+        value: this.letterItemDictionary[nextChar] || '',
+      });
+    },
+    removeLetter(index) {
+      this.letterItems.splice(index, 1);
+      this.errDialogText = '';
+    },
   },
   inject: ['newCraftingTableRecipeSaved'],
   components: {
@@ -105,32 +152,31 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   grid-gap: calc(4px + 1vw + 1vh);
- 
+
 }
 
 .crafting-table-letters-zone {
   width: 100%;
   display: grid;
-  grid-template-rows: auto 1fr calc(14px + 4vh + 0.8vw);
-  grid-gap: calc(0.8vh + 2px);
-  background-color: darkblue;
+  grid-template-rows: calc(26px + 2vh + 0.5vw) 1fr calc(26px + 2vh + 0.5vw);
+  position: relative;
+  top: calc(24px + 4vh + 0.5vw);
+  height: calc(90% - 4vh - 0.5vw - 36px);
+  max-height: calc(98vh - 40px - 2vw);
+
 }
-.is-shapeless-checkbox {
-    margin-left: calc(13px + 4%);
-    margin-top:calc(0.2vw + 0.5vh);
-}
+
 .crafting-table-grid-zone {
   width: 100%;
   height: 100%;
-  display: flex; 
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: cadetblue;
 }
 
 .clear-letters-button {
-  margin-top: -2vw;
+  margin-top: 0;
   width: calc(4vw + 56px + 2vh);
   background-color: var(--back);
   border: 1px solid transparent;
@@ -154,13 +200,14 @@ export default {
 }
 
 .crafting-table-grid-div-container {
-  margin-top: calc(10px + 2%);
-  height: calc(63vh - 3vw - 40px);
-  max-width: calc(47vw - 2vh);
+  margin-top: calc(2vh - 2px);
+  height: calc(55vh - 20px);
+  max-width: calc(42vw - 2vh);
   aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: calc(2vh - 2px);
 }
 
 .crafting-table-grid-div {
@@ -208,7 +255,8 @@ export default {
 
 .crafting-table-letters-container {
   overflow-y: auto;
-  height: 100%;
+  height: 100%; 
+
 }
 
 .crafting-table-letters-container::-webkit-scrollbar {
@@ -284,7 +332,8 @@ export default {
 
 .add-new-letter-button {
   justify-self: center;
-  width: calc(98% - 10px);
+  width: 92%;
+  height: 100%;
   background-color: var(--bright-2);
   border: 1px solid transparent;
   border-radius: calc(3px + 0.09vw + 0.1vh);
@@ -316,18 +365,10 @@ export default {
   stroke-width: 3;
 }
 
-.crafting-table-output-div {
-  margin-top: calc(2% + 10px);
-  display: grid;
-  width: 100%;
-  grid-template-rows: 1fr 1fr;
-  gap: calc(2% + 10px);
-  height: calc(30px + 10%);
-}
+
 
 .is-shapeless-checkbox {
   margin-left: calc(13px + 4%);
   margin-top: calc(0.2vw + 0.5vh);
-}
-</style>
+}</style>
   

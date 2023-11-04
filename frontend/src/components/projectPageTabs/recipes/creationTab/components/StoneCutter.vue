@@ -11,7 +11,7 @@
     </DefLine>
     <DefSave :submitText="submitText" />
   </form>
-  <InvalidInputDialog ref="errDialog" :errorText="`${errDialogText}`"></InvalidInputDialog>
+  <InvalidInputDialog ref="errDialog" :errorText="`${errDialogText}`"/>
 </template>
   
 <script>

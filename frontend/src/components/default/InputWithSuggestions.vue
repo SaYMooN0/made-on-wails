@@ -184,7 +184,7 @@ export default {
 
 .default-input {
   height: calc(1.6vh + 8px + 0.25vw);
-  width: calc(18vw + 60px);
+  width: calc(20vw + 45px);
   background-color: var(--back-2);
   border: 1px solid transparent;
   border-radius: calc(2px + 0.05vw + 0.1vh);

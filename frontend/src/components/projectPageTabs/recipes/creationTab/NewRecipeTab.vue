@@ -42,7 +42,7 @@ export default {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: calc(90vh - 4vw - 22px);
+    height: calc(98vh - 80px);
 }
 .type-select {
     position: absolute;

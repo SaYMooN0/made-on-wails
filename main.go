@@ -24,8 +24,8 @@ func main() {
 		Title:     "Made",
 		Width:     900,
 		Height:    600,
-		MinWidth:  700,
-		MinHeight: 500,
+		MinWidth:  720,
+		MinHeight: 540,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
