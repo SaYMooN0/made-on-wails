@@ -8,7 +8,7 @@
         <div class='recpe-content'>
             <CrafringTable v-if="selectedType === 'crafting-table'" />
             <Furnace v-if="selectedType === 'furnace'" />
-            <Stonecutter v-if="selectedType === 'stonecutter'"/>
+            <Stonecutter v-if="selectedType === 'stonecutter'" />
         </div>
     </div>
 </template>
@@ -32,18 +32,20 @@ export default {
 }
 </script>
 <style scoped>
-.tab-content{
+.tab-content {
     height: 100%;
     width: 100%;
     display: flex;
-    
+
 }
-.recpe-content{
+
+.recpe-content {
     display: flex;
     justify-content: center;
     width: 100%;
     height: calc(98vh - 80px);
 }
+
 .type-select {
     position: absolute;
     height: calc(1vh + 25px + 0.6vw);

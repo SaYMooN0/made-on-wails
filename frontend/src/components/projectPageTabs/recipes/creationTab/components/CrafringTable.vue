@@ -3,9 +3,11 @@
     <div class='crafting-table-letters-zone'>
       <DefCheckBox :name="isShapeless" class="is-shapeless-checkbox" />
       <div class='crafting-table-letters-container'>
-        <div v-for="(item, index) in letterItems" :key="index" class='crafting-table-letter-item'>
+        <div v-for="(item, index) in letterItems" :key="index" class='crafting-table-letter-item'
+          @dragstart="handleDragStart($event, item.letter)" draggable="true">
           <label class='letter-label'>{{ item.letter }}</label>
-          <input type='text' class='item-for-letter-input' v-model="item.value" data-suggestions />
+          <InputWithSuggestions :value="item.value" @updateValue="item.value = $event" suggestion-type="item"
+            class="item-for-letter-input" />
           <div class='letter-delete-button-container' @click="removeLetter(index)">
             <svg class='letter-delete-button' viewBox='0 0 24 24' fill='none'>
               <path d='M20.5001 6H3.5' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round' />
@@ -30,12 +32,18 @@
       </button>
     </div>
     <div class='crafting-table-grid-zone'>
-      <div class='clear-letters-button' onclick='clearLetters()'>Clear letters</div>
+      <div class='clear-letters-button' @click="clearLetters">Clear letters</div>
+
       <div class='crafting-table-grid-div-container'>
         <div class='crafting-table-grid-div'>
-          ${gridItems}
+          <div class='crafting-table-grid-item' v-for="(item, index) in gridItems" :key="index"
+            @dragover.prevent="handleDragOver" @drop.prevent="handleDrop($event, Math.floor(index / 3), index % 3)">
+            {{ item }}
+          </div>
         </div>
       </div>
+
+
       <DefLine labelText="output:">
         <InputWithSuggestions :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
       </DefLine>
@@ -77,6 +85,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    gridLetters: {
+      type: Array,
+      default: () => [['', '', ''], ['', '', ''], ['', '', '']]
+    },
     isNew: {
       type: Boolean,
       default: true
@@ -96,7 +108,8 @@ export default {
       isShapelessValue: this.isShapelessType,
       outputCountValue: this.initialOutputCount,
       errDialogText: '',
-      letterItems: [],
+      letterItems: this.initLetterItems(),
+      gridItems: this.initGridItems(),
     };
   },
   computed: {
@@ -105,6 +118,12 @@ export default {
   methods: {
     handleSubmit(event) {
 
+    },
+    initLetterItems() {
+      return Object.entries(this.letterItemDictionary).map(([letter, value]) => ({
+        letter,
+        value,
+      }));
     },
     addNewLetterForCraftingRecipe() {
       const currentChars = this.letterItems.map(item => item.letter);
@@ -132,6 +151,33 @@ export default {
       this.letterItems.splice(index, 1);
       this.errDialogText = '';
     },
+    initGridItems() {
+      return this.gridLetters.flat();
+    },
+    handleDragOver(event) {
+      event.preventDefault();
+    },
+    handleDrop(event, i, j) {
+      event.preventDefault();
+      const letter = event.dataTransfer.getData('text/plain');
+      // Обновление элемента массива напрямую, так как Vue 3 обрабатывает реактивность автоматически
+      this.gridItems[i * 3 + j] = letter;
+    },
+
+    handleDragStart(event, letter) {
+      event.dataTransfer.setData('text/plain', letter);
+    },
+    clearLetters() {
+      this.gridItems = this.gridItems.map(() => '');
+    }
+  },
+  watch: {
+    gridLetters: {
+      handler(newVal) {
+        this.gridItems = this.flattenGridLetters(newVal);
+      },
+      deep: true
+    }
   },
   inject: ['newCraftingTableRecipeSaved'],
   components: {
@@ -144,7 +190,13 @@ export default {
   }
 }
 </script>
-  
+
+<style>
+.item-for-letter-input .default-input {
+  width: 91% !important;
+}
+</style>
+
 <style scoped>
 .form-container {
   height: 100%;
@@ -255,7 +307,7 @@ export default {
 
 .crafting-table-letters-container {
   overflow-y: auto;
-  height: 100%; 
+  height: 100%;
 
 }
 
@@ -304,24 +356,6 @@ export default {
   stroke: var(--front);
 }
 
-.item-for-letter-input {
-  width: 94%;
-  height: calc(6px + 44%);
-  border: 1px solid transparent;
-  border-radius: calc(1px + 0.04vw + 0.1vh);
-  color: var(--front-3);
-  font-family: 'Bahnschrift';
-  background-color: transparent;
-  border: none;
-  outline: none;
-  font-size: calc(1vh + 0.12vw + 8px);
-}
-
-.item-for-letter-input:focus {
-  outline: none;
-  background-color: var(--back-3);
-}
-
 .letter-label {
   font-family: 'Figtree';
   color: var(--front);
@@ -365,10 +399,8 @@ export default {
   stroke-width: 3;
 }
 
-
-
 .is-shapeless-checkbox {
   margin-left: calc(13px + 4%);
   margin-top: calc(0.2vw + 0.5vh);
-}</style>
-  
+}
+</style>
