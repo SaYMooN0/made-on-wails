@@ -1,7 +1,8 @@
 <template>
   <form @submit.prevent="handleSubmit" class="form-container">
     <div class='crafting-table-letters-zone'>
-      <DefCheckBox :name="isShapeless" class="is-shapeless-checkbox" />
+      <DefCheckBox v-model="isShapelessValue" class="is-shapeless-checkbox" />
+
       <div class='crafting-table-letters-container'>
         <div v-for="(item, index) in letterItems" :key="index" class='crafting-table-letter-item'
           @dragstart="handleDragStart($event, item.letter)" draggable="true">
@@ -105,7 +106,7 @@ export default {
   data() {
     return {
       outputValue: this.initialOutput,
-      isShapelessValue: this.isShapelessType,
+      isShapelessValue: this.isShapeless,
       outputCountValue: this.initialOutputCount,
       errDialogText: '',
       letterItems: this.initLetterItems(),
@@ -117,7 +118,32 @@ export default {
   },
   methods: {
     handleSubmit(event) {
+      const usedLettersInGrid = new Set(this.gridItems.filter(letter => letter.trim() !== ''));
+      const definedLetters = new Set(this.letterItems.map(item => item.letter));
+      const unusedLetters = [...definedLetters].filter(letter => !usedLettersInGrid.has(letter));
+      const undefinedLetters = [...usedLettersInGrid].filter(letter => ![...definedLetters].some(definedLetter => definedLetter === letter));
 
+      if (unusedLetters.length > 0) {
+        this.errDialogText = `The following letters are defined but not used in the grid: ${unusedLetters.join(', ')}`;
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+
+      if (undefinedLetters.length > 0) {
+        this.errDialogText = `The following letters are used in the grid but not defined: ${undefinedLetters.join(', ')}`;
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      const filteredLetterItems = this.letterItems.filter(item => item.value.trim() !== '');
+      const formData = {
+        outputValue: this.outputValue,
+        isShapelessValue: this.isShapelessValue,
+        outputCountValue: this.outputCountValue,
+        letterItems: filteredLetterItems,
+        gridItems: this.gridItems
+      };
+
+      console.log(formData);
     },
     initLetterItems() {
       return Object.entries(this.letterItemDictionary).map(([letter, value]) => ({
@@ -160,7 +186,6 @@ export default {
     handleDrop(event, i, j) {
       event.preventDefault();
       const letter = event.dataTransfer.getData('text/plain');
-      // Обновление элемента массива напрямую, так как Vue 3 обрабатывает реактивность автоматически
       this.gridItems[i * 3 + j] = letter;
     },
 

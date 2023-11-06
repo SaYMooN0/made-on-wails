@@ -1,20 +1,23 @@
 <template>
     <label class="default-checkbox-label">
-        Shapeless
-        <input type="checkbox" name="isShapeless" :name="name" />
-        <span class="checkmark"></span>
+      Shapeless
+      <input type="checkbox" :checked="modelValue" @change="$emit('update:modelValue', $event.target.checked)">
+      <span class="checkmark"></span>
     </label>
-</template>
-<script>
-export default {
+  </template>
+  
+  <script>
+  export default {
     props: {
-        name: {
-            type: String,
-            required: true
-        }
-    }
-}
-</script>
+      modelValue: {
+        type: Boolean,
+        default: false
+      }
+    },
+    emits: ['update:modelValue']
+  };
+  </script>
+  
 <style>
 .default-checkbox-label input {
     display: none;
