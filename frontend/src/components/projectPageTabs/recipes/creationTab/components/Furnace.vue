@@ -67,6 +67,17 @@ export default {
     },
     methods: {
         handleSubmit() {
+            this.errDialogText = "";
+            if (!this.inputValue) {
+                this.errDialogText = "Input field is empty. ";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
+            if (!this.outputValue) {
+                this.errDialogText = "Output field is empty. ";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
             console.log("Input Value:", this.inputValue);
             console.log("Output Value:", this.outputValue);
             console.log("Furnace Type:", this.furnaceTypeValue);

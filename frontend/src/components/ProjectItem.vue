@@ -13,26 +13,98 @@
     </svg>
     <label class="project-text-version">{{ project.Loader }} {{ project.Version }}</label>
   </div>
+  <div class="context-menu" v-if="showContextMenu" :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
+    <ul>
+      <li @click="projectItemClicked(project.PathToFolder)">Open</li>
+      <li @click="contextAction('Pin')">Pin</li>
+      <li @click="contextAction('Show in File Manager')">Show in File Manager</li>
+      <li @click="contextAction('Delete')">Delete</li>
+    </ul>
+  </div>
 </template>
   
+
 <script>
-import {SetCurrentProjectByFolder } from "../../wailsjs/go/projectrelated/ProjectManager";
+import { SetCurrentProjectByFolder } from "../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: ['project'],
+  data() {
+    return {
+      showContextMenu: false,
+      contextMenuX: 0,
+      contextMenuY: 0
+    }
+  },
   methods: {
     projectItemClicked(path) {
+      this.hideContextMenu();
       SetCurrentProjectByFolder(path).then(() => {
         this.$emit('goToProjectPage');
-      })
+      });
     },
-    projectItemMoreButtonClicked(e, path) {
-      e.stopPropagation();
-      console.log(path);
-     
+    projectItemMoreButtonClicked(event, project) {
+      event.stopPropagation();
+      if(this.showContextMenu)
+      {
+        this.hideContextMenu();
+        return;
+      }
+      const menuButton = event.target.closest('.project-more-button');
+      const bounds = menuButton.getBoundingClientRect();
+      this.contextMenuX = bounds.left - 120;
+      this.contextMenuY = bounds.bottom + window.scrollY;
+
+      this.showContextMenu = true;
+    },
+    contextAction(action) {
+      alert(`Action '${action}' not implemented yet`);
+      this.hideContextMenu();
+    },
+    hideContextMenu() {
+      this.showContextMenu = false;
     }
-  }
+  },
+  mounted() {
+    document.addEventListener('click', this.hideContextMenu);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.hideContextMenu);
+  },
+
 }
 </script>
+
+<style scoped>
+.context-menu {
+  position: fixed;
+  border: 1px solid var(--front);
+  border-radius: calc(0.12vw + 0.07vh + 3px);
+  background-color: var(--back-2);
+  z-index: 1000;
+  padding-top: 2px;
+  padding-bottom: 2px;
+
+}
+
+.context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.context-menu ul li {
+  padding: 6px 12px;
+  cursor: pointer;
+  color: var(--front);
+  ;
+  font-family: 'Bahnschrift';
+  font-size: calc(0.35vh + 0.3vw + 10px);
+}
+
+.context-menu ul li:hover {
+  background-color: var(--back-3);
+}
+</style>
 <style scoped>
 .project-item {
   min-height: 60px;

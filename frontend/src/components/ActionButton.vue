@@ -33,14 +33,11 @@ export default {
     "icn inf"
     "icn inf";
   cursor: pointer;
-  transition: 0.12s;
   max-height: 20vh;
   cursor: pointer;
 }
 
 .action-btn:hover {
-  transform: scale(1.01);
-
   background-color: var(--back-3);
 }
 

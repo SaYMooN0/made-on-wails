@@ -2,7 +2,8 @@
     <label id="project-header" class="project-header">Your projects</label>
 
     <div class="projects-container" id="projects-container">
-        <ProjectItem v-for="project in  projects" :key="project.id" :project="project" @goToProjectPage="$emit('goToProjectPage')"/>
+        <ProjectItem v-for="project in  projects" :key="project.id" :project="project"
+            @goToProjectPage="$emit('goToProjectPage')" />
     </div>
 
     <div class="action-btns-container">
@@ -79,17 +80,6 @@ export default {
         this.fetchProjects();
     },
     methods: {
-        projectItemClicked(FolderPath) {
-            // const selectedProject = this.projects.find(i => i.PathToFolder === FolderPath);
-            // this.$router.push("/projectPage");
-        },
-        openProjectItemClicked() {
-            // const pathToProject = this.chooseProject();
-            // if (pathToProject) {
-            //     const selectedProject = this.projects.find(i => i.FullPath === pathToProject);
-            //     this.$router.push("/projectPage");
-            // }
-        },
         fetchPinnedProjects() {
             // GetProjects().then((projectsToFetch) => {
             //     this.projects = projectsToFetch;
@@ -99,11 +89,6 @@ export default {
             GetProjects().then((projectsToFetch) => {
                 this.projects = projectsToFetch;
             });
-        },
-
-        chooseProject() {
-            // Logic for choosing a project
-            return null;
         },
         openGitHub() {
             window.open('https://github.com/SaYMooN0/made-on-wails');

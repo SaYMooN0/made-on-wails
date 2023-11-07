@@ -118,11 +118,26 @@ export default {
   },
   methods: {
     handleSubmit(event) {
+      this.errDialogText = "";
       const usedLettersInGrid = new Set(this.gridItems.filter(letter => letter.trim() !== ''));
       const definedLetters = new Set(this.letterItems.map(item => item.letter));
       const unusedLetters = [...definedLetters].filter(letter => !usedLettersInGrid.has(letter));
       const undefinedLetters = [...usedLettersInGrid].filter(letter => ![...definedLetters].some(definedLetter => definedLetter === letter));
-
+      if (!this.outputValue) {
+        this.errDialogText = "Output field is empty. ";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      if (this.outputCountValue === null || this.outputCountValue === '') {
+        this.errDialogText = "Output count field is empty. ";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      if (this.outputCountValue > 128 || this.outputCountValue < 1) {
+        this.errDialogText = "Output count cannot be more than 128 or less than 1";
+        this.$refs.errDialog.showDialog();
+        return;
+      }
       if (unusedLetters.length > 0) {
         this.errDialogText = `The following letters are defined but not used in the grid: ${unusedLetters.join(', ')}`;
         this.$refs.errDialog.showDialog();
@@ -134,6 +149,7 @@ export default {
         this.$refs.errDialog.showDialog();
         return;
       }
+
       const filteredLetterItems = this.letterItems.filter(item => item.value.trim() !== '');
       const formData = {
         outputValue: this.outputValue,
