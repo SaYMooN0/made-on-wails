@@ -169,6 +169,9 @@ import History from '../projectPageTabs/History.vue';
 import Settings from '../projectPageTabs/Settings.vue';
 import NewRecipe from '../projectPageTabs/recipes/creationTab/NewRecipeTab.vue';
 import StoneCutter from "../projectPageTabs/recipes/creationTab/components/StoneCutter.vue";
+import Furnace from "../projectPageTabs/recipes/creationTab/components/Furnace.vue";
+
+
 
 import { ref } from 'vue';
 
@@ -189,7 +192,8 @@ export default {
     History,
     Settings,
     NewRecipe,
-    StoneCutter
+    StoneCutter,
+    Furnace
   },
   data() {
     return {
@@ -216,10 +220,9 @@ export default {
     historyTab() { this.addNewTab('history', "History", 'History'); },
     collectionsTab() { this.addNewTab('collections', "Collections", 'Collections'); },
     changeToRecipeCreationTab() { this.addNewTab('new-recipe', "New recipe", 'NewRecipe'); this.removeTab('recipes'); },
-    newStoneCutterRecipeSaved(newTabId, newTabName, oldTabId, properties) {
-      this.addNewTab(`action:${newTabId}`, newTabName, "StoneCutter", properties);
-      this.removeTab(oldTabId);
-    }
+    newStoneCutterRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "StoneCutter", properties); this.removeTab(oldTabId); },
+    newFurnaceRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "Furnace", properties); this.removeTab(oldTabId); },
+
   },
   setup() {
     const tabsList = ref([WELCOME_TAB]);
@@ -268,6 +271,7 @@ export default {
     return {
       createNewRecipeTab: this.changeToRecipeCreationTab,
       newStoneCutterRecipeSaved: this.newStoneCutterRecipeSaved,
+      newFurnaceRecipeSaved: this.newFurnaceRecipeSaved,
     };
   },
 }
@@ -281,7 +285,7 @@ body {
 
 .tabs-content-part {
   height: calc(96vh - 50px);
- 
+
 }
 
 .action-choosing-part {

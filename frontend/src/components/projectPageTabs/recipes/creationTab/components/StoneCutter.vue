@@ -85,7 +85,7 @@ export default {
         this.$refs.errDialog.showDialog();
         return;
       }
-      const type = 'StoneCutterAdd'
+      const type = 'StoneCutterAdd';
       let formArgs = {
         input: this.inputValue,
         output: this.outputValue,

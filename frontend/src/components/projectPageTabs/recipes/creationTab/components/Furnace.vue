@@ -8,9 +8,9 @@
         </DefLine>
         <DefLine labelText="additional:">
             <div class="radio-btns-container">
-                <DefRadio name="additional" value="furnaceOnly" spanText="None" v-model="furnaceTypeValue" />
-                <DefRadio name="additional" value="furnaceAndSmoker" spanText="Smoker" v-model="furnaceTypeValue" />
-                <DefRadio name="additional" value="furnaceAndBlast" spanText="Blast Furnace" v-model="furnaceTypeValue" />
+                <DefRadio name="additional" value="FurnaceOnly" spanText="None" v-model="furnaceTypeValue" />
+                <DefRadio name="additional" value="FurnaceAndSmoker" spanText="Smoker" v-model="furnaceTypeValue" />
+                <DefRadio name="additional" value="FurnaceAndBlast" spanText="Blast Furnace" v-model="furnaceTypeValue" />
             </div>
         </DefLine>
         <DefSave :submitText="submitText" />
@@ -24,6 +24,7 @@ import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue
 import DefRadio from './../../../../default/DefRadio.vue';
 import DefSave from './../../../../default/DefSave.vue';
 import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
+import { CurrentProjectAddNewRecipe, CurrentProjectChangeAction } from "../../../../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
     props: {
         initialInput: {
@@ -36,7 +37,7 @@ export default {
         },
         initialFurnaceType: {
             type: String,
-            default: "None"
+            default: "FurnaceOnly"
         },
         isNew: {
             type: Boolean,
@@ -60,9 +61,9 @@ export default {
         };
     },
     computed: {
-        isFurnaceOnlyChecked() { return this.initialFurnaceType === "None"; },
-        isFurnaceAndSmokerChecked() { return this.initialFurnaceType === "Smoker"; },
-        isFurnaceAndBlastChecked() { return this.initialFurnaceType === "Blast Furnace"; },
+        isFurnaceOnlyChecked() { return this.initialFurnaceType === "FurnaceOnly"; },
+        isFurnaceAndSmokerChecked() { return this.initialFurnaceType === "FurnaceAndSmoker"; },
+        isFurnaceAndBlastChecked() { return this.initialFurnaceType === "FurnaceAndBlast"; },
         submitText() { return this.isNew ? 'Save to file' : 'Save changes'; }
     },
     methods: {
@@ -78,9 +79,40 @@ export default {
                 this.$refs.errDialog.showDialog();
                 return;
             }
-            console.log("Input Value:", this.inputValue);
-            console.log("Output Value:", this.outputValue);
-            console.log("Furnace Type:", this.furnaceTypeValue);
+            console.log(this.furnaceTypeValue);
+            if (this.furnaceTypeValue===undefined) {
+                this.errDialogText = "Choose special furnace type. ";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
+            const type = this.furnaceTypeValue+'Add';
+            let formArgs = {
+                input: this.inputValue,
+                output: this.outputValue,
+                specialType: this.type
+            };
+            if (this.isNew) {
+                let properties;
+                console.log(type, formArgs);
+                CurrentProjectAddNewRecipe(type, formArgs).then((historyItem) => {
+                    console.log(historyItem);
+                    properties = {
+                        initialInput: this.inputValue,
+                        initialOutput: this.outputValue,
+                        initialFurnaceType: this.furnaceTypeValue,
+                        filePath: historyItem.FilePath,
+                        actionId: historyItem.ActionID,
+                        isNew: false
+                    };
+                    this.newFurnaceRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
+                });
+            }
+            else {
+                console.log("change");
+                // CurrentProjectChangeAction(type, formArgs).then((historyItem) => {
+                //   console.log(historyItem);
+                // });
+            }
         }
     },
     inject: ['newFurnaceRecipeSaved'],
