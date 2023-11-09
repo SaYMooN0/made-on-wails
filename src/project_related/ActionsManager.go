@@ -31,12 +31,23 @@ func HandleAction(actionType src.ActionType, arguments map[string]string, projec
 	case src.FurnaceAndSmokerAdd:
 		contentToWrite = fmt.Sprintf("event.smelting('%s', '%s'); event.smoking('%s', '%s');", arguments["output"], arguments["input"], arguments["output"], arguments["input"])
 	case src.CraftingTableAdd:
-		letterItemDictionary := make(map[rune]string)
-		err := json.Unmarshal([]byte(arguments["letterItemDictionary"]), &letterItemDictionary)
+		var temp []struct {
+			Letter string `json:"letter"`
+			Value  string `json:"value"`
+		}
+		err := json.Unmarshal([]byte(arguments["letterItemDictionary"]), &temp)
 		if err != nil {
 			panic(err)
 		}
-
+		letterItemDictionary := make(map[rune]string)
+		for _, item := range temp {
+			if len(item.Letter) == 1 {
+				letterItemDictionary[rune(item.Letter[0])] = item.Value
+			} else {
+				fmt.Printf("Invalid letter: %s\n", item.Letter)
+			}
+		}
+		fmt.Println(letterItemDictionary)
 		if len(letterItemDictionary) < 1 {
 			return nil
 		}
@@ -57,9 +68,30 @@ func HandleAction(actionType src.ActionType, arguments map[string]string, projec
 				letterItemString += fmt.Sprintf("%c: '%s',", letter, item)
 			}
 			letterItemString = strings.TrimSuffix(letterItemString, ",")
-			gridInputStrings := strings.Split(arguments["lettersInputGrid"], ",")
-			gridInput := fmt.Sprintf("'%s','%s','%s'", gridInputStrings[0], gridInputStrings[1], gridInputStrings[2])
-			contentToWrite = fmt.Sprintf("event.shaped('%s', [%s], {%s})", returnItemWithCount(arguments["output"], arguments["outputCount"]), gridInput, letterItemString)
+
+			var gridInputStrings []string
+			err := json.Unmarshal([]byte(arguments["lettersInputGrid"]), &gridInputStrings)
+			if err != nil {
+				fmt.Println("Error unmarshalling JSON string:", err)
+			}
+			gridInput := "['"
+
+			for i, char := range gridInputStrings {
+				if char == "" {
+					char = " "
+				}
+
+				if (i+1)%3 == 0 {
+					gridInput += char
+					if i != len(gridInputStrings)-1 {
+						gridInput += "', '"
+					}
+				} else {
+					gridInput += char
+				}
+			}
+			gridInput += "']"
+			contentToWrite = fmt.Sprintf("event.shaped('%s', %s, {%s})", returnItemWithCount(arguments["output"], arguments["outputCount"]), gridInput, letterItemString)
 		}
 	default:
 		return nil

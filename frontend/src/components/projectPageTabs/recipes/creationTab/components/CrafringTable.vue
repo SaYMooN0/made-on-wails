@@ -60,12 +60,11 @@
 <script>
 import DefSave from './../../../../default/DefSave.vue';
 import DefCheckBox from './../../../../default/DefCheckBox.vue';
-
 import DefLine from './../../../../default/DefLine.vue';
 import DefInputNum from './../../../../default/DefInputNum.vue';
 import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue';
 import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
-
+import { CurrentProjectAddNewRecipe, CurrentProjectChangeAction } from "../../../../../../wailsjs/go/projectrelated/ProjectManager";
 
 
 export default {
@@ -117,7 +116,7 @@ export default {
     submitText() { return this.isNew ? 'Save to file' : 'Save changes'; }
   },
   methods: {
-    handleSubmit(event) {
+    handleSubmit() {
       this.errDialogText = "";
       const usedLettersInGrid = new Set(this.gridItems.filter(letter => letter.trim() !== ''));
       const definedLetters = new Set(this.letterItems.map(item => item.letter));
@@ -149,17 +148,45 @@ export default {
         this.$refs.errDialog.showDialog();
         return;
       }
+      const emptyValueLetters = this.letterItems.filter(item => item.value.trim() === '').map(item => item.letter);
 
-      const filteredLetterItems = this.letterItems.filter(item => item.value.trim() !== '');
-      const formData = {
-        outputValue: this.outputValue,
-        isShapelessValue: this.isShapelessValue,
-        outputCountValue: this.outputCountValue,
-        letterItems: filteredLetterItems,
-        gridItems: this.gridItems
+      if (emptyValueLetters.length > 0) {
+        this.errDialogText = `The following letters have empty values: ${emptyValueLetters.join(', ')}`;
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+      const type = 'CraftingTableAdd';
+      let formArgs = {
+        letterItemDictionary: JSON.stringify(this.letterItems),
+        lettersInputGrid: JSON.stringify(this.gridItems),
+        isShapeless: this.isShapelessValue.toString(),
+        output: this.outputValue,
+        outputCount: this.outputCountValue.toString(),
       };
+      console.log(formArgs);
+      if (this.isNew) {
+        let properties;
+        console.log(type, formArgs);
+        CurrentProjectAddNewRecipe(type, formArgs).then((historyItem) => {
+          console.log(historyItem);
+          properties = {
+            initialInput: this.inputValue,
+            initialOutput: this.outputValue,
+            initialOutputCount: this.outputCountValue,
+            filePath: historyItem.FilePath,
+            actionId: historyItem.ActionID,
+            isNew: false
+          };
+          this.newStoneCutterRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
+        });
+      }
+      else {
+        console.log("change");
+        // CurrentProjectChangeAction(type, formArgs).then((historyItem) => {
+        //   console.log(historyItem);
+        // });
+      }
 
-      console.log(formData);
     },
     initLetterItems() {
       return Object.entries(this.letterItemDictionary).map(([letter, value]) => ({

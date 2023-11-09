@@ -170,6 +170,8 @@ import Settings from '../projectPageTabs/Settings.vue';
 import NewRecipe from '../projectPageTabs/recipes/creationTab/NewRecipeTab.vue';
 import StoneCutter from "../projectPageTabs/recipes/creationTab/components/StoneCutter.vue";
 import Furnace from "../projectPageTabs/recipes/creationTab/components/Furnace.vue";
+import CrafringTable from "../projectPageTabs/recipes/creationTab/components/CrafringTable.vue";
+
 
 
 
@@ -193,7 +195,8 @@ export default {
     Settings,
     NewRecipe,
     StoneCutter,
-    Furnace
+    Furnace,
+    CrafringTable
   },
   data() {
     return {
@@ -222,6 +225,8 @@ export default {
     changeToRecipeCreationTab() { this.addNewTab('new-recipe', "New recipe", 'NewRecipe'); this.removeTab('recipes'); },
     newStoneCutterRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "StoneCutter", properties); this.removeTab(oldTabId); },
     newFurnaceRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "Furnace", properties); this.removeTab(oldTabId); },
+    newCraftingTableRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "CrafringTable", properties); this.removeTab(oldTabId); },
+
 
   },
   setup() {
@@ -272,6 +277,8 @@ export default {
       createNewRecipeTab: this.changeToRecipeCreationTab,
       newStoneCutterRecipeSaved: this.newStoneCutterRecipeSaved,
       newFurnaceRecipeSaved: this.newFurnaceRecipeSaved,
+      newCraftingTableRecipeSaved: this.newCraftingTableRecipeSaved,
+
     };
   },
 }
