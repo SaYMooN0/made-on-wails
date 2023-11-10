@@ -17,7 +17,7 @@
     <ul>
       <li @click="projectItemClicked(project.PathToFolder)">Open</li>
       <li @click="contextAction('Pin')">Pin</li>
-      <li @click="contextAction('Show in File Manager')">Show in File Manager</li>
+      <li @click="ShowInFileManager(project.PathToFolder)">Show in File Manager</li>
       <li @click="contextAction('Delete')">Delete</li>
     </ul>
   </div>
@@ -25,7 +25,7 @@
   
 
 <script>
-import { SetCurrentProjectByFolder } from "../../wailsjs/go/projectrelated/ProjectManager";
+import { SetCurrentProjectByFolder,OpenProjectInFileManager } from "../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: ['project'],
   data() {
@@ -41,6 +41,10 @@ export default {
       SetCurrentProjectByFolder(path).then(() => {
         this.$emit('goToProjectPage');
       });
+    },
+    ShowInFileManager(path) {
+      this.hideContextMenu();
+      OpenProjectInFileManager(path);
     },
     projectItemMoreButtonClicked(event, project) {
       event.stopPropagation();

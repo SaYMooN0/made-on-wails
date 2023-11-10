@@ -6,7 +6,9 @@ import (
 	"fmt"
 	src "made/src"
 	"os"
+	"os/exec"
 	"path/filepath"
+	goRuntime "runtime"
 	"strings"
 	"unicode"
 
@@ -143,6 +145,22 @@ func (pm *ProjectManager) ChooseFolderForNewProject() string {
 		return ""
 	}
 	return folder
+}
+func (pm *ProjectManager) OpenProjectInFileManager(folderPath string) {
+	var cmd *exec.Cmd
+
+	switch goRuntime.GOOS {
+	case "windows":
+		cmd = exec.Command("explorer", folderPath)
+	case "linux":
+		cmd = exec.Command("xdg-open", folderPath)
+	case "darwin":
+		cmd = exec.Command("open", folderPath)
+	default:
+		return
+	}
+
+	cmd.Start()
 }
 
 func (pm *ProjectManager) ChooseProject() string {

@@ -25,6 +25,8 @@ export function GetInformationToFillCreationForm(arg1:string):Promise<projectrel
 
 export function GetProjects():Promise<Array<projectrelated.MadeProject>>;
 
+export function OpenProjectInFileManager(arg1:string):Promise<void>;
+
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentProjectByFolder(arg1:string):Promise<void>;

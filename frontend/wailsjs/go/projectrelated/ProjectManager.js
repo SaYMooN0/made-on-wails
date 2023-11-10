@@ -46,6 +46,10 @@ export function GetProjects() {
   return window['go']['projectrelated']['ProjectManager']['GetProjects']();
 }
 
+export function OpenProjectInFileManager(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['OpenProjectInFileManager'](arg1);
+}
+
 export function SaveToFile() {
   return window['go']['projectrelated']['ProjectManager']['SaveToFile']();
 }
