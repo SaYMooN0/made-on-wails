@@ -146,7 +146,7 @@ func (pm *ProjectManager) ChooseFolderForNewProject() string {
 	}
 	return folder
 }
-func (pm *ProjectManager) OpenProjectInFileManager(folderPath string) {
+func (pm *ProjectManager) OpenProjectInFileManager(folderPath string) string {
 	var cmd *exec.Cmd
 
 	switch goRuntime.GOOS {
@@ -157,10 +157,14 @@ func (pm *ProjectManager) OpenProjectInFileManager(folderPath string) {
 	case "darwin":
 		cmd = exec.Command("open", folderPath)
 	default:
-		return
+		return "Error: Unsupported platform"
 	}
 
-	cmd.Start()
+	err := cmd.Start()
+	if err != nil {
+		return err.Error()
+	}
+	return ""
 }
 
 func (pm *ProjectManager) ChooseProject() string {

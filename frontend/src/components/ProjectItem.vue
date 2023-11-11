@@ -44,9 +44,14 @@ export default {
     },
     ShowInFileManager(path) {
       this.hideContextMenu();
-      OpenProjectInFileManager(path);
+      OpenProjectInFileManager(path).then((err) => {
+        if(err && err!="")
+        {
+          alert(err);
+        }
+      });
     },
-    projectItemMoreButtonClicked(event, project) {
+    projectItemMoreButtonClicked(event) {
       event.stopPropagation();
       if(this.showContextMenu)
       {

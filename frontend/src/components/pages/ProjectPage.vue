@@ -165,7 +165,7 @@ import ModifyItems from '../projectPageTabs/ModifyItems.vue';
 import ModifyBlocks from '../projectPageTabs/ModifyBlocks.vue';
 import ModifyTags from '../projectPageTabs/ModifyTags.vue';
 import Collections from '../projectPageTabs/Collections.vue';
-import History from '../projectPageTabs/History.vue';
+import History from '../projectPageTabs/history/HistoryTab.vue';
 import Settings from '../projectPageTabs/Settings.vue';
 import NewRecipe from '../projectPageTabs/recipes/creationTab/NewRecipeTab.vue';
 import StoneCutter from "../projectPageTabs/recipes/creationTab/components/StoneCutter.vue";

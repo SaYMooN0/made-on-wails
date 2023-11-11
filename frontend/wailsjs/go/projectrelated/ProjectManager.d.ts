@@ -21,11 +21,13 @@ export function CurrentProjectChangeAction(arg1:string,arg2:string,arg3:string,a
 
 export function CurrentProjectGetItemsTypeSuggestion(arg1:string):Promise<Array<string>>;
 
+export function CurrentProjectHistory():Promise<Array<projectrelated.HistoryItem>>;
+
 export function GetInformationToFillCreationForm(arg1:string):Promise<projectrelated.ProjectCreationInformation>;
 
 export function GetProjects():Promise<Array<projectrelated.MadeProject>>;
 
-export function OpenProjectInFileManager(arg1:string):Promise<void>;
+export function OpenProjectInFileManager(arg1:string):Promise<string>;
 
 export function SaveToFile():Promise<void>;
 

@@ -8,6 +8,9 @@ import (
 func (pm *ProjectManager) CurrentProjectGetItemsTypeSuggestion(input string) []string {
 	return pm.currentProject.GetItemsTypeSuggestion(input)
 }
+func (pm *ProjectManager) CurrentProjectHistory() []HistoryItem {
+	return pm.currentProject.History
+}
 func (pm *ProjectManager) CurrentProjectAddNewRecipe(actionTypeStr string, arguments map[string]string) *HistoryItem {
 	actionType, err := src.StringToActionType(actionTypeStr)
 	fmt.Println(actionType, actionTypeStr, arguments)
