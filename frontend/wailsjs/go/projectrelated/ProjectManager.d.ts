@@ -23,6 +23,8 @@ export function CurrentProjectGetItemsTypeSuggestion(arg1:string):Promise<Array<
 
 export function CurrentProjectHistory():Promise<Array<projectrelated.HistoryItem>>;
 
+export function DoShowWarningWhenDeletingActionForCurrentProjectHistory():Promise<boolean>;
+
 export function GetInformationToFillCreationForm(arg1:string):Promise<projectrelated.ProjectCreationInformation>;
 
 export function GetProjects():Promise<Array<projectrelated.MadeProject>>;

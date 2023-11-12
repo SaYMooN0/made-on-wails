@@ -56,14 +56,12 @@ func (pm *ProjectManager) GetProjects() []MadeProject {
 
 // func (pm *ProjectManager) getPinnedProjects() []MadeProject {
 // 	var pinnedProjects []MadeProject
-
 // 	for _, pinnedProjectString := range pm.PinnedProjectLinks {
 // 		pinnedProject, err := CreateFromFile(pinnedProjectString)
 // 		if err == nil && pinnedProject != nil {
 // 			pinnedProjects = append(pinnedProjects, *pinnedProject)
 // 		}
 // 	}
-
 // 	return pinnedProjects
 // }
 

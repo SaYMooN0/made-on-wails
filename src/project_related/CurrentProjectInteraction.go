@@ -11,6 +11,9 @@ func (pm *ProjectManager) CurrentProjectGetItemsTypeSuggestion(input string) []s
 func (pm *ProjectManager) CurrentProjectHistory() []HistoryItem {
 	return pm.currentProject.History
 }
+func (pm *ProjectManager) DoShowWarningWhenDeletingActionForCurrentProjectHistory() bool {
+	return pm.currentProject.Settings.ShowWarningWhenDeletingAction
+}
 func (pm *ProjectManager) CurrentProjectAddNewRecipe(actionTypeStr string, arguments map[string]string) *HistoryItem {
 	actionType, err := src.StringToActionType(actionTypeStr)
 	fmt.Println(actionType, actionTypeStr, arguments)
@@ -25,6 +28,5 @@ func (pm *ProjectManager) CurrentProjectChangeAction(actionId, filePath string, 
 	if err != nil {
 		fmt.Println("Error converting string to ActionType:", err)
 	}
-
 	pm.currentProject.ChangeAction(actionId, filePath, actionType, arguments)
 }

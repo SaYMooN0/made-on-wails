@@ -11,13 +11,13 @@
         </div>
     </div>
     <div class='history-items-container'>
-        <dialog class='histoty-item-deleting-dialog'>
+        <dialog class='histoty-item-deleting-dialog' v-if="showDialog">
             <p class='history-item-deletig-dialog-main-label'>Are you sure you want to delete this action?</p>
             <label class='dont-show-label'>Don't show this message in this project anymore </label><input type='checkbox' />
             <button id='cancelDelete'>Cancel</button><button id='confirmDelete'>Delete</button>
         </dialog>
         <div v-for="historyItem in historyItems" class='history-item' @click="addTabFromType(historyItem)">
-            <label class='history-item-type'>{{ historyItem.type }}</label>
+            <label class='history-item-type'>{{ actionTypeToString(historyItem.ActionType) }}</label>
             <svg class='history-item-delete-button' @click.stop="deleteHistoryItem(historyItem)" viewBox='0 0 24 24'
                 fill='none'>
                 <path stroke='#1C274C' d='M20.5001 6H3.5' stroke-width='1.5' stroke-linecap='round' />
@@ -31,34 +31,43 @@
                     stroke-width='1.5' />
             </svg>
 
-            <label class='history-item-date'>{{ historyItem.creationTime }}</label>
-            <label class='history-item-input-output'>{{ historyItem.label }}</label>
+            <label class='history-item-date'>{{ historyItem.ActionID }}</label>
+            <label class='history-item-input-output'>{{ historyItemLabel(historyItem) }}</label>
         </div>
     </div>
 </template>
 <script>
-import { CurrentProjectHistory, CurrentProjectChangeAction } from "../../../../wailsjs/go/projectrelated/ProjectManager";
+import { CurrentProjectHistory, DoShowWarningWhenDeletingActionForCurrentProjectHistory, CurrentProjectChangeAction } from "../../../../wailsjs/go/projectrelated/ProjectManager";
+import { actionTypeToString,historyItemLabel } from "../../../HistoryItemManager";
+
 export default {
     data() {
         return {
+            showDialog: false,
             historyItems: [],
         };
     },
     methods: {
+        actionTypeToString,
+        historyItemLabel,
         focusSearch() {
-            // Логика для фокусировки на поиске
         },
         filterHistoryItems() {
-            // Логика фильтрации истории
         },
         addTabFromType(historyItem) {
-            // Добавление вкладки из типа истории
         },
         deleteHistoryItem(historyItem) {
-            // Удаление элемента истории
+            DoShowWarningWhenDeletingActionForCurrentProjectHistory().then((doShow) => {
+                if (doShow) {
+                    this.showDialog = true;
+                }
+            });
+        },
+        closeDialog(doNotShowAgain) {
+            this.showDialog = false;
         },
         fetchHistoryItems() {
-            
+
             CurrentProjectHistory().then((history) => {
                 console.log(history);
                 this.historyItems = history;
@@ -125,9 +134,10 @@ export default {
 .history-items-container {
     position: absolute;
     width: 98%;
-    height: 84%;
+    height: 80%;
     overflow-y: auto;
     bottom: 2%;
+    left: 1%;
 }
 
 .history-items-container::-webkit-scrollbar {
@@ -151,7 +161,7 @@ export default {
 .history-item {
     min-height: 52px;
     height: calc(25px + 5.5vh + 0.9vw);
-    width: 98%;
+    width: 97%;
     background-color: var(--back);
     border-radius: calc(0.14vw + 0.12vh + 3px);
     cursor: pointer;

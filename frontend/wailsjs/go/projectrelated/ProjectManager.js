@@ -42,6 +42,10 @@ export function CurrentProjectHistory() {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectHistory']();
 }
 
+export function DoShowWarningWhenDeletingActionForCurrentProjectHistory() {
+  return window['go']['projectrelated']['ProjectManager']['DoShowWarningWhenDeletingActionForCurrentProjectHistory']();
+}
+
 export function GetInformationToFillCreationForm(arg1) {
   return window['go']['projectrelated']['ProjectManager']['GetInformationToFillCreationForm'](arg1);
 }
