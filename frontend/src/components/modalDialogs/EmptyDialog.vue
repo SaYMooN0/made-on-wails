@@ -20,13 +20,13 @@ export default {
     document.removeEventListener('keydown', this.handleKeydown);
   },
   methods: {
-    showModal() {
+    showDialog() {
       this.isOpen = true;
       this.$nextTick(() => {
         this.$refs.dialogRef.showModal();
       });
     },
-    close() {
+    closeDialog() {
       this.isOpen = false;
       this.$refs.dialogRef.close();
     },
@@ -54,7 +54,7 @@ export default {
 }
 
 .dialog-container {
-  width: calc(210px + 28%);
+  width: calc(180px + 23% + 2vh);
   background-color: var(--back-2);
   border-radius: calc(0.35vh + 0.35vw + 7px);
   border-width: calc(0.05vh + 0.05vw + 4px);

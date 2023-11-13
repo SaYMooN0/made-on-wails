@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit" class="form-container">
     <div class='crafting-table-letters-zone'>
-      <DefCheckBox v-model="isShapelessValue" class="is-shapeless-checkbox" />
+      <DefCheckBox v-model="isShapelessValue" class="is-shapeless-checkbox" labelText="Shapeless" />
 
       <div class='crafting-table-letters-container'>
         <div v-for="(item, index) in letterItems" :key="index" class='crafting-table-letter-item'

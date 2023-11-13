@@ -11,12 +11,19 @@
         </div>
     </div>
     <div class='history-items-container'>
-        <dialog class='histoty-item-deleting-dialog' v-if="showDialog">
+        <EmptyDialog class='histoty-item-deleting-dialog' ref="deletingDialog">
             <p class='history-item-deletig-dialog-main-label'>Are you sure you want to delete this action?</p>
-            <label class='dont-show-label'>Don't show this message in this project anymore </label><input type='checkbox' />
-            <button id='cancelDelete'>Cancel</button><button id='confirmDelete'>Delete</button>
-        </dialog>
-        <div v-for="historyItem in historyItems" class='history-item' @click="addTabFromType(historyItem)">
+            <p class='dont-show-label'>Don't show this message in this project anymore
+                    <DefCheckBox v-model="isShapelessValue" class="is-shapeless-checkbox" />
+           
+            </p>
+            
+            <div class="dialog-buttons">
+                <button @click="closeDialog">Cancel</button>
+                <button @click="confirmDeleting(historyItem)">Delete</button>
+            </div>
+        </EmptyDialog>
+        <div v-for="historyItem in historyItems" class='history-item' @click="openHistoryItem(historyItem)">
             <label class='history-item-type'>{{ actionTypeToString(historyItem.ActionType) }}</label>
             <svg class='history-item-delete-button' @click.stop="deleteHistoryItem(historyItem)" viewBox='0 0 24 24'
                 fill='none'>
@@ -38,12 +45,17 @@
 </template>
 <script>
 import { CurrentProjectHistory, DoShowWarningWhenDeletingActionForCurrentProjectHistory, CurrentProjectChangeAction } from "../../../../wailsjs/go/projectrelated/ProjectManager";
-import { actionTypeToString,historyItemLabel } from "../../../HistoryItemManager";
+import { actionTypeToString, historyItemLabel } from "../../../HistoryItemManager";
+import EmptyDialog from "../../modalDialogs/EmptyDialog.vue"
+import DefCheckBox from "../../default/DefCheckBox.vue"
 
 export default {
+    components: {
+        EmptyDialog,
+        DefCheckBox
+    },
     data() {
         return {
-            showDialog: false,
             historyItems: [],
         };
     },
@@ -54,17 +66,20 @@ export default {
         },
         filterHistoryItems() {
         },
-        addTabFromType(historyItem) {
+        openHistoryItem(historyItem) {
         },
         deleteHistoryItem(historyItem) {
             DoShowWarningWhenDeletingActionForCurrentProjectHistory().then((doShow) => {
                 if (doShow) {
-                    this.showDialog = true;
+                    this.$refs.deletingDialog.showDialog();
                 }
             });
         },
-        closeDialog(doNotShowAgain) {
-            this.showDialog = false;
+        closeDialog() {
+            this.$refs.deletingDialog.closeDialog();
+        },
+        confirmDeleting(historyItem) {
+
         },
         fetchHistoryItems() {
 
@@ -83,7 +98,7 @@ export default {
 <style scoped>
 .history-page-top-container {
     position: absolute;
-    top: calc(30px + 3%);
+    top: calc(30px + 4%);
     left: 3%;
     width: 96%;
     height: calc(20px + 5%);
@@ -134,7 +149,7 @@ export default {
 .history-items-container {
     position: absolute;
     width: 98%;
-    height: 80%;
+    height: calc(90% - 60px - 1vw);
     overflow-y: auto;
     bottom: 2%;
     left: 1%;
@@ -224,13 +239,6 @@ export default {
 }
 
 .histoty-item-deleting-dialog {
-    position: absolute;
-    top: 0;
-    bottom: 14%;
-    width: calc(230px + 32%);
-    background-color: var(--back-2);
-    border-radius: calc(0.35vh + 0.35vw + 7px);
-    border-width: calc(0.05vh + 0.05vw + 4px);
     border-color: var(--warning-bright);
     padding-top: 0;
     padding-left: 1%;
@@ -246,6 +254,19 @@ export default {
     text-align: center;
 }
 
-
-.dont-show-label {}
+.dont-show-label {
+    font-family: 'Figtree';
+    color: var(--front);
+    font-size: calc(0.4vh + 0.65vw + 8px);
+    font-weight: 200;
+    width: 100%;
+    text-align: center;
+}
+.dialog-buttons
+{
+    display: inline-flex;
+    width: 100%;
+    justify-content: right;
+    gap: calc(4px + 0.5vw);
+}
 </style>
