@@ -23,7 +23,6 @@ function IdentifyActionCategory(actionTypeKey) {
     }
 }
 export function historyItemLabel(historyItem) {
-    console.log(historyItem);
     const category=IdentifyActionCategory(historyItem.ActionType);
     if (category === "New recipe") {
         if (historyItem.Arguments.hasOwnProperty('input') && historyItem.Arguments.hasOwnProperty('output')) {

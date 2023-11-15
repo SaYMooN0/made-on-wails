@@ -19,6 +19,8 @@ export function CurrentProjectAddNewRecipe(arg1:string,arg2:{[key: string]: stri
 
 export function CurrentProjectChangeAction(arg1:string,arg2:string,arg3:string,arg4:{[key: string]: string}):Promise<void>;
 
+export function CurrentProjectDeleteAction(arg1:string,arg2:string):Promise<void>;
+
 export function CurrentProjectGetItemsTypeSuggestion(arg1:string):Promise<Array<string>>;
 
 export function CurrentProjectHistory():Promise<Array<projectrelated.HistoryItem>>;
@@ -34,3 +36,5 @@ export function OpenProjectInFileManager(arg1:string):Promise<string>;
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentProjectByFolder(arg1:string):Promise<void>;
+
+export function SetDoShowWarningWhenDeletingActionForCurrentProjectHistory(arg1:boolean):Promise<void>;

@@ -2,6 +2,7 @@ package src
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -30,40 +31,49 @@ func WriteVanillaRecipe(contentToWrite, projectFolderPath, actionId string) {
 	file.WriteString(contentToWrite)
 }
 
-func DeleteAction(actionId, filePath string) {
+func DeleteAction(actionId, filePath string) error {
 	tempFilePath := filepath.Join(os.TempDir(), "tempfile")
-	skipNextLine := false
-
 	file, err := os.Open(filePath)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("error opening file: %v", err)
 	}
 	defer file.Close()
 
 	tempFile, err := os.Create(tempFilePath)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("error creating temp file: %v", err)
 	}
 	defer tempFile.Close()
 
 	scanner := bufio.NewScanner(file)
-	writer := bufio.NewWriter(tempFile)
-
+	skipNextLine := false
 	for scanner.Scan() {
 		line := scanner.Text()
-		if !skipNextLine && !strings.Contains(line, "//Made:"+actionId) {
-			writer.WriteString(line + "\n")
-		} else if strings.Contains(line, "//Made:"+actionId) {
+		if !skipNextLine && !strings.Contains(line, fmt.Sprintf("//Made:%s;", actionId)) {
+			_, err := tempFile.WriteString(line + "\n")
+			if err != nil {
+				return fmt.Errorf("error writing to temp file: %v", err)
+			}
+		} else if strings.Contains(line, fmt.Sprintf("//Made:%s;", actionId)) {
 			skipNextLine = true
 			continue
 		} else if skipNextLine {
 			skipNextLine = false
 		}
 	}
-	writer.Flush()
 
-	os.Remove(filePath)
-	os.Rename(tempFilePath, filePath)
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("error reading file: %v", err)
+	}
+
+	tempFile.Close()
+	file.Close()
+	err = os.Rename(tempFilePath, filePath)
+	if err != nil {
+		return fmt.Errorf("error replacing the file: %v", err)
+	}
+
+	return nil
 }
 
 func GetFullVanillaPath() string {

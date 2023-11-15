@@ -93,7 +93,7 @@ func NewMadeProject(name, fullPath, pathToFolder, version string, loader src.Loa
 		Loader:       loader,
 		CreationDate: currentTime,
 		LastUpdated:  currentTime,
-		Settings:     ProjectSettings{ShowWarningWhenDeletingAction: true}, // Assuming default initialization is fine
+		Settings:     ProjectSettings{ShowWarningWhenDeletingAction: true},
 		History:      []HistoryItem{},
 		Mods:         modList,
 	}
@@ -134,13 +134,13 @@ func (mp *MadeProject) ChangeAction(actionId, filePath string, actionType src.Ac
 }
 func (mp *MadeProject) DeleteAction(actionId, filePath string) {
 	fullPathToFile := filepath.Join(mp.PathToFolder, filepath.FromSlash(filePath))
-	if mp.TryDeleteHistoryItemByActionId(actionId) {
-		DeleteAction(actionId, fullPathToFile)
+	if mp.tryDeleteHistoryItemByActionId(actionId) {
+		src.DeleteAction(actionId, fullPathToFile)
 	}
 	mp.SaveToFile()
 }
 
-func (mp *MadeProject) TryDeleteHistoryItemByActionId(actionId string) bool {
+func (mp *MadeProject) tryDeleteHistoryItemByActionId(actionId string) bool {
 	for i, item := range mp.History {
 		if item.ActionID == actionId {
 			mp.History = append(mp.History[:i], mp.History[i+1:]...)

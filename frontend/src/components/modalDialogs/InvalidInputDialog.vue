@@ -22,10 +22,10 @@
     },
     methods: {
       showDialog() {
-        this.$refs.dialogRef.showModal();
+        this.$refs.dialogRef.showDialog();
       },
       closeDialog() {
-        this.$refs.dialogRef.close();
+        this.$refs.dialogRef.closeDialog();
       },
     },
     components: { EmptyDialog }

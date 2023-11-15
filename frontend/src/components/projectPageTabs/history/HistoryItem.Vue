@@ -30,10 +30,10 @@ export default {
         actionTypeToString,
         historyItemLabel,
         openHistoryItem() {
-            this.$emit('open', this.historyItem);
+            this.$emit('open');
         },
-        deleteHistoryItem(event) {
-            this.$emit('delete', this.historyItem);
+        deleteHistoryItem() {
+            this.$emit('delete');
         }
     }
 };

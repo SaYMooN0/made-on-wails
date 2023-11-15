@@ -110,12 +110,62 @@ export default {
       errDialogText: '',
       letterItems: this.initLetterItems(),
       gridItems: this.initGridItems(),
-    };
+    }
   },
   computed: {
     submitText() { return this.isNew ? 'Save to file' : 'Save changes'; }
   },
   methods: {
+    initLetterItems() {
+      return Object.entries(this.letterItemDictionary).map(([letter, value]) => ({
+        letter,
+        value,
+      }));
+    },
+    addNewLetterForCraftingRecipe() {
+      const currentChars = this.letterItems.map(item => item.letter);
+      let nextChar = null;
+      for (let i = 0; i < 9; i++) {
+        const potentialChar = String.fromCharCode('a'.charCodeAt(0) + i).toUpperCase();
+        if (!currentChars.includes(potentialChar)) {
+          nextChar = potentialChar;
+          break;
+        }
+      }
+
+      if (!nextChar || this.letterItems.length >= 9) {
+        this.errDialogText = 'You can`t add more than 9 letters';
+        this.$refs.errDialog.showDialog();
+        return;
+      }
+
+      this.letterItems.push({
+        letter: nextChar,
+        value: this.letterItemDictionary[nextChar] || '',
+      });
+    },
+    removeLetter(index) {
+      this.letterItems.splice(index, 1);
+      this.errDialogText = '';
+    },
+    initGridItems() {
+      return this.gridLetters.flat();
+    },
+    handleDragOver(event) {
+      event.preventDefault();
+    },
+    handleDrop(event, i, j) {
+      event.preventDefault();
+      const letter = event.dataTransfer.getData('text/plain');
+      this.gridItems[i * 3 + j] = letter;
+    },
+
+    handleDragStart(event, letter) {
+      event.dataTransfer.setData('text/plain', letter);
+    },
+    clearLetters() {
+      this.gridItems = this.gridItems.map(() => '');
+    },
     handleSubmit() {
       this.errDialogText = "";
       const usedLettersInGrid = new Set(this.gridItems.filter(letter => letter.trim() !== ''));
@@ -166,18 +216,19 @@ export default {
       console.log(formArgs);
       if (this.isNew) {
         let properties;
-        console.log(type, formArgs);
         CurrentProjectAddNewRecipe(type, formArgs).then((historyItem) => {
-          console.log(historyItem);
           properties = {
-            initialInput: this.inputValue,
+            letterItemDictionary: this.letterItems,
+            gridLetters: this.gridItems,
+            isShapeless: this.isShapelessValue,
             initialOutput: this.outputValue,
             initialOutputCount: this.outputCountValue,
             filePath: historyItem.FilePath,
             actionId: historyItem.ActionID,
             isNew: false
           };
-          this.newStoneCutterRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
+          console.log(properties);
+          this.newCraftingTableRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
         });
       }
       else {
@@ -186,58 +237,7 @@ export default {
         //   console.log(historyItem);
         // });
       }
-
     },
-    initLetterItems() {
-      return Object.entries(this.letterItemDictionary).map(([letter, value]) => ({
-        letter,
-        value,
-      }));
-    },
-    addNewLetterForCraftingRecipe() {
-      const currentChars = this.letterItems.map(item => item.letter);
-      let nextChar = null;
-      for (let i = 0; i < 9; i++) {
-        const potentialChar = String.fromCharCode('a'.charCodeAt(0) + i).toUpperCase();
-        if (!currentChars.includes(potentialChar)) {
-          nextChar = potentialChar;
-          break;
-        }
-      }
-
-      if (!nextChar || this.letterItems.length >= 9) {
-        this.errDialogText = 'You can`t add more than 9 letters';
-        this.$refs.errDialog.showDialog();
-        return;
-      }
-
-      this.letterItems.push({
-        letter: nextChar,
-        value: this.letterItemDictionary[nextChar] || '',
-      });
-    },
-    removeLetter(index) {
-      this.letterItems.splice(index, 1);
-      this.errDialogText = '';
-    },
-    initGridItems() {
-      return this.gridLetters.flat();
-    },
-    handleDragOver(event) {
-      event.preventDefault();
-    },
-    handleDrop(event, i, j) {
-      event.preventDefault();
-      const letter = event.dataTransfer.getData('text/plain');
-      this.gridItems[i * 3 + j] = letter;
-    },
-
-    handleDragStart(event, letter) {
-      event.dataTransfer.setData('text/plain', letter);
-    },
-    clearLetters() {
-      this.gridItems = this.gridItems.map(() => '');
-    }
   },
   watch: {
     gridLetters: {

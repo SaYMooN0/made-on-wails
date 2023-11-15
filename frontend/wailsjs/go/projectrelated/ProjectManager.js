@@ -34,6 +34,10 @@ export function CurrentProjectChangeAction(arg1, arg2, arg3, arg4) {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectChangeAction'](arg1, arg2, arg3, arg4);
 }
 
+export function CurrentProjectDeleteAction(arg1, arg2) {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProjectDeleteAction'](arg1, arg2);
+}
+
 export function CurrentProjectGetItemsTypeSuggestion(arg1) {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectGetItemsTypeSuggestion'](arg1);
 }
@@ -64,4 +68,8 @@ export function SaveToFile() {
 
 export function SetCurrentProjectByFolder(arg1) {
   return window['go']['projectrelated']['ProjectManager']['SetCurrentProjectByFolder'](arg1);
+}
+
+export function SetDoShowWarningWhenDeletingActionForCurrentProjectHistory(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['SetDoShowWarningWhenDeletingActionForCurrentProjectHistory'](arg1);
 }

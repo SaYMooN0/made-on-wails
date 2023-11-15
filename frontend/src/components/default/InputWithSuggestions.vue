@@ -36,12 +36,16 @@ export default {
   watch: {
     inputValue: {
       handler: function (newValue) {
-        this.suggestionItems=[];
+        if (newValue === undefined)
+          newValue = "";
+        this.suggestionItems = [];
         if (this.suggestionType == "item") {
+          console.log("err",newValue);
           CurrentProjectGetItemsTypeSuggestion(newValue.toLowerCase()).then((resievedSuggestions) => {
             this.suggestionItems = resievedSuggestions;
           });
         }
+
       },
       immediate: true
     }

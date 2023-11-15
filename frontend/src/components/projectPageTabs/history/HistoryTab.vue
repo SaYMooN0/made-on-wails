@@ -12,26 +12,29 @@
     </div>
     <div class='history-items-container'>
         <div v-for="item in historyItems" :key="item.ActionID">
-            <HistoryItem :historyItem="item" @open="openHistoryItem(historyItem)"
-                @delete="deleteHistoryItem(historyItem)" />
+            <HistoryItem :historyItem="item" @open="openHistoryItem(historyItem)" @delete="deleteHistoryItem(item)" />
         </div>
     </div>
 
     <EmptyDialog class='histoty-item-deleting-dialog' ref="deletingDialog">
         <p class='history-item-deletig-dialog-main-label'>Are you sure you want to delete this action?</p>
         <p class='dont-show-label'>Don't show this message in this project anymore
-            <DefCheckBox v-model="isShapelessValue" class="is-shapeless-checkbox" />
+            <DefCheckBox v-model="doNotShowWarningWhenDeletingAction" class="is-shapeless-checkbox" />
 
         </p>
 
         <div class="dialog-buttons">
             <button @click="closeDialog">Cancel</button>
-            <button @click="confirmDeleting(historyItem)">Delete</button>
+            <button @click="confirmDeleting(true)">Delete</button>
         </div>
     </EmptyDialog>
 </template>
 <script>
-import { CurrentProjectHistory, DoShowWarningWhenDeletingActionForCurrentProjectHistory, CurrentProjectChangeAction } from "../../../../wailsjs/go/projectrelated/ProjectManager";
+import {
+    CurrentProjectHistory, DoShowWarningWhenDeletingActionForCurrentProjectHistory, CurrentProjectChangeAction,
+    CurrentProjectDeleteAction,
+    SetDoShowWarningWhenDeletingActionForCurrentProjectHistory
+} from "../../../../wailsjs/go/projectrelated/ProjectManager";
 
 import EmptyDialog from "../../modalDialogs/EmptyDialog.vue"
 import DefCheckBox from "../../default/DefCheckBox.vue"
@@ -45,6 +48,8 @@ export default {
     data() {
         return {
             historyItems: [],
+            doNotShowWarningWhenDeletingAction: false,
+            actionToDelete: {},
         };
     },
     methods: {
@@ -55,22 +60,31 @@ export default {
         openHistoryItem(historyItem) {
         },
         deleteHistoryItem(historyItem) {
+            this.actionToDelete = historyItem;
             DoShowWarningWhenDeletingActionForCurrentProjectHistory().then((doShow) => {
                 if (doShow) {
                     this.$refs.deletingDialog.showDialog();
+                }
+                else {
+                    this.confirmDeleting();
                 }
             });
         },
         closeDialog() {
             this.$refs.deletingDialog.closeDialog();
         },
-        confirmDeleting(historyItem) {
+        confirmDeleting(changeDoNotShowSettings = false) {
+            if (changeDoNotShowSettings) {
+                SetDoShowWarningWhenDeletingActionForCurrentProjectHistory(false);
+            }
+            CurrentProjectDeleteAction(this.actionToDelete.ActionID, this.actionToDelete.FilePath);
 
+            const index = this.historyItems.findIndex(obj => obj === this.actionToDelete);
+            if (index > -1) {  this.historyItems.splice(index, 1);  }
         },
         fetchHistoryItems() {
 
             CurrentProjectHistory().then((history) => {
-                console.log(history);
                 this.historyItems = history;
             });
         }
