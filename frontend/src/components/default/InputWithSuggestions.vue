@@ -2,6 +2,7 @@
   <div>
     <input type="text" class="default-input" @input="handleInput" ref="inputRef"
       @focus="showSuggestions = true; activeIndex = 0" v-model="inputValue" />
+      
     <div v-if="showSuggestions && filteredSuggestions && filteredSuggestions.length" class="suggestions-list">
       <div v-for="(suggestion, index) in filteredSuggestions" :key="suggestion" @click.stop="setActiveSuggestion(index)"
         @dblclick="selectSuggestion(suggestion)" :ref="`suggestion-${index}`"

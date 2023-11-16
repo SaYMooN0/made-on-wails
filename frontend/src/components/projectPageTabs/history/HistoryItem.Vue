@@ -68,6 +68,8 @@ export default {
     font-family: 'Bahnschrift';
     cursor: inherit;
     justify-content: center;
+    font-size: calc(0.45vh + 0.6vw + 9px);
+    padding-top: 0;
 }
 
 .history-item-type {
@@ -75,6 +77,8 @@ export default {
     grid-area: type;
     font-family: 'Figtree';
     cursor: inherit;
+    font-size: calc(0.45vh + 0.65vw + 10px);
+    padding-top: 0;
 }
 
 .history-item-delete-button {
@@ -102,5 +106,6 @@ export default {
     color: var(--front);
     font-family: 'Bahnschrift';
     cursor: inherit;
+    font-size: calc(0.45vh + 0.65vw + 8px);
 }
 </style>

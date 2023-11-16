@@ -32,9 +32,9 @@
         </svg>
       </button>
     </div>
+    
     <div class='crafting-table-grid-zone'>
       <div class='clear-letters-button' @click="clearLetters">Clear letters</div>
-
       <div class='crafting-table-grid-div-container'>
         <div class='crafting-table-grid-div'>
           <div class='crafting-table-grid-item' v-for="(item, index) in gridItems" :key="index"
@@ -43,8 +43,6 @@
           </div>
         </div>
       </div>
-
-
       <DefLine labelText="output:">
         <InputWithSuggestions :value="initialOutput" @updateValue="this.outputValue = $event" suggestion-type="item" />
       </DefLine>
@@ -83,7 +81,7 @@ export default {
     },
     letterItemDictionary: {
       type: Object,
-      default: () => ({}),
+      default: () => [],
     },
     gridLetters: {
       type: Array,
@@ -108,7 +106,7 @@ export default {
       isShapelessValue: this.isShapeless,
       outputCountValue: this.initialOutputCount,
       errDialogText: '',
-      letterItems: this.initLetterItems(),
+      letterItems: this.letterItemDictionary,
       gridItems: this.initGridItems(),
     }
   },
@@ -116,12 +114,6 @@ export default {
     submitText() { return this.isNew ? 'Save to file' : 'Save changes'; }
   },
   methods: {
-    initLetterItems() {
-      return Object.entries(this.letterItemDictionary).map(([letter, value]) => ({
-        letter,
-        value,
-      }));
-    },
     addNewLetterForCraftingRecipe() {
       const currentChars = this.letterItems.map(item => item.letter);
       let nextChar = null;
@@ -227,7 +219,7 @@ export default {
             actionId: historyItem.ActionID,
             isNew: false
           };
-          console.log(properties);
+          console.log("prps", JSON.stringify(properties));
           this.newCraftingTableRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
         });
       }
