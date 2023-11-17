@@ -40,6 +40,28 @@ export default {
 </script>
 
 <style>
+.dialog-container button {
+  width: calc(40px + 1.1vh + 3.5vw);
+  height: calc(20px + 1.8vh + 0.3vw);
+  background-color: var(--back-3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Figtree';
+  font-size: calc(0.3vh + 0.41vw + 11px);
+  font-weight: 200;
+  color: var(--front);
+  border: 1px solid transparent;
+  border-radius: calc(2px + 0.04vw + 0.1vh);
+  cursor: pointer;
+}
+
+.dialog-container button:hover {
+  background-color: var(--bright-2);
+}
+</style>
+
+<style scoped>
 .dialog-wrapper {
   position: fixed;
   top: 0;
@@ -63,26 +85,6 @@ export default {
   padding-right: calc(3px + 1%);
   z-index: 11;
   padding: 1%
-}
-
-button {
-  width: calc(40px + 1.1vh + 3.5vw);
-  height: calc(20px + 1.8vh + 0.3vw);
-  background-color: var(--back-3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Figtree';
-  font-size: calc(0.3vh + 0.41vw + 11px);
-  font-weight: 200;
-  color: var(--front);
-  border: 1px solid transparent;
-  border-radius: calc(2px + 0.04vw + 0.1vh);
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: var(--bright-2);
 }
 
 .dialog-container:focus {

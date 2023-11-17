@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .tabs-container {
   width: 100%;
   max-width: 100%;
