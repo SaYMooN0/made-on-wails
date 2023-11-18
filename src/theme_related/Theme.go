@@ -31,3 +31,19 @@ func NewTheme(name string, mainBack, secondBack, thirdBack, mainFront, secondFro
 		WarningBright: warningBright,
 	}
 }
+func (t *Theme) GetValues() map[string]string {
+	return map[string]string{
+		"Name":               t.Name,
+		"MainBackColor":      t.MainBack.ToHex(),
+		"SecondBackColor":    t.SecondBack.ToHex(),
+		"ThirdBackColor":     t.ThirdBack.ToHex(),
+		"MainFrontColor":     t.MainFront.ToHex(),
+		"SecondFrontColor":   t.SecondFront.ToHex(),
+		"ThirdFrontColor":    t.ThirdFront.ToHex(),
+		"MainBrightColor":    t.MainBright.ToHex(),
+		"SecondBrightColor":  t.SecondBright.ToHex(),
+		"ThirdBrightColor":   t.ThirdBright.ToHex(),
+		"WarningMainColor":   t.WarningMain.ToHex(),
+		"WarningBrightColor": t.WarningBright.ToHex(),
+	}
+}

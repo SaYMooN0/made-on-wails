@@ -10,6 +10,10 @@ export function CurrentThemeColors() {
   return window['go']['themerelated']['ThemeCollection']['CurrentThemeColors']();
 }
 
+export function GetAllThemesValues() {
+  return window['go']['themerelated']['ThemeCollection']['GetAllThemesValues']();
+}
+
 export function SaveToFile() {
   return window['go']['themerelated']['ThemeCollection']['SaveToFile']();
 }

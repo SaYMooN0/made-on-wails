@@ -6,6 +6,8 @@ export function CurrentTheme():Promise<themerelated.Theme>;
 
 export function CurrentThemeColors():Promise<{[key: string]: string}>;
 
+export function GetAllThemesValues():Promise<Array<{[key: string]: string}>>;
+
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentTheme(arg1:themerelated.Theme):Promise<void>;
