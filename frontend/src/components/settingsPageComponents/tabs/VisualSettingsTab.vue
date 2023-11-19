@@ -1,9 +1,11 @@
 <template>
     <div class="visual-settings-container">
-        <div class="one-theme-zone">
-            <div v-for="(value, key) in chosenThemeColorFields" :key="key">
-                <label>{{ key }}: </label>{{ value }}
+        <div class="chosen-theme-zone">
+            <label class="chosen-theme-name">Theme: {{chosenTheme.Name}}</label>
+            <div class="color-labels-container">
+                <ColorLabel v-for="(value, key) in chosenThemeColorFields" :key="key" :label="key" :color="value" />
             </div>
+
         </div>
         <div class="avaliable-themes-zone">
 
@@ -14,7 +16,7 @@
 
 
 import { CurrentThemeColors, GetAllThemesValues } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
-
+import ColorLabel from "../tabsComponents/ColorLabel.vue";
 export default {
     data() {
         return {
@@ -53,6 +55,10 @@ export default {
         GetAllThemesValues().then((themes) => {
             this.avaliableThemes = themes;
         });
+    },
+    components:
+    {
+        ColorLabel
     }
 }
 </script>
@@ -62,18 +68,42 @@ export default {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: calc(35vw + 60px) 1fr;
 }
 
-.one-theme-zone {
-    background-color: cadetblue;
-    height: 100%;
+.chosen-theme-zone {
+    background-color: var(--back);
+    height: 84%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding:8% 0 10% 4%;
+    gap:10%;
 }
-
+.chosen-theme-name
+{
+    color: var(--front);
+    font-family: 'Figtree';
+    font-size: calc(1.4vh + 1.4vw + 11px);
+    padding-left: 8px;
+}
+.color-labels-container
+{
+    justify-self: center;
+    width: 70%;
+    height:calc(50% + 120px);
+    padding:5vh 4% 5vh 8%;
+    background-color: #f5f5f5;
+    border-radius: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 .avaliable-themes-zone {
     background-color: violet;
     height: 100%;
     width: 100%;
 }
+
 </style>
