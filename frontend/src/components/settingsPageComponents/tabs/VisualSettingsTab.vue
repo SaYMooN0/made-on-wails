@@ -1,14 +1,17 @@
 <template>
     <div class="visual-settings-container">
         <div class="chosen-theme-zone">
-            <label class="chosen-theme-name">Theme: {{chosenTheme.Name}}</label>
+            <label class="chosen-theme-name">Theme: {{ chosenTheme.Name }}</label>
             <div class="color-labels-container">
                 <ColorLabel v-for="(value, key) in chosenThemeColorFields" :key="key" :label="key" :color="value" />
             </div>
 
         </div>
         <div class="avaliable-themes-zone">
-
+            <label class="avaliable-themes-label">Available themes:</label>
+            <div class="themes-labels-container">
+                <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" />
+            </div>
         </div>
     </div>
 </template>
@@ -17,6 +20,8 @@
 
 import { CurrentThemeColors, GetAllThemesValues } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
 import ColorLabel from "../tabsComponents/ColorLabel.vue";
+import ThemeLabel from "../tabsComponents/ThemeLabel.vue";
+
 export default {
     data() {
         return {
@@ -58,7 +63,8 @@ export default {
     },
     components:
     {
-        ColorLabel
+        ColorLabel,
+        ThemeLabel
     }
 }
 </script>
@@ -78,32 +84,33 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding:8% 0 10% 4%;
-    gap:10%;
+    padding: 8% 0 10% 4%;
+    gap: 10%;
 }
-.chosen-theme-name
-{
+
+.chosen-theme-name {
     color: var(--front);
     font-family: 'Figtree';
     font-size: calc(1.4vh + 1.4vw + 11px);
     padding-left: 8px;
+    max-height: 10vh;
 }
-.color-labels-container
-{
+
+.color-labels-container {
     justify-self: center;
     width: 70%;
-    height:calc(50% + 120px);
-    padding:5vh 4% 5vh 8%;
+    height: calc(50% + 120px);
+    padding: 5vh 4% 5vh 8%;
     background-color: #f5f5f5;
     border-radius: 2%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
+
 .avaliable-themes-zone {
     background-color: violet;
     height: 100%;
     width: 100%;
 }
-
 </style>
