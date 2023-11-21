@@ -1,13 +1,15 @@
 <template>
-  <div class="tabs-container">
-    <button @click="setActiveTab('visual')" class="tab-button">Visual</button>
-    <button @click="setActiveTab('hotkeys')" class="tab-button">Hotkeys</button>
-    <button @click="setActiveTab('others')" class="tab-button">Others</button>
-  </div>
-  <div class="tabs-content">
-    <VisualSettingsTab v-if="activeTab === 'visual'" />
-    <HotKeysSettingsTab v-if="activeTab === 'hotkeys'" />
-    <OtherSettingsTab v-if="activeTab === 'others'" />
+  <div class="settings-container">
+    <div class="tabs-container">
+      <button @click="setActiveTab('visual')" class="tab-button">Visual</button>
+      <button @click="setActiveTab('hotkeys')" class="tab-button">Hotkeys</button>
+      <button @click="setActiveTab('others')" class="tab-button">Others</button>
+    </div>
+    <div class="tabs-content">
+      <VisualSettingsTab v-if="activeTab === 'visual'" />
+      <HotKeysSettingsTab v-if="activeTab === 'hotkeys'" />
+      <OtherSettingsTab v-if="activeTab === 'others'" />
+    </div>
   </div>
   <button @click="backToMain" class="go-back-button">Go back</button>
 </template>
@@ -39,22 +41,25 @@ export default {
 }
 </script>
 <style scoped>
+.settings-container {
+  display: grid;
+  grid-template-rows:calc(1vh + 32px + 0.1vw) 1fr;
+  height: 100vh;
+}
+
 .tabs-container {
-  position: absolute;
+  height: calc(100% - 2px);
   width: calc(100% - 10px);
   padding-left: 10px;
   display: grid;
   grid-template-columns: auto auto auto 1fr;
-  background-color: var(--back);
-  border-bottom: 2px var(--back-2) solid;
-  height: calc(1vh + 30px + 0.1vw);
   align-items: center;
+  border-bottom: 2px var(--back-2) solid;;
 }
-.tabs-content{
-  position: absolute;
-  top:calc(2vh + 24px + 0.2vw);
+
+.tabs-content {
   width: 100%;
-  height: calc(100% - 2vh - 24px - 0.2vw);
+  height: 100%;
 }
 
 .tab-button {
@@ -66,7 +71,7 @@ export default {
   align-items: center;
   color: var(--front);
   height: 80%;
-  padding:0 calc(4px + 0.12vw + 0.7vh) 0 calc(4px + 0.12vw + 0.7vh);
+  padding: 0 calc(4px + 0.12vw + 0.7vh) 0 calc(4px + 0.12vw + 0.7vh);
   font-family: 'Figtree';
 }
 
@@ -94,4 +99,5 @@ export default {
 
 .go-back-button:hover {
   background-color: var(--bright-3);
-}</style>
+}
+</style>

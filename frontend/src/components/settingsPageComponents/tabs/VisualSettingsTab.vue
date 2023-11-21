@@ -70,46 +70,45 @@ export default {
 </script>
 <style scoped>
 .visual-settings-container {
-    background-color: red;
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: calc(35vw + 60px) 1fr;
+    grid-template-columns: calc(35vw + 80px + 3vh) 1fr;
 }
 
 .chosen-theme-zone {
     background-color: var(--back);
-    height: 84%;
+    height: 100%;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 8% 0 10% 4%;
-    gap: 10%;
+    display: grid;
+    grid-template-rows: calc(20px + 12vh) 1fr;
+    padding-left: calc(6% - 5px);
 }
 
 .chosen-theme-name {
     color: var(--front);
     font-family: 'Figtree';
-    font-size: calc(1.4vh + 1.4vw + 11px);
-    padding-left: 8px;
-    max-height: 10vh;
+    font-size: calc(1.2vh + 1.55vw + 11px);
+    padding-left: calc(4px + 1vw - 1vh);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .color-labels-container {
-    justify-self: center;
-    width: 70%;
-    height: calc(50% + 120px);
-    padding: 5vh 4% 5vh 8%;
+    width: calc(68% + 64px);
+    height: 100%;
+    max-height: calc(60px + 50vh);
+    align-self:center;
+    padding: 4%;
     background-color: #f5f5f5;
     border-radius: 2%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+    grid-template-rows: repeat(11, 1fr);
 }
 
 .avaliable-themes-zone {
-    background-color: violet;
     height: 100%;
     width: 100%;
 }
