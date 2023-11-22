@@ -1,32 +1,60 @@
+
 <template>
   <label class="color-label">
     {{ label }}:
     <div class="color-operating-container">
+   
       <label class="color-pair">
-        {{ color }}
+        <template v-if="isEditing">
+          <input v-model="editableColor" class="color-input" />
+        </template>
+        <template v-else>
+          {{ color }}
+        </template>
         <span :style="`background-color: ${color}`" class="color-div"></span>
       </label>
-      <div class="change-color-button">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path
-            d="M11 4H7.2C6.0799 4 5.51984 4 5.09202 4.21799C4.71569 4.40974 4.40973 4.7157 4.21799 5.09202C4 5.51985 4 6.0799 4 7.2V16.8C4 17.9201 4 18.4802 4.21799 18.908C4.40973 19.2843 4.71569 19.5903 5.09202 19.782C5.51984 20 6.0799 20 7.2 20H16.8C17.9201 20 18.4802 20 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V12.5M15.5 5.5L18.3284 8.32843M10.7627 10.2373L17.411 3.58902C18.192 2.80797 19.4584 2.80797 20.2394 3.58902C21.0205 4.37007 21.0205 5.6364 20.2394 6.41745L13.3774 13.2794C12.6158 14.0411 12.235 14.4219 11.8012 14.7247C11.4162 14.9936 11.0009 15.2162 10.564 15.3882C10.0717 15.582 9.54378 15.6885 8.48793 15.9016L8 16L8.04745 15.6678C8.21536 14.4925 8.29932 13.9048 8.49029 13.3561C8.65975 12.8692 8.89125 12.4063 9.17906 11.9786C9.50341 11.4966 9.92319 11.0768 10.7627 10.2373Z"
-            stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+
+      <div class="change-color-button" @click="toggleEditing">
+
+        <template v-if="isEditing">
+          save
+        </template>
+        <template v-else>
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M11 4H7.2C6.0799 4 5.51984 4 5.09202 4.21799C4.71569 4.40974 4.40973 4.7157 4.21799 5.09202C4 5.51985 4 6.0799 4 7.2V16.8C4 17.9201 4 18.4802 4.21799 18.908C4.40973 19.2843 4.71569 19.5903 5.09202 19.782C5.51984 20 6.0799 20 7.2 20H16.8C17.9201 20 18.4802 20 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V12.5M15.5 5.5L18.3284 8.32843M10.7627 10.2373L17.411 3.58902C18.192 2.80797 19.4584 2.80797 20.2394 3.58902C21.0205 4.37007 21.0205 5.6364 20.2394 6.41745L13.3774 13.2794C12.6158 14.0411 12.235 14.4219 11.8012 14.7247C11.4162 14.9936 11.0009 15.2162 10.564 15.3882C10.0717 15.582 9.54378 15.6885 8.48793 15.9016L8 16L8.04745 15.6678C8.21536 14.4925 8.29932 13.9048 8.49029 13.3561C8.65975 12.8692 8.89125 12.4063 9.17906 11.9786C9.50341 11.4966 9.92319 11.0768 10.7627 10.2373Z"
+              stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </template>
+
       </div>
     </div>
-
   </label>
 </template>
-  
+
 <script>
 export default {
   props: {
     label: String,
     color: String
+  },
+  data() {
+    return {
+      isEditing: false,
+      editableColor: this.color
+    };
+  },
+  methods: {
+    toggleEditing() {
+      this.isEditing = !this.isEditing;
+      if (!this.isEditing) {
+        console.log(this.editableColor);
+      }
+    }
   }
 };
 </script>
-  
+
 <style scoped>
 .color-label {
   color: black;
@@ -38,6 +66,11 @@ export default {
   justify-content: space-between;
   padding: 0;
   padding-right: 2%;
+}
+
+.color-input {
+  
+  max-width: 40%;
 }
 
 .color-div {
@@ -63,10 +96,16 @@ export default {
 }
 
 .change-color-button {
-  width: 100%;
+  height: 96%;
   aspect-ratio: 1/1;
   border-radius: 10%;
-  background-color: violet;
+  background-color: gainsboro;
+  padding: 2%;
+  cursor: pointer;
+}
+
+.change-color-button:hover {
+  background-color: grey;
 }
 </style>
   

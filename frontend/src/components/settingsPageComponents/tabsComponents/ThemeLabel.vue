@@ -1,10 +1,14 @@
 <template>
-    <p  class="theme-label">
+    <label class="theme-label">
         {{ theme.Name }}
-        <div class="colors-container">
-            <div v-for="color in ThemeColorFields" class="color-div" :style="`background-color: ${color}`"></div>
+        <div class="right-side-container">
+            <div class="colors-container">
+                <div v-for="color in ThemeColorFields" class="color-div" :style="`background-color: ${color}`"></div>
+            </div>
+            <button class="edit-theme-button">edt</button>
+            <button class="delete-theme-button">del</button>
         </div>
-    </p>
+    </label>
 </template>
     
 <script>
@@ -24,27 +28,49 @@ export default {
     
 <style scoped>
 .theme-label {
-    color: black;
-    font-size: calc(0.5vh + 0.3vw + 11px);
+    font-size: calc(0.5vh + 0.5vw + 10px);
     font-weight: 600;
     font-family: 'Figtree';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 1%;
+    padding: calc(2px + 0.2vw + 0.2vh);
+    color: var(--front);
+    background-color: var(--back-2);
+    border-radius: 2px;
+    margin-top: calc(5px + 0.5vh);
+    transition: 0.1s all;
+    cursor: pointer;
 }
-
+.theme-label:hover{
+    background-color: var(--back-3);
+    color: var(--front-3);
+}
 .colors-container {
     display: flex;
     justify-content: space-between;
-    height: calc(0.3vh + 0.35vw + 11px);
-    max-width: calc(80px + 25vw );
+    height: calc(0.3vh + 0.5vw + 8px);
+    max-width: calc(80px + 25vw);
     background-color: white;
     align-items: center;
-    padding: 1%;
+    padding: calc(2px + 0.1vw + 0.1vh);
     gap: 5px;
-    
+    border-radius: 2px;
+}
 
+.right-side-container {
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 920px) {
+    .right-side-container .delete-theme-button {
+        display: none;
+    }
+
+    .right-side-container .edit-theme-button {
+        display: none;
+    }
 }
 
 .color-div {

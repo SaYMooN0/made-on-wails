@@ -8,10 +8,11 @@
 
         </div>
         <div class="avaliable-themes-zone">
-            <label class="avaliable-themes-label">Available themes:</label>
+            <p class="avaliable-themes-label">Available themes:</p>
             <div class="themes-labels-container">
                 <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" />
             </div>
+            <button class="new-theme-button">Create new theme</button>
         </div>
     </div>
 </template>
@@ -74,6 +75,7 @@ export default {
     width: 100%;
     display: grid;
     grid-template-columns: calc(35vw + 80px + 3vh) 1fr;
+    gap: 6px;
 }
 
 .chosen-theme-zone {
@@ -81,7 +83,7 @@ export default {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: calc(20px + 12vh) 1fr;
+    grid-template-rows: calc(24vh - 40px) 1fr;
     padding-left: calc(6% - 5px);
 }
 
@@ -99,17 +101,31 @@ export default {
 .color-labels-container {
     width: calc(68% + 64px);
     height: 100%;
-    max-height: calc(60px + 50vh);
-    align-self:center;
-    padding: 4%;
+    max-height: calc(50px + 54vh);
+    align-self: center;
     background-color: #f5f5f5;
     border-radius: 2%;
     display: grid;
     grid-template-rows: repeat(11, 1fr);
+    padding: 4%;
+    overflow-y: auto;
 }
 
 .avaliable-themes-zone {
     height: 100%;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.avaliable-themes-label {
     width: 100%;
+    color: var(--front);
+    font-family: 'Figtree';
+    margin-top: calc(1vh + 0.5vw + 10px);
+    margin-bottom: 4px;
+    font-size: calc(0.9vh + 1.2vw + 9px);
+    text-align: center;
+    border-bottom: 2px var(--back-2) solid;
 }
 </style>
