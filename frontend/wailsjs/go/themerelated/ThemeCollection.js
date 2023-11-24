@@ -21,3 +21,11 @@ export function SaveToFile() {
 export function SetCurrentTheme(arg1) {
   return window['go']['themerelated']['ThemeCollection']['SetCurrentTheme'](arg1);
 }
+
+export function ThemeFromHexToNormal(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12) {
+  return window['go']['themerelated']['ThemeCollection']['ThemeFromHexToNormal'](arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+}
+
+export function UpdateTheme(arg1, arg2) {
+  return window['go']['themerelated']['ThemeCollection']['UpdateTheme'](arg1, arg2);
+}

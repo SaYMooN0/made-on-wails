@@ -8,10 +8,19 @@ import (
 type ThemeCollection struct {
 	Themes           []Theme `json:"Themes"`
 	CurrentThemeName string  `json:"_currentThemeName"`
-	ThemeNames       []string
-	FileName         string `json:"-"`
+	FileName         string  `json:"-"`
 }
 
+func (tc *ThemeCollection) UpdateTheme(name string, newTheme Theme) string {
+	for i, theme := range tc.Themes {
+		if theme.Name == name {
+			tc.Themes[i] = newTheme
+			tc.SaveToFile()
+			return ""
+		}
+	}
+	return "Failed to update the theme"
+}
 func (tc *ThemeCollection) CurrentTheme() *Theme {
 	for _, theme := range tc.Themes {
 		if theme.Name == tc.CurrentThemeName {
@@ -59,7 +68,6 @@ func CreateDefaultThemesFile() {
 	dark := DefaultDark()
 	light := DefaultLight()
 	themeCollection.Themes = append(themeCollection.Themes, *dark, *light)
-	themeCollection.ThemeNames = append(themeCollection.ThemeNames, dark.Name, light.Name)
 	themeCollection.CurrentThemeName = dark.Name
 	err := themeCollection.SaveToFile()
 	if err != nil {
@@ -73,13 +81,27 @@ func LoadFromFile() *ThemeCollection {
 	if err != nil {
 		errMessage := "Error: LoadFromFile " + err.Error() + "\n"
 		os.WriteFile("error.txt", []byte(errMessage), 0644)
+		return nil
 	}
+
 	var themes ThemeCollection
 	err = json.Unmarshal(data, &themes)
 	if err != nil {
 		errMessage := "Error: LoadFromFile json " + err.Error() + "\n"
 		os.WriteFile("error.txt", []byte(errMessage), 0644)
+		return nil
 	}
+	uniqueThemes := make([]Theme, 0)
+	seen := make(map[string]bool)
+
+	for _, theme := range themes.Themes {
+		if _, found := seen[theme.Name]; !found {
+			uniqueThemes = append(uniqueThemes, theme)
+			seen[theme.Name] = true
+		}
+	}
+
+	themes.Themes = uniqueThemes
 	return &themes
 }
 
@@ -94,36 +116,56 @@ func (tc *ThemeCollection) SaveToFile() error {
 	}
 	return nil
 }
-func DefaultDark() *Theme {
+func (tc *ThemeCollection) ThemeFromHexToNormal(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright string) *Theme {
+	return NewThemeFromHexValues(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright)
+}
+func NewThemeFromHexValues(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright string) *Theme {
 	return NewTheme(
+		name,
+		FromHex(mainBack),
+		FromHex(secondBack),
+		FromHex(thirdBack),
+		FromHex(mainFront),
+		FromHex(secondFront),
+		FromHex(thirdFront),
+		FromHex(mainBright),
+		FromHex(secondBright),
+		FromHex(thirdBright),
+		FromHex(warningMain),
+		FromHex(warningBright),
+	)
+}
+
+func DefaultDark() *Theme {
+	return NewThemeFromHexValues(
 		"default dark",
-		FromHex("#272527"),
-		FromHex("#2F2E37"),
-		FromHex("#3B3946"),
-		FromHex("#D8D3DC"),
-		FromHex("#D4BFFD"),
-		FromHex("#A782EA"),
-		FromHex("#8862D5"),
-		FromHex("#7E54D5"),
-		FromHex("#5A39AD"),
-		FromHex("#7E032A"),
-		FromHex("#930336"),
+		"#272527",
+		"#2F2E37",
+		"#3B3946",
+		"#D8D3DC",
+		"#D4BFFD",
+		"#A782EA",
+		"#8862D5",
+		"#7E54D5",
+		"#5A39AD",
+		"#7E032A",
+		"#930336",
 	)
 }
 
 func DefaultLight() *Theme {
-	return NewTheme(
+	return NewThemeFromHexValues(
 		"default light",
-		FromHex("#E0E1DD"),
-		FromHex("#D5BDAF"),
-		FromHex("#C9B9B0"),
-		FromHex("#457B9D"),
-		FromHex("#1F4558"),
-		FromHex("#1D3557"),
-		FromHex("#171020"),
-		FromHex("#222B48"),
-		FromHex("#262D4A"),
-		FromHex("#7E032A"),
-		FromHex("#930336"),
+		"#E0E1DD",
+		"#D5BDAF",
+		"#C9B9B0",
+		"#457B9D",
+		"#1F4558",
+		"#1D3557",
+		"#171020",
+		"#222B48",
+		"#262D4A",
+		"#7E032A",
+		"#930336",
 	)
 }

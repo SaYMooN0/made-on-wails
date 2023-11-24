@@ -117,9 +117,5 @@
       }
     }
   ],
-  "_currentThemeName": "default dark",
-  "ThemeNames": [
-    "default dark",
-    "default light"
-  ]
+  "_currentThemeName": "default dark"
 }

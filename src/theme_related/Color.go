@@ -3,6 +3,7 @@ package themerelated
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Color struct {
@@ -18,8 +19,13 @@ func (c Color) ToHex() string {
 }
 
 func FromHex(hex string) Color {
-	r, _ := strconv.ParseUint(hex[1:3], 16, 8)
-	g, _ := strconv.ParseUint(hex[3:5], 16, 8)
-	b, _ := strconv.ParseUint(hex[5:7], 16, 8)
+	if strings.HasPrefix(hex, "#") {
+		hex = hex[1:]
+	}
+	hex = strings.ToLower(hex)
+	r, _ := strconv.ParseUint(hex[0:2], 16, 8)
+	g, _ := strconv.ParseUint(hex[2:4], 16, 8)
+	b, _ := strconv.ParseUint(hex[4:6], 16, 8)
+
 	return NewColor(uint8(r), uint8(g), uint8(b))
 }

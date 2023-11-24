@@ -1,6 +1,6 @@
 
 <template>
-  <label class="color-label">
+  <label class="color-label non-selectable">
     {{ label }}:
     <div class="color-operating-container">
 
@@ -75,20 +75,26 @@ export default {
       this.isEditing = !this.isEditing;
     },
     saveNewColor() {
-      if (this.isEditing) {
-        console.log(this.editableColor);
+      if (this.isValidColor(this.editableColor)) {
+        this.updateTheme(this.label, this.editableColor);
+        this.isEditing = false;
+      } else {
+        this.showError(`Invalid color ${this.editableColor} for ${this.label}`);
       }
-      this.isEditing = !this.isEditing;
     },
     cancelEditing() {
       this.editableColor = this.color;
       this.isEditing = false;
+    },
+    isValidColor(color) {
+      const regex = /^#[0-9A-Fa-f]{6}$/;
+      return regex.test(color);
     }
   },
   components: {
     IconButton
   },
-  inject: ['cancelColorsEditing'],
+  inject: ['cancelColorsEditing', 'updateTheme', 'showError'],
 };
 </script>
 

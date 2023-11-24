@@ -32,7 +32,7 @@
 <script>
 
 
-import { CurrentThemeColors, GetAllThemesValues } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
+import { CurrentThemeColors, GetAllThemesValues, UpdateTheme, ThemeFromHexToNormal } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
 import ColorLabel from "../tabsComponents/ColorLabel.vue";
 import ThemeLabel from "../tabsComponents/ThemeLabel.vue";
 
@@ -65,6 +65,22 @@ export default {
                     colorLabelComponent.cancelEditing();
                 });
             }
+        },
+        updateTheme(themeField, colorValue) {
+            this.chosenTheme[themeField] = colorValue;
+            console.log(themeField, colorValue);
+            console.log(this.chosenTheme);
+            ThemeFromHexToNormal(this.chosenTheme.Name, this.chosenTheme.MainBackColor, this.chosenTheme.SecondBackColor, this.chosenTheme.ThirdBackColor, this.chosenTheme.MainFrontColor, this.chosenTheme.SecondFrontColor, this.chosenTheme.ThirdFrontColor, this.chosenTheme.MainBrightColor, this.chosenTheme.SecondBrightColor, this.chosenTheme.ThirdBrightColor, this.chosenTheme.WarningMainColor, this.chosenTheme.WarningBrightColor).then((validThemeValues) => {
+                UpdateTheme(validThemeValues.Name, validThemeValues).then((returnedString) => {
+                    if (returnedString) {
+                        this.showError(returnedString);
+                    }
+                });
+            });
+
+        },
+        showError(text) {
+            console.log(text);
         }
     },
     computed: {
@@ -90,6 +106,8 @@ export default {
     provide() {
         return {
             cancelColorsEditing: this.cancelAllEditing,
+            updateTheme: this.updateTheme,
+            showError: this.showError
         }
     },
 }
