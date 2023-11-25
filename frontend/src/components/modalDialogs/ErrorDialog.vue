@@ -5,7 +5,7 @@
       <div class="btn-container">
         <button @click="closeDialog" class="close-button">Close</button>
       </div>
-     
+
     </div>
   </EmptyDialog>
 </template>
@@ -22,10 +22,10 @@ export default {
   },
   methods: {
     showDialog() {
-      this.$refs.dialogRef.showModal();
+      this.$refs.dialogRef.showDialog();
     },
     closeDialog() {
-      this.$refs.dialogRef.close();
+      this.$refs.dialogRef.closeDialog();
     },
   },
   components: { EmptyDialog }
@@ -46,6 +46,7 @@ export default {
   margin-bottom: 0;
   text-align: justify;
 }
+
 .btn-container {
   margin-top: 0px;
   display: flex;

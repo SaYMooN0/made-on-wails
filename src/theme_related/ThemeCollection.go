@@ -34,22 +34,22 @@ func (tc *ThemeCollection) CurrentTheme() *Theme {
 	tc.Themes = append(tc.Themes, *defaultTheme)
 	return defaultTheme
 }
-func (tc *ThemeCollection) GetAllThemesValues() []map[string]string {
-	var themesInfo []map[string]string
+func (tc *ThemeCollection) GetAllThemesValues() []ThemeHex {
+	var themesArray []ThemeHex
 
 	for _, theme := range tc.Themes {
-		themeInfo := theme.GetValues()
-		themesInfo = append(themesInfo, themeInfo)
+		themeHex := NewThemeHex(theme)
+		themesArray = append(themesArray, *themeHex)
 	}
 
-	return themesInfo
+	return themesArray
 }
-func (tc *ThemeCollection) CurrentThemeColors() map[string]string {
+func (tc *ThemeCollection) CurrentThemeColors() *ThemeHex {
 	current := tc.CurrentTheme()
 	if current == nil {
 		return nil
 	}
-	return current.GetValues()
+	return NewThemeHex(*current)
 }
 
 func (tc *ThemeCollection) SetCurrentTheme(theme Theme) {
@@ -116,9 +116,23 @@ func (tc *ThemeCollection) SaveToFile() error {
 	}
 	return nil
 }
-func (tc *ThemeCollection) ThemeFromHexToNormal(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright string) *Theme {
-	return NewThemeFromHexValues(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright)
+func (tc *ThemeCollection) ThemeFromHexTheme(th ThemeHex) *Theme {
+	return NewTheme(
+		th.Name,
+		FromHex(th.MainBackColor),
+		FromHex(th.SecondBackColor),
+		FromHex(th.ThirdBackColor),
+		FromHex(th.MainFrontColor),
+		FromHex(th.SecondFrontColor),
+		FromHex(th.ThirdFrontColor),
+		FromHex(th.MainBrightColor),
+		FromHex(th.SecondBrightColor),
+		FromHex(th.ThirdBrightColor),
+		FromHex(th.WarningMainColor),
+		FromHex(th.WarningBrightColor),
+	)
 }
+
 func NewThemeFromHexValues(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright string) *Theme {
 	return NewTheme(
 		name,

@@ -11,7 +11,7 @@
         <div class="avaliable-themes-zone">
             <p class="avaliable-themes-label">Available themes:</p>
             <div class="themes-labels-container">
-                <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" />
+                <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" @click="changeTheme(theme.Name)" />
             </div>
             <button class="new-theme-button">
                 Create new theme
@@ -25,26 +25,34 @@
                     <path d="M7.98999 2V7" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
                         stroke-linejoin="round" />
                     <path d="M12 2V4" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg></button>
+                </svg>
+            </button>
         </div>
     </div>
+    <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`" />
 </template>
 <script>
 
 
-import { CurrentThemeColors, GetAllThemesValues, UpdateTheme, ThemeFromHexToNormal } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
+import { CurrentThemeColors, GetAllThemesValues, UpdateTheme, ThemeFromHexTheme,SetCurrentTheme } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
 import ColorLabel from "../tabsComponents/ColorLabel.vue";
 import ThemeLabel from "../tabsComponents/ThemeLabel.vue";
+import ErrorDialog from "../../modalDialogs/ErrorDialog.vue"
 
 export default {
     data() {
         return {
             avaliableThemes: [],
-            chosenTheme: {}
+            chosenTheme: {},
+            errDialogText: '',
         };
     },
     methods: {
-        changeTheme() {
+        changeTheme(themeName) { 
+            // SetCurrentTheme();
+        }
+        ,
+        applyCurrentThemeColors() {
             CurrentThemeColors().then((theme) => {
                 document.documentElement.style.setProperty('--back', theme.MainBackColor);
                 document.documentElement.style.setProperty('--back-2', theme.SecondBackColor);
@@ -68,19 +76,21 @@ export default {
         },
         updateTheme(themeField, colorValue) {
             this.chosenTheme[themeField] = colorValue;
-            console.log(themeField, colorValue);
-            console.log(this.chosenTheme);
-            ThemeFromHexToNormal(this.chosenTheme.Name, this.chosenTheme.MainBackColor, this.chosenTheme.SecondBackColor, this.chosenTheme.ThirdBackColor, this.chosenTheme.MainFrontColor, this.chosenTheme.SecondFrontColor, this.chosenTheme.ThirdFrontColor, this.chosenTheme.MainBrightColor, this.chosenTheme.SecondBrightColor, this.chosenTheme.ThirdBrightColor, this.chosenTheme.WarningMainColor, this.chosenTheme.WarningBrightColor).then((validThemeValues) => {
+            ThemeFromHexTheme(this.chosenTheme).then((validThemeValues) => {
                 UpdateTheme(validThemeValues.Name, validThemeValues).then((returnedString) => {
                     if (returnedString) {
                         this.showError(returnedString);
+                    }
+                    else {
+                       this.applyCurrentThemeColors();
                     }
                 });
             });
 
         },
         showError(text) {
-            console.log(text);
+            this.errDialogText = text;
+            this.$refs.errDialog.showDialog();
         }
     },
     computed: {
@@ -101,7 +111,8 @@ export default {
     components:
     {
         ColorLabel,
-        ThemeLabel
+        ThemeLabel,
+        ErrorDialog
     },
     provide() {
         return {

@@ -4,14 +4,14 @@ import {themerelated} from '../models';
 
 export function CurrentTheme():Promise<themerelated.Theme>;
 
-export function CurrentThemeColors():Promise<{[key: string]: string}>;
+export function CurrentThemeColors():Promise<themerelated.ThemeHex>;
 
-export function GetAllThemesValues():Promise<Array<{[key: string]: string}>>;
+export function GetAllThemesValues():Promise<Array<themerelated.ThemeHex>>;
 
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentTheme(arg1:themerelated.Theme):Promise<void>;
 
-export function ThemeFromHexToNormal(arg1:string,arg2:string,arg3:string,arg4:string,arg5:string,arg6:string,arg7:string,arg8:string,arg9:string,arg10:string,arg11:string,arg12:string):Promise<themerelated.Theme>;
+export function ThemeFromHexTheme(arg1:themerelated.ThemeHex):Promise<themerelated.Theme>;
 
 export function UpdateTheme(arg1:string,arg2:themerelated.Theme):Promise<string>;

@@ -252,6 +252,40 @@ export namespace themerelated {
 		    return a;
 		}
 	}
+	export class ThemeHex {
+	    Name: string;
+	    MainBackColor: string;
+	    SecondBackColor: string;
+	    ThirdBackColor: string;
+	    MainFrontColor: string;
+	    SecondFrontColor: string;
+	    ThirdFrontColor: string;
+	    MainBrightColor: string;
+	    SecondBrightColor: string;
+	    ThirdBrightColor: string;
+	    WarningMainColor: string;
+	    WarningBrightColor: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ThemeHex(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Name = source["Name"];
+	        this.MainBackColor = source["MainBackColor"];
+	        this.SecondBackColor = source["SecondBackColor"];
+	        this.ThirdBackColor = source["ThirdBackColor"];
+	        this.MainFrontColor = source["MainFrontColor"];
+	        this.SecondFrontColor = source["SecondFrontColor"];
+	        this.ThirdFrontColor = source["ThirdFrontColor"];
+	        this.MainBrightColor = source["MainBrightColor"];
+	        this.SecondBrightColor = source["SecondBrightColor"];
+	        this.ThirdBrightColor = source["ThirdBrightColor"];
+	        this.WarningMainColor = source["WarningMainColor"];
+	        this.WarningBrightColor = source["WarningBrightColor"];
+	    }
+	}
 
 }
 

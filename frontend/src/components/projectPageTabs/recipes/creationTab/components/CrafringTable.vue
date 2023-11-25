@@ -52,7 +52,7 @@
     </div>
     <DefSave :submitText="submitText" />
   </form>
-  <InvalidInputDialog ref="errDialog" :errorText="`${errDialogText}`"></InvalidInputDialog>
+  <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`"/>
 </template>
   
 <script>
@@ -61,7 +61,7 @@ import DefCheckBox from './../../../../default/DefCheckBox.vue';
 import DefLine from './../../../../default/DefLine.vue';
 import DefInputNum from './../../../../default/DefInputNum.vue';
 import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue';
-import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
+import ErrorDialog from './../../../../modalDialogs/ErrorDialog.vue';
 import { CurrentProjectAddNewRecipe, CurrentProjectChangeAction } from "../../../../../../wailsjs/go/projectrelated/ProjectManager";
 
 
@@ -244,7 +244,7 @@ export default {
     DefLine,
     InputWithSuggestions,
     DefSave,
-    InvalidInputDialog,
+    ErrorDialog,
     DefInputNum,
     DefCheckBox
   }

@@ -15,7 +15,7 @@
         </DefLine>
         <DefSave :submitText="submitText" />
     </form>
-    <InvalidInputDialog ref="errDialog" :errorText="`${errDialogText}`"></InvalidInputDialog>
+    <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`"/>
 </template>
   
 <script>
@@ -23,7 +23,7 @@ import DefLine from './../../../../default/DefLine.vue';
 import InputWithSuggestions from './../../../../default/InputWithSuggestions.vue';
 import DefRadio from './../../../../default/DefRadio.vue';
 import DefSave from './../../../../default/DefSave.vue';
-import InvalidInputDialog from './../../../../modalDialogs/InvalidInputDialog.vue';
+import ErrorDialog from './../../../../modalDialogs/ErrorDialog.vue';
 import { CurrentProjectAddNewRecipe, CurrentProjectChangeAction } from "../../../../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
     props: {
@@ -93,7 +93,6 @@ export default {
             };
             if (this.isNew) {
                 let properties;
-                console.log(type, formArgs);
                 CurrentProjectAddNewRecipe(type, formArgs).then((historyItem) => {
                     console.log(historyItem);
                     properties = {
@@ -121,7 +120,7 @@ export default {
         InputWithSuggestions,
         DefRadio,
         DefSave,
-        InvalidInputDialog
+        ErrorDialog
     }
 }
 </script>
