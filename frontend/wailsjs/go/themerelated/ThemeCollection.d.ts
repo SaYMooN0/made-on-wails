@@ -10,7 +10,7 @@ export function GetAllThemesValues():Promise<Array<themerelated.ThemeHex>>;
 
 export function SaveToFile():Promise<void>;
 
-export function SetCurrentTheme(arg1:themerelated.Theme):Promise<void>;
+export function SetCurrentTheme(arg1:string):Promise<string>;
 
 export function ThemeFromHexTheme(arg1:themerelated.ThemeHex):Promise<themerelated.Theme>;
 

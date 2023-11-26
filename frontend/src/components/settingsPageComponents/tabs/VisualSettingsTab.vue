@@ -11,7 +11,7 @@
         <div class="avaliable-themes-zone">
             <p class="avaliable-themes-label">Available themes:</p>
             <div class="themes-labels-container">
-                <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" @click="changeTheme(theme.Name)" />
+                <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" @click="changeTheme(theme)" />
             </div>
             <button class="new-theme-button">
                 Create new theme
@@ -34,7 +34,7 @@
 <script>
 
 
-import { CurrentThemeColors, GetAllThemesValues, UpdateTheme, ThemeFromHexTheme,SetCurrentTheme } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
+import { CurrentThemeColors, GetAllThemesValues, UpdateTheme, ThemeFromHexTheme, SetCurrentTheme } from "./../../../../wailsjs/go/themerelated/ThemeCollection";
 import ColorLabel from "../tabsComponents/ColorLabel.vue";
 import ThemeLabel from "../tabsComponents/ThemeLabel.vue";
 import ErrorDialog from "../../modalDialogs/ErrorDialog.vue"
@@ -48,8 +48,17 @@ export default {
         };
     },
     methods: {
-        changeTheme(themeName) { 
-            // SetCurrentTheme();
+        changeTheme(theme) {
+            this.cancelAllEditing();
+            SetCurrentTheme(theme.Name).then((returnedString) => {
+                if (returnedString) {
+                    this.showError(returnedString);
+                }
+                else {
+                    this.chosenTheme = theme;
+                    this.applyCurrentThemeColors();
+                }
+            });
         }
         ,
         applyCurrentThemeColors() {
@@ -82,7 +91,7 @@ export default {
                         this.showError(returnedString);
                     }
                     else {
-                       this.applyCurrentThemeColors();
+                        this.applyCurrentThemeColors();
                     }
                 });
             });

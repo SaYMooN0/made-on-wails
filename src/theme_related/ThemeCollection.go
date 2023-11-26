@@ -52,8 +52,15 @@ func (tc *ThemeCollection) CurrentThemeColors() *ThemeHex {
 	return NewThemeHex(*current)
 }
 
-func (tc *ThemeCollection) SetCurrentTheme(theme Theme) {
-	tc.CurrentThemeName = theme.Name
+func (tc *ThemeCollection) SetCurrentTheme(themeName string) string {
+	for _, theme := range tc.Themes {
+		if theme.Name == themeName {
+			tc.CurrentThemeName = themeName
+			tc.SaveToFile()
+			return ""
+		}
+	}
+	return "Theme with the given name does not exist"
 }
 
 func InitializeThemeCollection() *ThemeCollection {
