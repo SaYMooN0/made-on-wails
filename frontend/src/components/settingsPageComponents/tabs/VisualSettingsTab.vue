@@ -6,14 +6,13 @@
                 <ColorLabel v-for="(value, key) in chosenThemeColorFields" :key="key" :label="key" :color="value"
                     ref="colorLabels" />
             </div>
-
         </div>
         <div class="avaliable-themes-zone">
             <p class="avaliable-themes-label">Available themes:</p>
             <div class="themes-labels-container">
                 <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" @click="changeTheme(theme)" />
             </div>
-            <button class="new-theme-button">
+            <button class="new-theme-button" @click="createNewTheme">
                 Create new theme
                 <svg viewBox="0 0 24 24" fill="none" class="brush-icon">
                     <path
@@ -100,6 +99,11 @@ export default {
         showError(text) {
             this.errDialogText = text;
             this.$refs.errDialog.showDialog();
+        },
+        createNewTheme()
+        {
+            this.$emit("createNewTheme");
+
         }
     },
     computed: {

@@ -14,6 +14,10 @@ export function GetAllThemesValues() {
   return window['go']['themerelated']['ThemeCollection']['GetAllThemesValues']();
 }
 
+export function GetHexDefaultDark() {
+  return window['go']['themerelated']['ThemeCollection']['GetHexDefaultDark']();
+}
+
 export function SaveToFile() {
   return window['go']['themerelated']['ThemeCollection']['SaveToFile']();
 }

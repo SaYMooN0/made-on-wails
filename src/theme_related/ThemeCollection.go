@@ -139,7 +139,9 @@ func (tc *ThemeCollection) ThemeFromHexTheme(th ThemeHex) *Theme {
 		FromHex(th.WarningBrightColor),
 	)
 }
-
+func (tc *ThemeCollection) GetHexDefaultDark() *ThemeHex {
+	return NewThemeHex(*DefaultDark())
+}
 func NewThemeFromHexValues(name, mainBack, secondBack, thirdBack, mainFront, secondFront, thirdFront, mainBright, secondBright, thirdBright, warningMain, warningBright string) *Theme {
 	return NewTheme(
 		name,

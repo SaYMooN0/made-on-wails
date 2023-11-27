@@ -6,7 +6,7 @@
       <button @click="setActiveTab('others')" class="tab-button">Others</button>
     </div>
     <div class="tabs-content">
-      <VisualSettingsTab v-if="activeTab === 'visual'" />
+      <VisualSettingsTab v-if="activeTab === 'visual'" @createNewTheme="createNewTheme"/>
       <HotKeysSettingsTab v-if="activeTab === 'hotkeys'" />
       <OtherSettingsTab v-if="activeTab === 'others'" />
     </div>
@@ -31,6 +31,10 @@ export default {
     },
     setActiveTab(tabName) {
       this.activeTab = tabName;
+    },
+    createNewTheme()
+    {
+      this.$emit('goToNewTheme');
     }
   },
   components: {

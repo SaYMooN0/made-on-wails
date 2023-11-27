@@ -8,6 +8,8 @@ export function CurrentThemeColors():Promise<themerelated.ThemeHex>;
 
 export function GetAllThemesValues():Promise<Array<themerelated.ThemeHex>>;
 
+export function GetHexDefaultDark():Promise<themerelated.ThemeHex>;
+
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentTheme(arg1:string):Promise<string>;
