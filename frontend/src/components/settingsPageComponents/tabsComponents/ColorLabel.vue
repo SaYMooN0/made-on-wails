@@ -111,25 +111,27 @@ export default {
 }
 
 .color-div {
-  height: calc(0.6vh + 0.35vw + 10px);
+  height: calc(0.5vh + 0.4vw + 10px);
   aspect-ratio: 1/1;
   border-radius: 10%;
 }
 
 .color-operating-container {
-  width: calc(36% + 40px);
+  width: calc(40% + 54px);
   display: grid;
   grid-template-columns: 1fr calc(0.7vh + 0.6vw + 38px);
-  gap: calc(0.7vh + 0.3vw + 10px);
+  gap: calc(0.6vw + 5px);
 
 }
 
 .color-pair {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: calc(0.35vh + 0.5vw + 8px);
+  display: grid;
+  grid-template-columns: 1fr calc(0.5vh + 0.4vw + 10px);
+  gap: calc(0.4vw + 1px);
   align-items: center;
+  font-size: calc(0.35vh + 0.5vw + 8px);
+  text-align: right;
+
 }
 
 .color-input {
@@ -143,6 +145,7 @@ export default {
   padding: 2px;
   border: 1px solid transparent;
   border-radius: 2px;
+  justify-self: end;
 }
 
 .color-input:focus {

@@ -58,9 +58,9 @@
 <script>
 import { GetProjects } from "../../../wailsjs/go/projectrelated/ProjectManager";
 
-import ProjectItem from '../ProjectItem.vue';
-import ActionButton from '../ActionButton.vue';
-import LinkButton from '../LinkButton.vue';
+import ProjectItem from '../startingActionsPageComponents/ProjectItem.vue';
+import ActionButton from '../startingActionsPageComponents/ActionButton.vue';
+import LinkButton from '../startingActionsPageComponents/LinkButton.vue';
 
 
 export default {

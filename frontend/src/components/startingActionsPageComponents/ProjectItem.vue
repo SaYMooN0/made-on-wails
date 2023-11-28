@@ -25,7 +25,7 @@
   
 
 <script>
-import { SetCurrentProjectByFolder,OpenProjectInFileManager } from "../../wailsjs/go/projectrelated/ProjectManager";
+import { SetCurrentProjectByFolder,OpenProjectInFileManager } from "../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: ['project'],
   data() {
