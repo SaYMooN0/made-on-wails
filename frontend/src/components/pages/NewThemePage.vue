@@ -1,15 +1,42 @@
 <template>
-    <h1>
-        New theme:
-    </h1>
-    <h2>Theme name: <input type="text" /></h2>
-    <div class="color-labels-container">
-        <NewThemeColorInput v-for="(value, key) in themeValues" :key="key" :label="key" :color="value" ref="colorLabels" />
+    <div class="page-container">
+
+
+        <h1 class="new-theme-name">
+            New theme name:
+            <input type="text" />
+        </h1>
+        <div class="color-inputs-blocks-container">
+            <div class="color-inputs-block">
+                <label class="color-group-label">Back Colors:</label>
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+            </div>
+            <div class="color-inputs-block">
+                <label class="color-group-label">Front Colors:</label>
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+            </div>
+            <div class="color-inputs-block">
+                <label class="color-group-label">Bright Colors:</label>
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+            </div>
+            <div class="color-inputs-block">
+                <label class="color-group-label">Warning Colors:</label>
+                <NewThemeColorInput />
+                <NewThemeColorInput />
+            </div>
+        </div>
+        <GoBackButton @goBack="backToMain" />
     </div>
-    <button @click="this.$emit('goBack');" class="go-back-button">Go back</button>
 </template>
 <script>
-import NewThemeColorInput from '../settingsPageComponents/tabsComponents/NewThemeColorInput.vue';
+import NewThemeColorInput from '../newThemePageComponents/NewThemeColorInput.vue';
+import GoBackButton from '../GoBackButton.vue';
 import { GetHexDefaultDark } from '../../../wailsjs/go/themerelated/ThemeCollection'
 export default {
     data() {
@@ -27,34 +54,54 @@ export default {
     },
     components:
     {
-        NewThemeColorInput
+        NewThemeColorInput,
+        GoBackButton
+    },
+    methods: {
+        backToMain() {
+            this.$emit('goBack');
+        }
     },
     created() {
         GetHexDefaultDark().then((theme) => {
-            this.newTheme=theme;
+            this.newTheme = theme;
         });
     }
 };
 </script>
 <style>
-.go-back-button {
-    position: absolute;
-    right: calc(8px + 1vw);
-    bottom: calc(6px + 2%);
-    height: calc(2vh + 22px + 0.2vw);
-    width: calc(4vw + 60px + 2vh);
-    background-color: var(--bright-2);
-    font-family: 'Figtree';
-    font-size: calc(0.55vh + 0.55vw + 10px);
-    font-weight: 300;
-    color: var(--front);
-    border: 1px solid transparent;
-    border-radius: calc(3px + 0.09vw + 0.1vh);
-    cursor: pointer;
-    transition: 0.08s;
+.page-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    padding-left: calc(1vh + 0.4vw + 11px);
+    padding-right: calc(1vh + 0.4vw + 11px);
 }
 
-.go-back-button:hover {
-    background-color: var(--bright-3);
+.new-theme-name {
+    color: var(--front);
+    font-family: 'Figtree';
+    font-size: calc(1.4vh + 1.4vw + 11px);
+}
+
+.theme-name-input {}
+
+.color-inputs-blocks-container {
+    background-color: aqua;
+    height: 90%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: calc(0.4vh + 1vw);
+    align-items: center;
+}
+
+.color-inputs-block {
+    height: 82%;
+    width: 100%;
+    background-color: #f5f5f5;
+    border-radius: 2%;
+    display: grid;
+    grid-template-rows: auto 1fr 1fr 1fr;
 }
 </style>

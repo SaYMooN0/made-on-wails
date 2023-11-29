@@ -24,7 +24,7 @@ export default {
     {
         deleteTheme(event) {
             event.stopPropagation();
-            console.log(this.theme);
+           alert("deleting theme: "+ this.theme);
         },
     },
     computed: {

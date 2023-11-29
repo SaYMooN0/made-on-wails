@@ -17,7 +17,7 @@ export default {
 <style scoped>
 .color-input {
 	border: none;
-	width: 321px;
+	width: 32px;
 	height: 32px;
 }
 input[type="color"]::-webkit-color-swatch-wrapper {

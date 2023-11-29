@@ -6,19 +6,19 @@
       <button @click="setActiveTab('others')" class="tab-button">Others</button>
     </div>
     <div class="tabs-content">
-      <VisualSettingsTab v-if="activeTab === 'visual'" @createNewTheme="createNewTheme"/>
+      <VisualSettingsTab v-if="activeTab === 'visual'" @createNewTheme="createNewTheme" />
       <HotKeysSettingsTab v-if="activeTab === 'hotkeys'" />
       <OtherSettingsTab v-if="activeTab === 'others'" />
     </div>
   </div>
-  <button @click="backToMain" class="go-back-button">Go back</button>
+  <GoBackButton @goBack="backToMain"/>
 </template>
 
 <script>
 import HotKeysSettingsTab from './../settingsPageComponents/Tabs/HotKeysSettingsTab.vue';
 import OtherSettingsTab from './../settingsPageComponents/Tabs/OtherSettingsTab.vue';
 import VisualSettingsTab from './../settingsPageComponents/Tabs/VisualSettingsTab.vue';
-
+import GoBackButton from '../GoBackButton.vue';
 export default {
   data() {
     return {
@@ -32,22 +32,22 @@ export default {
     setActiveTab(tabName) {
       this.activeTab = tabName;
     },
-    createNewTheme()
-    {
+    createNewTheme() {
       this.$emit('goToNewTheme');
     }
   },
   components: {
     HotKeysSettingsTab,
     OtherSettingsTab,
-    VisualSettingsTab
+    VisualSettingsTab,
+    GoBackButton
   }
 }
 </script>
 <style scoped>
 .settings-container {
   display: grid;
-  grid-template-rows:calc(1vh + 32px + 0.1vw) 1fr;
+  grid-template-rows: calc(1vh + 32px + 0.1vw) 1fr;
   height: 100vh;
 }
 
@@ -58,7 +58,8 @@ export default {
   display: grid;
   grid-template-columns: auto auto auto 1fr;
   align-items: center;
-  border-bottom: 2px var(--back-2) solid;;
+  border-bottom: 2px var(--back-2) solid;
+  ;
 }
 
 .tabs-content {
