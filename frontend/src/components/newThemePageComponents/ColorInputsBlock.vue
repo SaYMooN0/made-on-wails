@@ -1,7 +1,8 @@
 <template>
     <div class="color-inputs-block">
         <label class="color-block-label">{{ title }}</label>
-        <NewThemeColorInput v-for="item in colorList" :key="item.label" :label="item.label" :color="item.color" />
+        <NewThemeColorInput v-for="item in colorList" :key="item.label" :label="item.label" :color="item.color"
+            @color-updated="updateColor(item.label, $event)" />
     </div>
 </template>
   
@@ -13,15 +14,34 @@ export default {
         NewThemeColorInput
     },
     props: {
-        title: String,
         type: String,
+        title: String,
         colorList: {
             type: Array,
             default: () => []
         }
+    },
+    methods: {
+        updateColor(label, newColor) {
+            const item = this.colorList.find(item => item.label === label);
+            if (item) { item.color = newColor; }
+        },
+        getColors() {
+            let colors = {};
+            this.colorList.forEach(p => {
+                colors[`${this.type}${p.label}Color`] = p.color;
+            });
+
+            return colors;
+        },
+    },
+    created() {
+        console.log("hha", this.colorList);
     }
+
 };
 </script>
+
   
 <style scoped>
 .color-block-label {

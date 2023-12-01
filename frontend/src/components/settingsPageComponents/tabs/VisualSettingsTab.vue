@@ -62,15 +62,15 @@ export default {
         ,
         applyCurrentThemeColors() {
             CurrentThemeColors().then((theme) => {
-                document.documentElement.style.setProperty('--back', theme.MainBackColor);
-                document.documentElement.style.setProperty('--back-2', theme.SecondBackColor);
-                document.documentElement.style.setProperty('--back-3', theme.ThirdBackColor);
-                document.documentElement.style.setProperty('--front', theme.MainFrontColor);
-                document.documentElement.style.setProperty('--front-2', theme.SecondFrontColor);
-                document.documentElement.style.setProperty('--front-3', theme.ThirdFrontColor);
-                document.documentElement.style.setProperty('--bright', theme.MainBrightColor);
-                document.documentElement.style.setProperty('--bright-2', theme.SecondBrightColor);
-                document.documentElement.style.setProperty('--bright-3', theme.ThirdBrightColor);
+                document.documentElement.style.setProperty('--back', theme.BackMainColor);
+                document.documentElement.style.setProperty('--back-2', theme.BackSecondColor);
+                document.documentElement.style.setProperty('--back-3', theme.BackThirdColor);
+                document.documentElement.style.setProperty('--front', theme.FrontMainColor);
+                document.documentElement.style.setProperty('--front-2', theme.FrontSecondColor);
+                document.documentElement.style.setProperty('--front-3', theme.FrontThirdColor);
+                document.documentElement.style.setProperty('--bright', theme.BrightMainColor);
+                document.documentElement.style.setProperty('--bright-2', theme.BrightSecondColor);
+                document.documentElement.style.setProperty('--bright-3', theme.BrightThirdColor);
                 document.documentElement.style.setProperty('--warning-main', theme.WarningMainColor);
                 document.documentElement.style.setProperty('--warning-bright', theme.WarningBrightColor);
             });
@@ -91,6 +91,7 @@ export default {
                     }
                     else {
                         this.applyCurrentThemeColors();
+                        this.fetchThemesFromGo();
                     }
                 });
             });
@@ -100,9 +101,16 @@ export default {
             this.errDialogText = text;
             this.$refs.errDialog.showDialog();
         },
-        createNewTheme()
-        {
+        createNewTheme() {
             this.$emit("createNewTheme");
+        },
+        fetchThemesFromGo() {
+            CurrentThemeColors().then((theme) => {
+                this.chosenTheme = theme;
+            });
+            GetAllThemesValues().then((themes) => {
+                this.avaliableThemes = themes;
+            });
         }
     },
     computed: {
@@ -113,12 +121,7 @@ export default {
         },
     },
     created() {
-        CurrentThemeColors().then((theme) => {
-            this.chosenTheme = theme;
-        });
-        GetAllThemesValues().then((themes) => {
-            this.avaliableThemes = themes;
-        });
+        this.fetchThemesFromGo();
     },
     components:
     {

@@ -254,15 +254,15 @@ export namespace themerelated {
 	}
 	export class ThemeHex {
 	    Name: string;
-	    MainBackColor: string;
-	    SecondBackColor: string;
-	    ThirdBackColor: string;
-	    MainFrontColor: string;
-	    SecondFrontColor: string;
-	    ThirdFrontColor: string;
-	    MainBrightColor: string;
-	    SecondBrightColor: string;
-	    ThirdBrightColor: string;
+	    BackMainColor: string;
+	    BackSecondColor: string;
+	    BackThirdColor: string;
+	    FrontMainColor: string;
+	    FrontSecondColor: string;
+	    FrontThirdColor: string;
+	    BrightMainColor: string;
+	    BrightSecondColor: string;
+	    BrightThirdColor: string;
 	    WarningMainColor: string;
 	    WarningBrightColor: string;
 	
@@ -273,15 +273,15 @@ export namespace themerelated {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.Name = source["Name"];
-	        this.MainBackColor = source["MainBackColor"];
-	        this.SecondBackColor = source["SecondBackColor"];
-	        this.ThirdBackColor = source["ThirdBackColor"];
-	        this.MainFrontColor = source["MainFrontColor"];
-	        this.SecondFrontColor = source["SecondFrontColor"];
-	        this.ThirdFrontColor = source["ThirdFrontColor"];
-	        this.MainBrightColor = source["MainBrightColor"];
-	        this.SecondBrightColor = source["SecondBrightColor"];
-	        this.ThirdBrightColor = source["ThirdBrightColor"];
+	        this.BackMainColor = source["BackMainColor"];
+	        this.BackSecondColor = source["BackSecondColor"];
+	        this.BackThirdColor = source["BackThirdColor"];
+	        this.FrontMainColor = source["FrontMainColor"];
+	        this.FrontSecondColor = source["FrontSecondColor"];
+	        this.FrontThirdColor = source["FrontThirdColor"];
+	        this.BrightMainColor = source["BrightMainColor"];
+	        this.BrightSecondColor = source["BrightSecondColor"];
+	        this.BrightThirdColor = source["BrightThirdColor"];
 	        this.WarningMainColor = source["WarningMainColor"];
 	        this.WarningBrightColor = source["WarningBrightColor"];
 	    }

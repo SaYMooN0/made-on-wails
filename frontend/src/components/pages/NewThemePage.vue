@@ -5,27 +5,27 @@
                 New theme name:
                 <input type="text" class="theme-name-input" />
             </div>
-            <div class="save-theme-button">Save</div>
+            <div class="save-theme-button" @click="saveThemes">Save</div>
         </h1>
         <div class="color-inputs-blocks-container">
-            <ColorInputsBlock title="Back Colors" type="Back" :colorList="[
-                { label: 'Main', color: '#12ffbb' },
-                { label: 'Second', color: '#34ffdd' },
-                { label: 'Third', color: '#56ffee' }
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="backColorsBlock" title="Back Colors" type="Back" :colorList="[
+                { label: 'Main', color: newTheme.BackMainColor },
+                { label: 'Second', color: newTheme.BackSecondColor },
+                { label: 'Third', color: newTheme.BackThirdColor }
             ]" />
-            <ColorInputsBlock title="Front Colors" type="Front" :colorList="[
-                { label: 'Main', color: '#12ffbb' },
-                { label: 'Second', color: '#34ffdd' },
-                { label: 'Third', color: '#56ffee' }
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="frontColorsBlock" title="Front Colors" type="Front" :colorList="[
+                { label: 'Main', color: newTheme.FrontMainColor },
+                { label: 'Second', color: newTheme.FrontSecondColor },
+                { label: 'Third', color: newTheme.FrontThirdColor }
             ]" />
-            <ColorInputsBlock title="Bright Colors" type="Bright" :colorList="[
-                { label: 'Main', color: '#12ffbb' },
-                { label: 'Second', color: '#34ffdd' },
-                { label: 'Third', color: '#56ffee' }
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="brightColorsBlock" title="Bright Colors" type="Bright" :colorList="[
+                { label: 'Main', color: newTheme.BrightMainColor },
+                { label: 'Second', color: newTheme.BrightSecondColor },
+                { label: 'Third', color: newTheme.BrightThirdColor }
             ]" />
-            <ColorInputsBlock title="Warning Colors" type="Warning" :colorList="[
-                { label: 'Main', color: '#12ffbb' },
-                { label: 'Bright', color: '#34ffdd' }
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="warningColorsBlock" title="Warning Colors" type="Warning" :colorList="[
+                { label: 'Main', color: newTheme.WarningMainColor },
+                { label: 'Bright', color: newTheme.WarningBrightColor }
             ]" />
         </div>
         <GoBackButton @goBack="backToMain" />
@@ -59,11 +59,28 @@ export default {
     methods: {
         backToMain() {
             this.$emit('goBack');
+        },
+        saveThemes() {
+            const backColors = this.$refs.backColorsBlock.getColors();
+            const frontColors = this.$refs.frontColorsBlock.getColors();
+            const brightColors = this.$refs.brightColorsBlock.getColors();
+            const warningColors = this.$refs.warningColorsBlock.getColors();
+
+            const combinedColors = {
+                ...backColors,
+                ...frontColors,
+                ...brightColors,
+                ...warningColors
+            };
+
+            console.log(combinedColors);
         }
     },
     created() {
         GetHexDefaultDark().then((theme) => {
             this.newTheme = theme;
+            
+            console.log("Create, ",this.newTheme);
         });
     }
 };
