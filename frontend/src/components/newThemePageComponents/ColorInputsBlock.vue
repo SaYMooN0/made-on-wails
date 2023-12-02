@@ -34,9 +34,6 @@ export default {
 
             return colors;
         },
-    },
-    created() {
-        console.log("hha", this.colorList);
     }
 
 };

@@ -3,30 +3,34 @@
         <h1 class="new-theme-name">
             <div style="display: flex;justify-content: left; gap: 1vw;align-items: center;">
                 New theme name:
-                <input type="text" class="theme-name-input" />
+                <input type="text" class="theme-name-input" v-model="themeName" />
             </div>
             <div class="save-theme-button" @click="saveThemes">Save</div>
         </h1>
         <div class="color-inputs-blocks-container">
-            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="backColorsBlock" title="Back Colors" type="Back" :colorList="[
-                { label: 'Main', color: newTheme.BackMainColor },
-                { label: 'Second', color: newTheme.BackSecondColor },
-                { label: 'Third', color: newTheme.BackThirdColor }
-            ]" />
-            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="frontColorsBlock" title="Front Colors" type="Front" :colorList="[
-                { label: 'Main', color: newTheme.FrontMainColor },
-                { label: 'Second', color: newTheme.FrontSecondColor },
-                { label: 'Third', color: newTheme.FrontThirdColor }
-            ]" />
-            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="brightColorsBlock" title="Bright Colors" type="Bright" :colorList="[
-                { label: 'Main', color: newTheme.BrightMainColor },
-                { label: 'Second', color: newTheme.BrightSecondColor },
-                { label: 'Third', color: newTheme.BrightThirdColor }
-            ]" />
-            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="warningColorsBlock" title="Warning Colors" type="Warning" :colorList="[
-                { label: 'Main', color: newTheme.WarningMainColor },
-                { label: 'Bright', color: newTheme.WarningBrightColor }
-            ]" />
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="backColorsBlock" title="Back Colors" type="Back"
+                :colorList="[
+                    { label: 'Main', color: newTheme.BackMainColor },
+                    { label: 'Second', color: newTheme.BackSecondColor },
+                    { label: 'Third', color: newTheme.BackThirdColor }
+                ]" />
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="frontColorsBlock" title="Front Colors"
+                type="Front" :colorList="[
+                    { label: 'Main', color: newTheme.FrontMainColor },
+                    { label: 'Second', color: newTheme.FrontSecondColor },
+                    { label: 'Third', color: newTheme.FrontThirdColor }
+                ]" />
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="brightColorsBlock" title="Bright Colors"
+                type="Bright" :colorList="[
+                    { label: 'Main', color: newTheme.BrightMainColor },
+                    { label: 'Second', color: newTheme.BrightSecondColor },
+                    { label: 'Third', color: newTheme.BrightThirdColor }
+                ]" />
+            <ColorInputsBlock v-if="Object.keys(newTheme).length > 0" ref="warningColorsBlock" title="Warning Colors"
+                type="Warning" :colorList="[
+                    { label: 'Main', color: newTheme.WarningMainColor },
+                    { label: 'Bright', color: newTheme.WarningBrightColor }
+                ]" />
         </div>
         <GoBackButton @goBack="backToMain" />
     </div>
@@ -35,12 +39,15 @@
 <script>
 import ColorInputsBlock from '../newThemePageComponents/ColorInputsBlock.vue'
 import GoBackButton from '../GoBackButton.vue';
-import { GetHexDefaultDark } from '../../../wailsjs/go/themerelated/ThemeCollection';
+import { GetHexDefaultDark, GetAllThemeNames, AddNewTheme, ThemeFromHexTheme } from '../../../wailsjs/go/themerelated/ThemeCollection';
 import ErrorDialog from '../modalDialogs/ErrorDialog.vue';
 export default {
     data() {
         return {
             newTheme: {},
+            allThemeNames: [],
+            themeName: 'new theme',
+            errDialogText: ''
         }
 
     },
@@ -54,33 +61,44 @@ export default {
     components:
     {
         ColorInputsBlock,
-        GoBackButton
+        GoBackButton,
+        ErrorDialog
     },
     methods: {
         backToMain() {
             this.$emit('goBack');
         },
         saveThemes() {
+            if (this.allThemeNames.includes(this.themeName)) {
+                this.errDialogText = "You already have a theme with that name. Please come up with another name for this theme";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
             const backColors = this.$refs.backColorsBlock.getColors();
             const frontColors = this.$refs.frontColorsBlock.getColors();
             const brightColors = this.$refs.brightColorsBlock.getColors();
             const warningColors = this.$refs.warningColorsBlock.getColors();
-
-            const combinedColors = {
+            const newThemeName = this.themeName;
+            const newThemeValues = {
                 ...backColors,
                 ...frontColors,
                 ...brightColors,
-                ...warningColors
+                ...warningColors,
+                Name:newThemeName
             };
 
-            console.log(combinedColors);
+            ThemeFromHexTheme(newThemeValues).then((themeRGB) => {
+                console.log(themeRGB);
+                // AddNewTheme(themeRGB);
+            });
         }
     },
     created() {
         GetHexDefaultDark().then((theme) => {
             this.newTheme = theme;
-            
-            console.log("Create, ",this.newTheme);
+        });
+        GetAllThemeNames().then((names) => {
+            this.allThemeNames = names;
         });
     }
 };

@@ -11,6 +11,17 @@ type ThemeCollection struct {
 	FileName         string  `json:"-"`
 }
 
+func (tc *ThemeCollection) GetAllThemeNames() []string {
+	var themeNames []string
+	for _, theme := range tc.Themes {
+		themeNames = append(themeNames, theme.Name)
+	}
+	return themeNames
+}
+func (tc *ThemeCollection) AddNewTheme(newTheme Theme) {
+	tc.Themes = append(tc.Themes, newTheme)
+}
+
 func (tc *ThemeCollection) UpdateTheme(name string, newTheme Theme) string {
 	for i, theme := range tc.Themes {
 		if theme.Name == name {
