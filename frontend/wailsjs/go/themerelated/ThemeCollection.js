@@ -14,6 +14,10 @@ export function CurrentThemeColors() {
   return window['go']['themerelated']['ThemeCollection']['CurrentThemeColors']();
 }
 
+export function DeleteThemeByName(arg1) {
+  return window['go']['themerelated']['ThemeCollection']['DeleteThemeByName'](arg1);
+}
+
 export function GetAllThemeNames() {
   return window['go']['themerelated']['ThemeCollection']['GetAllThemeNames']();
 }

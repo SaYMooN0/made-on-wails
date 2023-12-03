@@ -8,6 +8,8 @@ export function CurrentTheme():Promise<themerelated.Theme>;
 
 export function CurrentThemeColors():Promise<themerelated.ThemeHex>;
 
+export function DeleteThemeByName(arg1:string):Promise<string>;
+
 export function GetAllThemeNames():Promise<Array<string>>;
 
 export function GetAllThemesValues():Promise<Array<themerelated.ThemeHex>>;

@@ -140,7 +140,7 @@ export default {
 </script>
 <style scoped>
 .visual-settings-container {
-    height: 100%;
+    height: calc(98% - 10px);
     width: 100%;
     display: grid;
     grid-template-columns: calc(35vw + 80px + 3vh) 1fr;
@@ -149,29 +149,25 @@ export default {
 
 .chosen-theme-zone {
     background-color: var(--back);
-    height: 100%;
+    height: 97%;
     width: 100%;
     display: grid;
-    grid-template-rows: calc(24vh - 40px) 1fr;
+    grid-template-rows: auto 1fr;
     padding-left: calc(6% - 5px);
 }
 
 .chosen-theme-name {
+    margin-top: calc(5vh + 2px);
+    margin-bottom: calc(2vh + 8px);
     color: var(--front);
     font-family: 'Figtree';
-    font-size: calc(1.2vh + 1.55vw + 11px);
-    padding-left: calc(4px + 1vw - 1vh);
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
+    font-size: calc(3vh + 8px);
 }
 
 .color-labels-container {
-    width: calc(68% + 64px);
-    height: 100%;
-    max-height: calc(50px + 54vh);
     align-self: center;
+    height: calc(65% + 100px);
+    width: calc(67% + 70px);
     background-color: #f5f5f5;
     border-radius: 2%;
     display: grid;
@@ -181,33 +177,53 @@ export default {
 }
 
 .avaliable-themes-zone {
-    height: calc(92% - 30px);
-    width: 94%;
-    padding-left: 3%;
-    padding-right: 3%;
+    height: calc(100% - 40px - 2vw);
+    width: 96%;
+    padding-left: 2%;
     display: grid;
-    grid-template-rows: auto 1fr calc(23px + 1.6vh + 0.8vw);
+    grid-template-rows: auto 1fr calc(25px + 1.6vh + 0.5vw);
 
 }
 
 .avaliable-themes-label {
-    width: 100%;
+    width: 98%;
+    padding-right: calc(0.25vw + 0.2vh + 5px);
     color: var(--front);
     font-family: 'Figtree';
-    margin-top: calc(1vh + 0.5vw + 10px);
+    margin-top: calc(2vh + 6px);
     margin-bottom: 4px;
-    font-size: calc(0.9vh + 1.2vw + 9px);
+    font-size: calc(2vh + 9px);
     text-align: center;
     border-bottom: 1px var(--back-2) solid;
+
 }
 
 .themes-labels-container {
     max-height: 100%;
     overflow-y: auto;
 }
+.themes-labels-container::-webkit-scrollbar {
+    width: calc(0.25vw + 0.2vh + 4px);
+ 
+
+}
+
+.themes-labels-container::-webkit-scrollbar-track {
+    border-radius: calc(0.1vw + 0.04vh + 2px);
+    height: 94%;
+}
+
+.themes-labels-container::-webkit-scrollbar-thumb {
+    background: var(--front-2);
+    border-radius: calc(0.1vw + 0.04vh + 2px);
+}
+
+.themes-labels-container::-webkit-scrollbar-thumb:hover {
+    background: var(--front-3);
+}
+
 
 .new-theme-button {
-
     height: 100%;
     justify-self: center;
     display: flex;
@@ -223,12 +239,10 @@ export default {
     cursor: pointer;
     gap: 3px;
     transition: 0.08s;
-
 }
 
 .new-theme-button:hover {
     background-color: var(--bright-3);
-
 }
 
 .brush-icon {

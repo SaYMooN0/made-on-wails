@@ -31,7 +31,6 @@ export default {
             this.colorList.forEach(p => {
                 colors[`${this.type}${p.label}Color`] = p.color;
             });
-
             return colors;
         },
     }

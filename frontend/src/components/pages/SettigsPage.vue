@@ -64,7 +64,7 @@ export default {
 
 .tabs-content {
   width: 100%;
-  height: 100%;
+  height: calc(99% - 10px);
 }
 
 .tab-button {

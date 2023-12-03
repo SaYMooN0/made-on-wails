@@ -3,7 +3,7 @@
         <h1 class="new-theme-name">
             <div style="display: flex;justify-content: left; gap: 1vw;align-items: center;">
                 New theme name:
-                <input type="text" class="theme-name-input" v-model="themeName" />
+                <input type="text" class="theme-name-input" v-model="newThemeName" />
             </div>
             <div class="save-theme-button" @click="saveThemes">Save</div>
         </h1>
@@ -32,7 +32,7 @@
                     { label: 'Bright', color: newTheme.WarningBrightColor }
                 ]" />
         </div>
-        <GoBackButton @goBack="backToMain" />
+        <GoBackButton @goBack="backToSettings" />
     </div>
     <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`" />
 </template>
@@ -46,7 +46,7 @@ export default {
         return {
             newTheme: {},
             allThemeNames: [],
-            themeName: 'new theme',
+            newThemeName: 'new theme',
             errDialogText: ''
         }
 
@@ -65,31 +65,31 @@ export default {
         ErrorDialog
     },
     methods: {
-        backToMain() {
+        backToSettings() {
             this.$emit('goBack');
         },
         saveThemes() {
-            if (this.allThemeNames.includes(this.themeName)) {
-                this.errDialogText = "You already have a theme with that name. Please come up with another name for this theme";
-                this.$refs.errDialog.showDialog();
-                return;
-            }
             const backColors = this.$refs.backColorsBlock.getColors();
             const frontColors = this.$refs.frontColorsBlock.getColors();
             const brightColors = this.$refs.brightColorsBlock.getColors();
             const warningColors = this.$refs.warningColorsBlock.getColors();
-            const newThemeName = this.themeName;
-            const newThemeValues = {
+            const themeName = this.newThemeName;
+            this.newTheme = {
                 ...backColors,
                 ...frontColors,
                 ...brightColors,
                 ...warningColors,
-                Name:newThemeName
+                Name: themeName
             };
-
-            ThemeFromHexTheme(newThemeValues).then((themeRGB) => {
-                console.log(themeRGB);
-                // AddNewTheme(themeRGB);
+            if (this.allThemeNames.includes(this.newThemeName)) {
+                this.errDialogText = "You already have a theme with that name. Please come up with another name for this theme";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
+            ThemeFromHexTheme(this.newTheme).then((themeRGB) => {
+                AddNewTheme(themeRGB);
+                console.log(this.newTheme, themeRGB);
+                this.backToSettings()
             });
         }
     },

@@ -16,6 +16,7 @@
 </template>
     
 <script>
+import { DeleteThemeByName } from '../../../../wailsjs/go/themerelated/ThemeCollection';
 export default {
     props: {
         theme: Object,
@@ -24,7 +25,11 @@ export default {
     {
         deleteTheme(event) {
             event.stopPropagation();
-           alert("deleting theme: "+ this.theme);
+            DeleteThemeByName(this.theme.Name).then((deletingRes) => {
+                if (deletingRes) {
+                    alert(deletingRes);
+                }
+            });
         },
     },
     computed: {
@@ -39,13 +44,13 @@ export default {
     
 <style scoped>
 .theme-label {
-    font-size: calc(0.5vh + 0.5vw + 10px);
+    font-size: calc(1vh + 12px);
     font-weight: 600;
     font-family: 'Figtree';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: calc(2px + 0.2vw + 0.2vh);
+    padding: calc(3px + 0.4vh);
     color: var(--front);
     background-color: var(--back-2);
     border-radius: calc(1px + 0.2vw);
@@ -101,11 +106,13 @@ export default {
     fill: var(--back-2);
 
 }
-.theme-label:hover svg path{
+
+.theme-label:hover svg path {
     fill: var(--front);
     transition: 0.12s;
-    
+
 }
+
 .delete-theme-button:hover path {
     fill: var(--warning-main) !important;
     height: 82%;

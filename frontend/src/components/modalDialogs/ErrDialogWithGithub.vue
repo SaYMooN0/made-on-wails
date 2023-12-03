@@ -36,7 +36,8 @@ export default {
 .dialog-container {
     border-color: var(--warning-bright);
 }
-
+</style>
+<style scoped>
 .error-text {
     white-space: pre-line;
     font-family: 'Figtree';

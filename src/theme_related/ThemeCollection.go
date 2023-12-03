@@ -20,6 +20,25 @@ func (tc *ThemeCollection) GetAllThemeNames() []string {
 }
 func (tc *ThemeCollection) AddNewTheme(newTheme Theme) {
 	tc.Themes = append(tc.Themes, newTheme)
+	tc.SaveToFile()
+}
+func (tc *ThemeCollection) DeleteThemeByName(name string) string {
+	if len(tc.Themes) <= 1 {
+		return "Error: Create a new theme before deleting the last one."
+	}
+
+	for i, theme := range tc.Themes {
+		if theme.Name == name {
+			tc.Themes = append(tc.Themes[:i], tc.Themes[i+1:]...)
+			if tc.CurrentThemeName == name {
+				tc.CurrentThemeName = tc.Themes[0].Name
+			}
+			tc.SaveToFile()
+			return ""
+		}
+	}
+
+	return "Error: Theme with the specified name does not exist."
 }
 
 func (tc *ThemeCollection) UpdateTheme(name string, newTheme Theme) string {
