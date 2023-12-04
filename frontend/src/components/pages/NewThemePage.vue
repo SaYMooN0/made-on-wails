@@ -81,6 +81,16 @@ export default {
                 ...warningColors,
                 Name: themeName
             };
+            if (!this.newThemeName) {
+                this.errDialogText = "Come up with a name for the new theme";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
+            if (!/^[a-zA-Z0-9 _-]+$/.test(this.newThemeName)) {
+                this.errDialogText = "The theme name contains invalid characters. Please use only letters, numbers, spaces, underscores, and hyphens.";
+                this.$refs.errDialog.showDialog();
+                return;
+            }
             if (this.allThemeNames.includes(this.newThemeName)) {
                 this.errDialogText = "You already have a theme with that name. Please come up with another name for this theme";
                 this.$refs.errDialog.showDialog();

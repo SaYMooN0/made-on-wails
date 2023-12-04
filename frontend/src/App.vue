@@ -22,6 +22,7 @@
             <NewThemePage @goBack="currentPage = 'settings'" />
         </div>
     </div>
+    <Notification ref="notification" />
 </template>
 <script>
 import StartingActionsPage from './components/pages/StartingActionsPage.vue';
@@ -30,7 +31,7 @@ import ProjectCreationPage from './components/pages/ProjectCreationPage.vue';
 import MadeInfoPage from './components/pages/MadeInfoPage.vue';
 import ProjectPage from './components/pages/ProjectPage.vue';
 import NewThemePage from './components/pages/NewThemePage.vue';
-
+import Notification from './components/Notification.vue';
 
 import { CurrentThemeColors } from "../wailsjs/go/themerelated/ThemeCollection";
 
@@ -41,7 +42,8 @@ export default {
         ProjectCreationPage,
         MadeInfoPage,
         ProjectPage,
-        NewThemePage
+        NewThemePage,
+        Notification
     },
     data() {
         return {
@@ -66,8 +68,16 @@ export default {
                 document.documentElement.style.setProperty('--warning-main', theme.WarningMainColor);
                 document.documentElement.style.setProperty('--warning-bright', theme.WarningBrightColor);
             });
-        }
-    }
+        },
+        showNotification(message) {
+            this.$refs.notification.show(message);
+        },
+    },
+    provide() {
+        return {
+            showNotification: this.showNotification,
+        };
+    },
 }
 </script>
 <style>

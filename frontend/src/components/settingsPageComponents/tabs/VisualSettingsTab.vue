@@ -161,7 +161,7 @@ export default {
     margin-bottom: calc(2vh + 8px);
     color: var(--front);
     font-family: 'Figtree';
-    font-size: calc(3vh + 8px);
+    font-size: calc(2.1vh + 6px + 0.5vw);
 }
 
 .color-labels-container {

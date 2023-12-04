@@ -8,7 +8,6 @@
   
 <script>
 import NewThemeColorInput from './NewThemeColorInput.vue';
-
 export default {
     components: {
         NewThemeColorInput
