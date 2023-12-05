@@ -31,10 +31,10 @@ export default {
         if (/^#[0-9A-Fa-f]{6}$/.test(clipText)) {
           this.updateColor(clipText);
         } else {
-          this.showNotification('The color in the clipboard is not in a valid hex format. Use the hex representation of the color');
+          this.showNotification('The color in the clipboard is not in a valid hex format. Use the hex representation of the color', true);
         }
       }).catch((err) => {
-        this.showNotification('Failed to access the clipboard.');
+        this.showNotification('An error has occurred: '+err, true);
       });
     },
   },

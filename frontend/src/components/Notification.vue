@@ -1,34 +1,60 @@
 <template>
-    <div :class="['notification', notificationClass]">
+    <div :class="['notification', notificationClass, { error: isError }, 'non-selectable']"
+         @mouseenter="onMouseEnter"
+         @mouseleave="onMouseLeave">
       {{ message }}
+      <span class="close-button" @click="closeNotification">&times;</span>
     </div>
   </template>
   
 <script>
 export default {
-  data() {
-    return {
-      visible: false,
-      message: '',
-    };
-  },
-  computed: {
-    notificationClass() {
-      return {
-        'notification-visible': this.visible,
-        'notification-hidden': !this.visible
-      };
-    }
-  },
-  methods: {
-    show(message) {
-      this.message = message;
-      this.visible = true;
-      setTimeout(() => {
-        this.visible = false;
-      }, 3000);
+    data() {
+        return {
+            visible: false,
+            isError: false,
+            message: '',
+            hideTimeout: null,
+        };
     },
-  },
+    computed: {
+        notificationClass() {
+            return {
+                'notification-visible': this.visible,
+                'notification-hidden': !this.visible
+            };
+        }
+    },
+    methods: {
+        show(message, isError = false) {
+            this.message = message;
+            this.visible = true;
+            this.isError = isError;
+            this.startHideTimer();
+        },
+        closeNotification() {
+            this.visible = false;
+            clearTimeout(this.hideTimeout); 
+        },
+        startHideTimer() {
+            this.hideTimeout = setTimeout(() => {
+                this.visible = false;
+            }, 3000);
+        },
+        setTimeoutToOneSec()
+        {
+            this.hideTimeout = setTimeout(() => {
+                this.visible = false;
+            }, 1000);
+        },
+        onMouseEnter() {
+            clearTimeout(this.hideTimeout);
+        },
+        onMouseLeave() {
+            this.setTimeoutToOneSec();
+        }
+    },
+
 };
 </script>
 
@@ -38,17 +64,20 @@ export default {
 <style>
 .notification {
     position: fixed;
-    top: calc(10px + 2vh);
+    top: calc(8px + 5vh);
     left: 50%;
-    transform: translateX(-50%) translateY(-50px);
-    background-color: #ffcc00;
-    color: #333;
+    background-color: var(--back);
+    color: var(--front);
+    font-family: Bahnschrift;
+    font-weight: 700;
+    font-size: calc(9px + 0.7vw + 0.6vh);
     padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: calc(3px + 0.15vh + 0.15vw);
+    box-shadow: 1px 4px 15px rgba(0.2, 0.2, 0.2, 0.35);
     opacity: 0;
     transition: all 0.5s ease;
     z-index: 1000;
+    width: calc(150px + 50%);
 }
 
 .notification-visible {
@@ -59,5 +88,24 @@ export default {
 .notification-hidden {
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);
-}</style>
+}
+
+.error {
+    color: var(--warning-main) !important;
+}
+
+.close-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--front);
+    font-size: calc(14px + 0.9vw + 0.8vh);
+}
+
+.close-button:hover {
+    color: var(--bright);
+}
+</style>
   

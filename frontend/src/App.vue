@@ -69,8 +69,8 @@ export default {
                 document.documentElement.style.setProperty('--warning-bright', theme.WarningBrightColor);
             });
         },
-        showNotification(message) {
-            this.$refs.notification.show(message);
+        showNotification(message, isError) {
+            this.$refs.notification.show(message, isError);
         },
     },
     provide() {

@@ -35,10 +35,7 @@
         <button class="create-btn" type="submit">Create</button>
 
     </form>
-    <p class="warning">{{ warning }}</p>
     <a class="cancel-btn no-underline" @click="cancelCreation">Cancel</a>
-
-
     <ErrDialogWithGithub ref="errDialogWithGithub" :errorText="`${errDialogWithGithubText}`"> </ErrDialogWithGithub>
     <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`"></ErrorDialog>
 </template>
@@ -63,19 +60,18 @@ export default {
             version: '',
             modLoader: 'Forge',
             loaders: ['Forge', "Fabric"],
-            warning: '',
             errDialogWithGithubText: '',
             errDialogText: '',
         };
     },
     methods: {
         openFolderSelectionDialog() {
-            this.warning = '';
             ChooseFolderForNewProject().then((folder) => {
                 if (folder != '') {
                     AnyMadeProjectFilesInFolder(folder).then((anyProjectInFolder) => {
                         if (anyProjectInFolder) {
-                            this.warning = "!Warning! There is already a .madeProject file in this folder. You can open it by going to the starting actions page, or if you want to create a project from scratch, please delete the previous project in this folder";
+                            this.showNotification("!Warning! There is already a .madeProject file in this folder. You can open it by going to the starting actions page,\
+                             or if you want to create a project from scratch, please delete the previous project in this folder", true);
                         }
                     });
                     GetInformationToFillCreationForm(folder).then((inf) => {
@@ -84,8 +80,8 @@ export default {
                             this.fillForm(inf);
                         }
                         else {
-                            this.warning = '!Warning! The folder with the modpack that you are trying to open is most likely created not with CurseForge.\
-                        To avoid errors in Made and the modpack itself, it is recommended to recreate your modpack using CurseForge';
+                            this.showNotification('!Warning! The folder with the modpack that you are trying to open is most likely created not with CurseForge.\
+                        To avoid errors in Made and the modpack itself, it is recommended to recreate your modpack using CurseForge',true);
                         }
 
                     });
@@ -129,9 +125,6 @@ export default {
 
             });
         },
-        closeWarningDialog() {
-            alert("closeWarningDialog")
-        },
         cancelCreation() {
             this.$emit('goBack');
         },
@@ -148,7 +141,8 @@ export default {
             }
             return false;
         },
-    }
+    },
+    inject: ['showNotification'],
 };
 </script>
 
@@ -282,20 +276,5 @@ input:focus {
     outline: none;
     border: 1px solid transparent;
     border-radius: calc(1px + 0.04vw + 0.1vh);
-}
-
-.warning {
-    position: absolute;
-    bottom: calc(20px + 8%);
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(34vw + 250px + 4vh);
-    max-width: 90%;
-    text-align: center;
-    font-family: 'Figtree';
-    color: var(--warning-bright);
-    font-size: calc(1vh + 0.35vw + 7px);
-    font-weight: 200;
-
 }
 </style>
