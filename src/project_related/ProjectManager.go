@@ -29,16 +29,19 @@ func (pm *ProjectManager) CurrentProject() MadeProject {
 	return pm.currentProject
 }
 func InitializeProjectManager() *ProjectManager {
-	if _, err := os.Stat(linksFileName); os.IsNotExist(err) {
-		return &ProjectManager{}
-
-	}
-	data, _ := os.ReadFile(linksFileName)
 	pm := &ProjectManager{}
-	json.Unmarshal(data, pm)
-	pm.Projects = pm.GetProjects()
+	if _, err := os.Stat(linksFileName); os.IsNotExist(err) {
+		defaultData, _ := json.MarshalIndent(pm, "", "  ")
+		os.WriteFile(linksFileName, defaultData, 0644)
+	} else {
+		data, _ := os.ReadFile(linksFileName)
+		json.Unmarshal(data, pm)
+		pm.Projects = pm.GetProjects()
+	}
+
 	return pm
 }
+
 func (pm *ProjectManager) SetStartupOnContext(ctx context.Context) {
 	pm.ctx = ctx
 }
@@ -52,6 +55,47 @@ func (pm *ProjectManager) GetProjects() []MadeProject {
 		}
 	}
 	return projects
+}
+func (pm *ProjectManager) DeleteProjectLink(linkPath string) string {
+	for i, link := range pm.ProjectLinks {
+		if link == linkPath {
+			pm.ProjectLinks = append(pm.ProjectLinks[:i], pm.ProjectLinks[i+1:]...)
+			pm.SaveToFile()
+			return ""
+		}
+	}
+	return "Error: Link path not found in Project Links."
+}
+func (pm *ProjectManager) PinProjectLink(linkPath string) string {
+	exists := false
+	for _, link := range pm.ProjectLinks {
+		if link == linkPath {
+			exists = true
+			break
+		}
+	}
+	if !exists {
+		return "Error: Link path not found in Project Links."
+	}
+	for _, pinnedLink := range pm.PinnedProjectLinks {
+		if pinnedLink == linkPath {
+			return "Error: Project already pinned."
+		}
+	}
+
+	pm.PinnedProjectLinks = append(pm.PinnedProjectLinks, linkPath)
+	pm.SaveToFile()
+	return ""
+}
+func (pm *ProjectManager) UnpinProjectLink(linkPath string) string {
+	for i, pinnedLink := range pm.PinnedProjectLinks {
+		if pinnedLink == linkPath {
+			pm.PinnedProjectLinks = append(pm.PinnedProjectLinks[:i], pm.PinnedProjectLinks[i+1:]...)
+			pm.SaveToFile()
+			return ""
+		}
+	}
+	return "Error: Link path not found in Pinned Project Links."
 }
 
 // func (pm *ProjectManager) getPinnedProjects() []MadeProject {
@@ -124,11 +168,15 @@ func (pm *ProjectManager) AnyMadeProjectFilesInFolder(pathToFolder string) bool 
 	return err != nil && err.Error() == "found"
 }
 func (pm *ProjectManager) AddProjectToCollectionIfNeeded(pathToFile string) {
+	for _, link := range pm.ProjectLinks {
+		if link == pathToFile {
+			return
+		}
+	}
 	project, err := CreateFromFile(pathToFile)
 	if err != nil {
 		return
 	}
-
 	pm.Projects = append(pm.Projects, *project)
 	pm.ProjectLinks = append(pm.ProjectLinks, project.FullPath)
 	pm.SaveToFile()
@@ -144,6 +192,29 @@ func (pm *ProjectManager) ChooseFolderForNewProject() string {
 	}
 	return folder
 }
+func (pm *ProjectManager) OpenExistingProject() string {
+	fileFilter := runtime.FileFilter{
+		Pattern: "*.madeProject",
+	}
+
+	dialogOptions := runtime.OpenDialogOptions{
+		Title:   "Select the project file",
+		Filters: []runtime.FileFilter{fileFilter},
+	}
+
+	file, err := runtime.OpenFileDialog(pm.ctx, dialogOptions)
+	if err != nil || file == "" {
+		return "No file selected or error opening file dialog"
+	}
+	pm.AddProjectToCollectionIfNeeded(file)
+	proj, err := CreateFromFile(file)
+	if err != nil {
+		return "An error occurred while reading the project file"
+	}
+	pm.currentProject = *proj
+	return ""
+}
+
 func (pm *ProjectManager) OpenProjectInFileManager(folderPath string) string {
 	var cmd *exec.Cmd
 

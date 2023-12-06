@@ -3,12 +3,12 @@
 
     <div class="projects-container" id="projects-container">
         <ProjectItem v-for="project in  projects" :key="project.id" :project="project"
-            @goToProjectPage="$emit('goToProjectPage')" />
+            @goToProjectPage="$emit('goToProjectPage')" @refreshProjectItems="refreshProjectItems()" />
     </div>
 
     <div class="action-btns-container">
         <p class="work-starting-text">Start working</p>
-        <ActionButton link="/projectCreation" name="Create new project" @createNewProject="$emit('createNewProject')"
+        <ActionButton @click="$emit('createNewProject')" name="Create new project"
             info="Open already existing mod pack folder and start using Made in it">
             <svg class="action-icon" viewBox="0 0 24 24" fill="none">
                 <path
@@ -16,14 +16,16 @@
                     stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </ActionButton>
-        <ActionButton name="Open project" info="Open an already existing .madeProject file and modify it">
+        <ActionButton @click="openExistingProject" name="Open project"
+            info="Open an already existing .madeProject file and modify it">
             <svg class="action-icon" viewBox="0 0 24 24" fill="none">
                 <path
                     d="M14 11H8M10 15H8M16 7H8M20 10.5V6.8C20 5.11984 20 4.27976 19.673 3.63803C19.3854 3.07354 18.9265 2.6146 18.362 2.32698C17.7202 2 16.8802 2 15.2 2H8.8C7.11984 2 6.27976 2 5.63803 2.32698C5.07354 2.6146 4.6146 3.07354 4.32698 3.63803C4 4.27976 4 5.11984 4 6.8V17.2C4 18.8802 4 19.7202 4.32698 20.362C4.6146 20.9265 5.07354 21.3854 5.63803 21.673C6.27976 22 7.11984 22 8.8 22H11.5M22 22L20.5 20.5M21.5 18C21.5 19.933 19.933 21.5 18 21.5C16.067 21.5 14.5 19.933 14.5 18C14.5 16.067 16.067 14.5 18 14.5C19.933 14.5 21.5 16.067 21.5 18Z"
                     stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </ActionButton>
-        <ActionButton name="Use without mod pack" info="Use Made functionality without mod pack">
+        <ActionButton @click="() => { console.log('not implemented yet') }" name="Use without mod pack"
+            info="Use Made functionality without mod pack">
             <svg class="action-icon" viewBox="0 0 24 24" fill="none">
                 <path
                     d="M20 11.9412V6.8C20 5.11984 20 4.27976 19.673 3.63803C19.3854 3.07354 18.9265 2.6146 18.362 2.32698C17.7202 2 16.8802 2 15.2 2H8.8C7.11984 2 6.27976 2 5.63803 2.32698C5.07354 2.6146 4.6146 3.07354 4.32698 3.63803C4 4.27976 4 5.11984 4 6.8V17.2C4 18.8802 4 19.7202 4.32698 20.362C4.6146 20.9265 5.07354 21.3854 5.63803 21.673C6.27976 22 7.11984 22 8.8 22H14M14 11H8M10 15H8M16 7H8M15 17H21"
@@ -56,7 +58,7 @@
 </template>
   
 <script>
-import { GetProjects } from "../../../wailsjs/go/projectrelated/ProjectManager";
+import { GetProjects, OpenExistingProject } from "../../../wailsjs/go/projectrelated/ProjectManager";
 
 import ProjectItem from '../startingActionsPageComponents/ProjectItem.vue';
 import ActionButton from '../startingActionsPageComponents/ActionButton.vue';
@@ -64,6 +66,7 @@ import LinkButton from '../startingActionsPageComponents/LinkButton.vue';
 
 
 export default {
+    inject: ['showNotification'],
     components: {
         ActionButton,
         ProjectItem,
@@ -76,8 +79,7 @@ export default {
         };
     },
     created() {
-        this.fetchPinnedProjects();
-        this.fetchProjects();
+        this.refreshProjectItems();
     },
     methods: {
         fetchPinnedProjects() {
@@ -90,9 +92,23 @@ export default {
                 this.projects = projectsToFetch;
             });
         },
+        refreshProjectItems() {
+            this.fetchPinnedProjects();
+            this.fetchProjects();
+        },
         openGitHub() {
             window.open('https://github.com/SaYMooN0/made-on-wails');
-        }
+        },
+        openExistingProject() {
+            OpenExistingProject().then((error) => {
+                if (error === "") {
+                    this.$emit('goToProjectPage');
+                }
+                else {
+                    this.showNotification(error)
+                }
+            });
+        },
     }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="action-btn" :id="btnId" @click="navigateToLink">
+  <div class="action-btn" @click="navigateToLink">
     <div class="action-name">{{ name }}</div>
     <slot></slot>
     <label class="action-info">{{ info }}</label>
@@ -9,14 +9,7 @@
   
 <script>
 export default {
-  props: ['link', 'name', 'info', 'btnId'],
-  methods: {
-    navigateToLink() {
-      if (this.link === "/projectCreation") {
-        this.$emit('createNewProject');
-      }
-    }
-  }
+  props: ['name', 'info'],
 }
 </script>
 <style>

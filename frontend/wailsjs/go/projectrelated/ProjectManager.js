@@ -46,6 +46,10 @@ export function CurrentProjectHistory() {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectHistory']();
 }
 
+export function DeleteProjectLink(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['DeleteProjectLink'](arg1);
+}
+
 export function DoShowWarningWhenDeletingActionForCurrentProjectHistory() {
   return window['go']['projectrelated']['ProjectManager']['DoShowWarningWhenDeletingActionForCurrentProjectHistory']();
 }
@@ -58,8 +62,16 @@ export function GetProjects() {
   return window['go']['projectrelated']['ProjectManager']['GetProjects']();
 }
 
+export function OpenExistingProject() {
+  return window['go']['projectrelated']['ProjectManager']['OpenExistingProject']();
+}
+
 export function OpenProjectInFileManager(arg1) {
   return window['go']['projectrelated']['ProjectManager']['OpenProjectInFileManager'](arg1);
+}
+
+export function PinProjectLink(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['PinProjectLink'](arg1);
 }
 
 export function SaveToFile() {
@@ -72,4 +84,8 @@ export function SetCurrentProjectByFolder(arg1) {
 
 export function SetDoShowWarningWhenDeletingActionForCurrentProjectHistory(arg1) {
   return window['go']['projectrelated']['ProjectManager']['SetDoShowWarningWhenDeletingActionForCurrentProjectHistory'](arg1);
+}
+
+export function UnpinProjectLink(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['UnpinProjectLink'](arg1);
 }

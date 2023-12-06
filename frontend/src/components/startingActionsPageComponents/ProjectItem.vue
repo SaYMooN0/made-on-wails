@@ -17,17 +17,18 @@
     <ul>
       <li @click="projectItemClicked(project.PathToFolder)">Open</li>
       <li @click="contextAction('Pin')">Pin</li>
-      <li @click="ShowInFileManager(project.PathToFolder)">Show in File Manager</li>
-      <li @click="contextAction('Delete')">Delete</li>
+      <li @click="showInFileManager(project.PathToFolder)">Show in file manager</li>
+      <li @click="deleteProjectLink(project.FullPath)">Delete from liks</li>
     </ul>
   </div>
 </template>
   
 
 <script>
-import { SetCurrentProjectByFolder,OpenProjectInFileManager } from "../../../wailsjs/go/projectrelated/ProjectManager";
+import { SetCurrentProjectByFolder,OpenProjectInFileManager, DeleteProjectLink } from "../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: ['project'],
+  inject:['showNotification'],
   data() {
     return {
       showContextMenu: false,
@@ -42,12 +43,26 @@ export default {
         this.$emit('goToProjectPage');
       });
     },
-    ShowInFileManager(path) {
+    showInFileManager(path) {
       this.hideContextMenu();
       OpenProjectInFileManager(path).then((err) => {
         if(err && err!="")
         {
-          alert(err);
+          this.showNotification(err,1);
+        }
+      });
+    },
+    deleteProjectLink(fullPath)
+    {
+      DeleteProjectLink(fullPath).then((err) => {
+        if(err && err!="")
+        {
+          this.showNotification(err,1);
+        }
+        else
+        {
+          this.showNotification("The project link was successfully deleted");
+          this.$emit('refreshProjectItems');
         }
       });
     },

@@ -25,16 +25,24 @@ export function CurrentProjectGetItemsTypeSuggestion(arg1:string):Promise<Array<
 
 export function CurrentProjectHistory():Promise<Array<projectrelated.HistoryItem>>;
 
+export function DeleteProjectLink(arg1:string):Promise<string>;
+
 export function DoShowWarningWhenDeletingActionForCurrentProjectHistory():Promise<boolean>;
 
 export function GetInformationToFillCreationForm(arg1:string):Promise<projectrelated.ProjectCreationInformation>;
 
 export function GetProjects():Promise<Array<projectrelated.MadeProject>>;
 
+export function OpenExistingProject():Promise<string>;
+
 export function OpenProjectInFileManager(arg1:string):Promise<string>;
+
+export function PinProjectLink(arg1:string):Promise<string>;
 
 export function SaveToFile():Promise<void>;
 
 export function SetCurrentProjectByFolder(arg1:string):Promise<void>;
 
 export function SetDoShowWarningWhenDeletingActionForCurrentProjectHistory(arg1:boolean):Promise<void>;
+
+export function UnpinProjectLink(arg1:string):Promise<string>;
