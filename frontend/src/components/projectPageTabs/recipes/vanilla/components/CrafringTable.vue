@@ -126,8 +126,7 @@ export default {
       }
 
       if (!nextChar || this.letterItems.length >= 9) {
-        this.errDialogText = 'You can`t add more than 9 letters';
-        this.$refs.errDialog.showDialog();
+        this.showNotification('You can`t add more than 9 letters', 1);
         return;
       }
 
@@ -239,7 +238,7 @@ export default {
       deep: true
     }
   },
-  inject: ['newCraftingTableRecipeSaved'],
+  inject: ['newCraftingTableRecipeSaved' , 'showNotification'],
   components: {
     DefLine,
     InputWithSuggestions,

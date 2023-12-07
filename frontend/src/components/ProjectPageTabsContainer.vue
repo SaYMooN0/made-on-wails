@@ -23,7 +23,6 @@ export default {
 <style scoped>
 .tabs-container {
   width: 100%;
-  max-width: 100%;
   margin-left: 0;
   padding: 0;
   list-style-type: none;
@@ -31,7 +30,7 @@ export default {
   overflow-y: auto;
   margin-top: calc(6px + 0.4vh);
   background-color: var(--back-2);
-  height: calc(0.8vh + 24px);
+  height: calc(0.8vh + 25px);
   padding: 0;
 }
 

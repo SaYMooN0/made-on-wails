@@ -28,13 +28,14 @@ export default {
   
 <style scoped>
 .tab-item {
-  font-size: calc(0.22vh + 0.3vw + 10px);
+  font-size: calc(0.2vh + 0.2vw + 10px);
   font-weight: 400;
   background-color: var(--back-2);
   border: calc(0.04vw + 1px) solid var(--back-3);
   float: left;
-  height: calc(0.8vh + 22px);
+  height: calc(0.8vh + 23px);
   display: inline-flex;
+  align-items: center;
   padding-right: 0;
   transition: background-color 0.08s;
 }
@@ -48,13 +49,10 @@ export default {
 }
 
 .tab-item:hover path {
-  display: block;
+  display: block !important;
 }
 
 .tab-item label {
-  margin-top: 3px;
-  text-decoration: none;
-  align-self: center;
   color: var(--front);
   font-family: 'Bahnschrift';
   display: flex;
@@ -78,8 +76,9 @@ export default {
   fill: var(--front);
 }
 
-.active-tab label {
-  color: var(--front-3);
+.active-tab{
+  border-top: var(--front-3) solid calc(0.04vw + 2px);
+  height: calc(0.8vh + 21px);
 }
 </style>
   

@@ -120,7 +120,6 @@ export default {
   padding: 6px 12px;
   cursor: pointer;
   color: var(--front);
-  ;
   font-family: 'Bahnschrift';
   font-size: calc(0.35vh + 0.3vw + 10px);
 }

@@ -51,9 +51,9 @@ export default {
 }
 
 .left-panel-btn-icon-big {
-    height: calc(72% - 7px);
-    margin-left: calc(1px + 0.2vw + 0.1vh);
-    padding-right: calc(2% + 5px);
+    height: calc(80% - 13px);
+    margin-left: calc(0.2vw + 0.1vh);
+    padding-right: calc(2% + 2px);
     align-self: center;
     aspect-ratio: 1/1;
 }

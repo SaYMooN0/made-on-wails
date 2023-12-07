@@ -1,11 +1,14 @@
 <template>
-    <div :class="['notification', notificationClass, { error: isError }, 'non-selectable']"
+    <div :class="['notification', notificationClass, { error: isError, 'non-selectable': true, 'held': isHeld }]"
          @mouseenter="onMouseEnter"
-         @mouseleave="onMouseLeave">
+         @mouseleave="onMouseLeave"
+         @mousedown="onMouseDown"
+         @mouseup="onMouseUp">
       {{ message }}
       <span class="close-button" @click="closeNotification">&times;</span>
     </div>
-  </template>
+</template>
+
   
 <script>
 export default {
@@ -15,6 +18,7 @@ export default {
             isError: false,
             message: '',
             hideTimeout: null,
+            isHeld: false,
         };
     },
     computed: {
@@ -34,15 +38,14 @@ export default {
         },
         closeNotification() {
             this.visible = false;
-            clearTimeout(this.hideTimeout); 
+            clearTimeout(this.hideTimeout);
         },
         startHideTimer() {
             this.hideTimeout = setTimeout(() => {
                 this.visible = false;
-            }, 3000);
+            }, 3200);
         },
-        setTimeoutToOneSec()
-        {
+        setTimeoutToOneSec() {
             this.hideTimeout = setTimeout(() => {
                 this.visible = false;
             }, 1000);
@@ -52,7 +55,13 @@ export default {
         },
         onMouseLeave() {
             this.setTimeoutToOneSec();
-        }
+        },
+        onMouseDown() {
+            this.isHeld = true;
+        },
+        onMouseUp() {
+            this.isHeld = false;
+        },
     },
 
 };
@@ -78,14 +87,18 @@ export default {
     transition: all 0.5s ease;
     z-index: 1000;
     width: calc(150px + 50%);
+    cursor: grab;
 }
-
+.notification.held {
+    cursor: grabbing;
+}
 .notification-visible {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
 
 .notification-hidden {
+    z-index: -100;
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);
 }

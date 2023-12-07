@@ -15,7 +15,7 @@ export default {
     },
     labelText: {
       type: String,
-      default: '' // Значение по умолчанию - пустая строка
+      default: ''
     }
   },
   emits: ['update:modelValue']

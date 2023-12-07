@@ -1,7 +1,7 @@
 <template>
     <div class="action-buttons-container">
         <RecipesTabActionButton mainLabel="Add vanilla recipe"
-            hintLabel="Create recipes for crafting stations from vanilla minecraft" :actionOnClick="createActionOnClick" />
+            hintLabel="Create recipes for crafting stations from vanilla minecraft" :actionOnClick="newVanilaRecipeOnClick" />
         <RecipesTabActionButton mainLabel="Delete recipe" hintLabel="Delete creation recipes for and from items and tags"
             :actionOnClick="deleteActionOnClick" />
         <RecipesTabActionButton mainLabel="Change recipe" hintLabel="Change recipes by replacing the items used in them"
@@ -16,16 +16,18 @@
 <script>
 import RecipesTabActionButton from './RecipesTabActionButton.vue';
 
+
 export default {
     components: {
         RecipesTabActionButton
     },
-    inject: ['createNewRecipeTab'],
+    inject: ['newVanilaRecipeTab', 'newDeletingRecipeTab'],
     methods: {
-        createActionOnClick() {
-            this.createNewRecipeTab();
+        newVanilaRecipeOnClick() {
+            this.newVanilaRecipeTab();
         },
         deleteActionOnClick() {
+            this.newDeletingRecipeTab();
         },
         changeActionOnClick() {
         },

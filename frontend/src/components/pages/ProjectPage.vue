@@ -2,7 +2,7 @@
   <div id="action-choosing-container" class="action-choosing-part">
     <LeftPanelButton buttonLabel="Modify recipes" @createTab="modifyRecipesTab">
       <svg fill="#000000" class="left-panel-btn-icon left-panel-btn-icon-big left-panel-btn-icon-fill" version="1.1"
-        viewBox="0 0 452.025 452.025" xml:space="preserve">
+        viewBox="0 0 459 454" xml:space="preserve">
         <path d="M147.912,363.325c-4.7-4.7-12.3-4.7-17,0c-4.7,4.7-4.7,12.3,0,17l13.6,13.6h-55.2c-35.9,0-65-29.2-65-65v-40.3
 			c0-6.6-5.4-12-12-12s-12,5.4-12,12v40.3c0,49.1,39.9,89,89,89h55.2l-13.6,13.6c-4.7,4.7-4.7,12.3,0,17c2.3,2.3,5.4,3.5,8.5,3.5
 			s6.1-1.2,8.5-3.5l34.1-34.1c4.7-4.7,4.7-12.3,0-17L147.912,363.325z" />
@@ -167,10 +167,11 @@ import ModifyTags from '../projectPageTabs/ModifyTags.vue';
 import Collections from '../projectPageTabs/Collections.vue';
 import History from '../projectPageTabs/history/HistoryTab.vue';
 import Settings from '../projectPageTabs/Settings.vue';
-import NewRecipe from '../projectPageTabs/recipes/creationTab/NewRecipeTab.vue';
-import StoneCutter from "../projectPageTabs/recipes/creationTab/components/StoneCutter.vue";
-import Furnace from "../projectPageTabs/recipes/creationTab/components/Furnace.vue";
-import CrafringTable from "../projectPageTabs/recipes/creationTab/components/CrafringTable.vue";
+import NewVanilaRecipe from '../projectPageTabs/recipes/vanilla/NewVanillaRecipeTab.vue';
+import DeletingRecipe from '../projectPageTabs/recipes/DeletingRecipeTab.vue';
+import StoneCutter from "../projectPageTabs/recipes/vanilla/components/StoneCutter.vue";
+import Furnace from "../projectPageTabs/recipes/vanilla/components/Furnace.vue";
+import CrafringTable from "../projectPageTabs/recipes/vanilla/components/CrafringTable.vue";
 
 
 
@@ -193,10 +194,11 @@ export default {
     Collections,
     History,
     Settings,
-    NewRecipe,
+    NewVanilaRecipe,
     StoneCutter,
     Furnace,
-    CrafringTable
+    CrafringTable,
+    DeletingRecipe
   },
   data() {
     return {
@@ -222,7 +224,8 @@ export default {
     settingsTab() { this.addNewTab('settings', "Settings", 'Settings'); },
     historyTab() { this.addNewTab('history', "History", 'History'); },
     collectionsTab() { this.addNewTab('collections', "Collections", 'Collections'); },
-    changeToRecipeCreationTab() { this.addNewTab('new-recipe', "New recipe", 'NewRecipe'); this.removeTab('recipes'); },
+    newVanilaRecipeTab() { this.addNewTab('new-recipe', "New Recipe", 'NewVanilaRecipe'); this.removeTab('recipes'); },
+    newDeletingRecipeTab() { this.addNewTab('recipe-deleting', "Delete Recipe", 'DeletingRecipe'); this.removeTab('recipes'); },
     newStoneCutterRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "StoneCutter", properties); this.removeTab(oldTabId); },
     newFurnaceRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "Furnace", properties); this.removeTab(oldTabId); },
     newCraftingTableRecipeSaved(newTabId, newTabName, oldTabId, properties) { this.addNewTab(`action:${newTabId}`, newTabName, "CrafringTable", properties); this.removeTab(oldTabId); },
@@ -274,7 +277,8 @@ export default {
   },
   provide() {
     return {
-      createNewRecipeTab: this.changeToRecipeCreationTab,
+      newVanilaRecipeTab: this.newVanilaRecipeTab,
+      newDeletingRecipeTab:this.newDeletingRecipeTab,
       newStoneCutterRecipeSaved: this.newStoneCutterRecipeSaved,
       newFurnaceRecipeSaved: this.newFurnaceRecipeSaved,
       newCraftingTableRecipeSaved: this.newCraftingTableRecipeSaved,
