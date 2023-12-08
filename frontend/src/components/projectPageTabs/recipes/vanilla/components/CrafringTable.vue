@@ -32,7 +32,7 @@
         </svg>
       </button>
     </div>
-    
+
     <div class='crafting-table-grid-zone'>
       <div class='clear-letters-button' @click="clearLetters">Clear letters</div>
       <div class='crafting-table-grid-div-container'>
@@ -52,7 +52,7 @@
     </div>
     <DefSave :submitText="submitText" />
   </form>
-  <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`"/>
+  <ErrorDialog ref="errDialog" :errorText="`${errDialogText}`" />
 </template>
   
 <script>
@@ -238,7 +238,7 @@ export default {
       deep: true
     }
   },
-  inject: ['newCraftingTableRecipeSaved' , 'showNotification'],
+  inject: ['newCraftingTableRecipeSaved', 'showNotification'],
   components: {
     DefLine,
     InputWithSuggestions,
@@ -272,7 +272,7 @@ export default {
   grid-template-rows: calc(26px + 2vh + 0.5vw) 1fr calc(26px + 2vh + 0.5vw);
   position: relative;
   top: calc(24px + 4vh + 0.5vw);
-  height: calc(90% - 4vh - 0.5vw - 36px);
+  height: calc(100% - 2vh - 0.5vw - 40px);
   max-height: calc(98vh - 40px - 2vw);
 
 }
@@ -299,7 +299,6 @@ export default {
   color: var(--front);
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
   background-color: var(--back-3);
   transition: 0.08s;
@@ -461,5 +460,6 @@ export default {
 .is-shapeless-checkbox {
   margin-left: calc(13px + 4%);
   margin-top: calc(0.2vw + 0.5vh);
+  margin-right: auto;
 }
 </style>

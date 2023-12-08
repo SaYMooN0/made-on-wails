@@ -133,11 +133,11 @@ export default {
   },
   mounted() {
     document.addEventListener("click", this.handleOutsideClick);
-    document.addEventListener("keydown", this.handleKeydown);  // Добавьте эту строку
+    document.addEventListener("keydown", this.handleKeydown); 
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleOutsideClick);
-    document.removeEventListener("keydown", this.handleKeydown);  // Добавьте эту строку
+    document.removeEventListener("keydown", this.handleKeydown);
   },
 }
 </script>
@@ -156,6 +156,8 @@ export default {
   font-weight: 600;
   font-size: calc(0.36vh + 0.36vw + 9px);
   margin-left: 16px;
+  margin-top: 3px;
+
 }
 
 .suggestions-list .active {

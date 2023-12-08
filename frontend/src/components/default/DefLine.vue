@@ -31,6 +31,5 @@ export default {
     font-family: 'Figtree';
     font-weight: 600;
     font-size: calc(0.9vh + 0.71vw + 8px);
-    padding-right: calc(1px + 0.25vw + 0.25vh);
 }
 </style>

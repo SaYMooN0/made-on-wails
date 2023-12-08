@@ -32,17 +32,14 @@ export default {
   font-family: 'Figtree';
   font-weight: 600;
   font-size: calc(0.7vw + 0.7vh + 9px);
-  white-space: nowrap;
 }
 
 .default-checkbox-label .checkmark {
   position: relative;
-  top: 0;
   left: calc(0.1vw + 2px);
   aspect-ratio: 1/1;
   height: calc(11px + 0.3vw + 0.28vh);
   background-color: var(--back-2);
-  margin-right: 10px;
   display: inline-block;
   vertical-align: middle;
   border: calc(2px + 0.05vw + 0.05vh) solid transparent;
@@ -72,7 +69,7 @@ export default {
 }
 
 .default-checkbox-label .checkmark:after {
-  width: 28%;
+  width: 20%;
   height: 70%;
   border: solid white;
   border-width: 0 3px 3px 0;
