@@ -9,7 +9,7 @@
         </div>
         <div class="avaliable-themes-zone">
             <p class="avaliable-themes-label">Available themes:</p>
-            <div class="themes-labels-container">
+            <div class="themes-labels-container scrollbar">
                 <ThemeLabel v-for="theme in avaliableThemes" :theme="theme" @click="changeTheme(theme)" />
             </div>
             <button class="new-theme-button" @click="createNewTheme">
@@ -202,27 +202,6 @@ export default {
     max-height: 100%;
     overflow-y: auto;
 }
-.themes-labels-container::-webkit-scrollbar {
-    width: calc(0.25vw + 0.2vh + 4px);
- 
-
-}
-
-.themes-labels-container::-webkit-scrollbar-track {
-    border-radius: calc(0.1vw + 0.04vh + 2px);
-    height: 94%;
-}
-
-.themes-labels-container::-webkit-scrollbar-thumb {
-    background: var(--front-2);
-    border-radius: calc(0.1vw + 0.04vh + 2px);
-}
-
-.themes-labels-container::-webkit-scrollbar-thumb:hover {
-    background: var(--front-3);
-}
-
-
 .new-theme-button {
     height: 100%;
     justify-self: center;

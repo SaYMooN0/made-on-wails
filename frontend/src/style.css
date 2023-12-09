@@ -23,3 +23,21 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
 }
+
+.scrollbar::-webkit-scrollbar {
+    width: calc(0.3vw + 0.2vh + 3px);
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    background: var(--back-3);
+    border-radius: calc(0.1vw + 0.04vh + 2px);
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: var(--front-2);
+    border-radius: calc(0.1vw + 0.04vh + 2px);
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--bright);
+}

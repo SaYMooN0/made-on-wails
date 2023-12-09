@@ -1,5 +1,5 @@
 <template>
-    <input type="submit" :value="submitText" class="default-save"/>
+    <input type="submit" :value="submitText" class="default-save" />
 </template>
 
 <script>
@@ -14,7 +14,7 @@ export default {
 </script>
 <style scoped>
 .default-save {
-    position:absolute;
+    position: absolute;
     right: calc(8px + 3vw);
     bottom: calc(6px + 2%);
     height: calc(2vh + 24px + 0.2vw);
@@ -27,12 +27,10 @@ export default {
     font-weight: 300;
     color: var(--front);
     cursor: pointer;
-    transition: 0.08s;
+    transition: 0.08s all;
 }
 
-    .default-save:hover {
-        transform: scale(1.02);
-        background-color: var(--bright-3);
-    }
-
+.default-save:hover {
+    background-color: var(--bright-3);
+}
 </style>

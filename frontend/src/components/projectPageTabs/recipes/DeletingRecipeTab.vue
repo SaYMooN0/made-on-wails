@@ -1,21 +1,22 @@
 <template>
-    <div class="tab-container">
-
+    <label class="header-label">Delete recipes for </label>
+    <div class="filters-container">
         <DefLine labelText="item:">
             <InputWithSuggestions :value="initialItem" @updateValue="this.itemValue = $event" suggestion-type="item" />
         </DefLine>
         <DefLine>
             <div class="checkbox-container">
-                <DefCheckBox labelText="from" v-model="fromValue" />
-                <DefCheckBox labelText="to" v-model="toValue" />
+                <DefCheckBox labelText="as input" v-model="fromValue" class="non-selectable" />
+                <DefCheckBox labelText="as output" v-model="toValue" class="non-selectable" />
             </div>
         </DefLine>
         <DefLine labelText="types:" />
-        <div class="types-container">
-            <DefLine v-for="(type, index) in types" :labelText="`${index + 1})`">
+        <div class="types-container scrollbar">
+            <DefLine v-for="(type, index) in types" :key="`type-${index}-${type}`" :labelText="`${index + 1})`"
+                class="non-selectable">
                 <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
                     <InputWithSuggestions :value="type" @updateValue="this.types[index] = $event" suggestion-type="type" />
-                    <svg class='delete-type-icon' viewBox='0 0 24 24' fill='none'  @click="deleteType(index)">
+                    <svg class='delete-type-icon' viewBox='0 0 24 24' fill='none' @click="deleteType(index)">
                         <path stroke='#1C274C' d='M20.5001 6H3.5' stroke-width='1.5' stroke-linecap='round' />
                         <path
                             d='M18.8332 8.5L18.3732 15.3991C18.1962 18.054 18.1077 19.3815 17.2427 20.1907C16.3777 21 15.0473 21 12.3865 21H11.6132C8.95235 21 7.62195 21 6.75694 20.1907C5.89194 19.3815 5.80344 18.054 5.62644 15.3991L5.1665 8.5'
@@ -31,9 +32,9 @@
 
             </DefLine>
         </div>
-        <div @click="addNewType">Add New Type</div>
+        <div @click="addNewType" class="add-new-type-button">Add New Type</div>
     </div>
-    <DefSave :submitText="submitText" />
+    <DefSave @click="submit" :submitText="submitText" />
 </template>
 <script>
 import DefCheckBox from '../../default/DefCheckBox.vue';
@@ -99,19 +100,49 @@ export default {
         deleteType(index) {
             this.types.splice(index, 1);
         },
+        submit() {
+            let emptyTypeIndexes = [];
+
+            this.types.forEach((type, index) => {
+                if (!type || type.trim() === '') {
+                    emptyTypeIndexes.push(index + 1);
+                }
+            });
+
+            if (emptyTypeIndexes.length > 0) {
+                this.showNotification(`There are empty values in types ${emptyTypeIndexes.join(', ')}. Delete or fill them`, 1);
+                return;
+            }
+            if ((!this.itemValue || this.itemValue.trim() === '') && (this.fromValue || this.toValue)) {
+                this.showNotification("The 'item' field could not be empty if 'input' or 'output' is selected", 1);
+                return;
+            }
+        }
     },
     computed: {
         submitText() { return this.isNew ? 'Save' : 'Save changes'; }
     },
+    inject: ["showNotification"],
+
 }
 </script>
 <style scoped>
-.tab-container {
+.header-label {
+    position: relative;
+    top: 3vh;
+    margin-left: calc(10px + 2vw);
+
+    color: var(--front);
+    font-family: 'Figtree';
+    font-size: calc(1.4vh + 1.4vw + 11px);
+}
+
+.filters-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: calc(10px + 10vh);
+    padding-top: calc(10vh - 20px);
 }
 
 .checkbox-container {
@@ -123,7 +154,7 @@ export default {
 
 .types-container {
     width: 60%;
-    max-height: calc(60vh - 100px);
+    max-height: calc(66vh - 160px);
     overflow-y: auto;
 }
 
@@ -145,5 +176,20 @@ export default {
 
 .delete-type-icon:hover path {
     stroke: var(--front-2);
+}
+
+.add-new-type-button {
+    justify-self: center;
+    background-color: var(--bright-2);
+    border: 1px solid transparent;
+    border-radius: calc(3px + 0.09vw + 0.1vh);
+    font-family: 'Figtree';
+    font-size: calc(0.5vh + 0.5vw + 10px);
+    font-weight: 300;
+    color: var(--front);
+    padding: 9px;
+    cursor: pointer;
+    transition: 0.06s;
+
 }
 </style>

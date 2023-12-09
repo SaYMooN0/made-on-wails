@@ -1,7 +1,7 @@
 <template>
     <label id="project-header" class="project-header">Your projects</label>
 
-    <div class="projects-container" id="projects-container">
+    <div class="projects-container scrollbar" id="projects-container">
         <ProjectItem v-for="project in  projects" :key="project.id" :project="project"
             @goToProjectPage="$emit('goToProjectPage')" @refreshProjectItems="refreshProjectItems()" />
     </div>
@@ -132,28 +132,6 @@ export default {
     height: 65%;
     overflow-y: auto;
 }
-
-.projects-container::-webkit-scrollbar {
-    width: calc(0.25vw + 0.2vh + 4px);
-
-}
-
-.projects-container::-webkit-scrollbar-track {
-    background: var(--back-3);
-    border-radius: calc(0.1vw + 0.04vh + 2px);
-}
-
-.projects-container::-webkit-scrollbar-thumb {
-    background: var(--front-2);
-    border-radius: calc(0.1vw + 0.04vh + 2px);
-}
-
-.projects-container::-webkit-scrollbar-thumb:hover {
-    background: var(--front-3);
-}
-
-
-
 .corrupted-sign-dialog {
     position: absolute;
     top: 0;

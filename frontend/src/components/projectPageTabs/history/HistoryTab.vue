@@ -10,7 +10,7 @@
             <input type='text' class='history-search-input' @input='filterHistoryItems' />
         </div>
     </div>
-    <div class='history-items-container'>
+    <div class='history-items-container scrollbar'>
         <div v-for="item in historyItems" :key="item.ActionID">
             <HistoryItem :historyItem="item" @open="openHistoryItem(historyItem)" @delete="deleteHistoryItem(item)" />
         </div>
@@ -153,24 +153,6 @@ export default {
     overflow-y: auto;
     bottom: 2%;
     left: 1%;
-}
-
-.history-items-container::-webkit-scrollbar {
-    width: calc(0.2vw + 0.2vh + 5px);
-}
-
-.history-items-container::-webkit-scrollbar-track {
-    background: var(--back-3);
-    border-radius: calc(0.08vw + 0.02vh + 2px);
-}
-
-.history-items-container::-webkit-scrollbar-thumb {
-    background: var(--front-2);
-    border-radius: calc(0.08vw + 0.02vh + 2px);
-}
-
-.history-items-container::-webkit-scrollbar-thumb:hover {
-    background: var(--front-3);
 }
 
 

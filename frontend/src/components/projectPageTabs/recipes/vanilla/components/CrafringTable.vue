@@ -3,7 +3,7 @@
     <div class='crafting-table-letters-zone'>
       <DefCheckBox v-model="isShapelessValue" class="is-shapeless-checkbox" labelText="Shapeless" />
 
-      <div class='crafting-table-letters-container'>
+      <div class='crafting-table-letters-container scrollbar'>
         <div v-for="(item, index) in letterItems" :key="index" class='crafting-table-letter-item'
           @dragstart="handleDragStart($event, item.letter)" draggable="true">
           <label class='letter-label'>{{ item.letter }}</label>
@@ -367,24 +367,6 @@ export default {
   overflow-y: auto;
   height: 100%;
 
-}
-
-.crafting-table-letters-container::-webkit-scrollbar {
-  width: calc(0.32vw + 0.3vh + 2px);
-}
-
-.crafting-table-letters-container::-webkit-scrollbar-track {
-  background: var(--back-3);
-  border-radius: calc(0.1vw + 0.04vh + 2px);
-}
-
-.crafting-table-letters-container::-webkit-scrollbar-thumb {
-  background: var(--front-2);
-  border-radius: calc(0.1vw + 0.04vh + 2px);
-}
-
-.crafting-table-letters-container::-webkit-scrollbar-thumb:hover {
-  background: var(--bright);
 }
 
 .crafting-table-letter-item {
