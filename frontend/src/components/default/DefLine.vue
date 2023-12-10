@@ -12,7 +12,7 @@ export default {
     props: {
         labelText: {
             type: String,
-            required: true
+            required: false
         }
     }
 }

@@ -10,7 +10,7 @@ type Mod struct {
 	Items          []Item           `json:"items"`
 	Blocks         []Block          `json:"blocks"`
 	Tags           []Tag            `json:"tags"`
-	SupportedTypes []ProcessingType `json:"supportedTypes"`
+	ProcessingType []ProcessingType `json:"supportedTypes"`
 }
 
 func NewMod(id, inGameName string) *Mod {
@@ -20,7 +20,7 @@ func NewMod(id, inGameName string) *Mod {
 		Items:          []Item{},
 		Blocks:         []Block{},
 		Tags:           []Tag{},
-		SupportedTypes: []ProcessingType{},
+		ProcessingType: []ProcessingType{},
 	}
 }
 

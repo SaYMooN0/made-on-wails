@@ -21,7 +21,9 @@ export function CurrentProjectChangeAction(arg1:string,arg2:string,arg3:string,a
 
 export function CurrentProjectDeleteAction(arg1:string,arg2:string):Promise<void>;
 
-export function CurrentProjectGetItemsTypeSuggestion(arg1:string):Promise<Array<string>>;
+export function CurrentProjectGetItemSuggestion(arg1:string):Promise<Array<string>>;
+
+export function CurrentProjectGetProcessingTypeSuggestion(arg1:string):Promise<Array<string>>;
 
 export function CurrentProjectHistory():Promise<Array<projectrelated.HistoryItem>>;
 

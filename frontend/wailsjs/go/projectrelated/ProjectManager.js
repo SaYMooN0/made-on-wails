@@ -38,8 +38,12 @@ export function CurrentProjectDeleteAction(arg1, arg2) {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectDeleteAction'](arg1, arg2);
 }
 
-export function CurrentProjectGetItemsTypeSuggestion(arg1) {
-  return window['go']['projectrelated']['ProjectManager']['CurrentProjectGetItemsTypeSuggestion'](arg1);
+export function CurrentProjectGetItemSuggestion(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProjectGetItemSuggestion'](arg1);
+}
+
+export function CurrentProjectGetProcessingTypeSuggestion(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProjectGetProcessingTypeSuggestion'](arg1);
 }
 
 export function CurrentProjectHistory() {

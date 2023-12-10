@@ -12,10 +12,11 @@
         </DefLine>
         <DefLine labelText="types:" />
         <div class="types-container scrollbar">
-            <DefLine v-for="(type, index) in types" :key="`type-${index}-${type}`" :labelText="`${index + 1})`"
+            <DefLine v-for="(typeVal, index) in types" :key="`type-${types.length}`" :labelText="`${index + 1})`"
                 class="non-selectable">
                 <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
-                    <InputWithSuggestions :value="type" @updateValue="this.types[index] = $event" suggestion-type="type" />
+                    <InputWithSuggestions :value="typeVal" @updateValue="updateTypeValue($event, index)"
+                        suggestion-type="type" ref="inputComponents" />
                     <svg class='delete-type-icon' viewBox='0 0 24 24' fill='none' @click="deleteType(index)">
                         <path stroke='#1C274C' d='M20.5001 6H3.5' stroke-width='1.5' stroke-linecap='round' />
                         <path
@@ -87,10 +88,18 @@ export default {
             fromValue: this.from,
             toValue: this.from,
             itemValue: this.initialItem,
-            types: this.initTypes(),
+            types: this.initTypes()
         }
     },
     methods: {
+        updateTypeValue(newValue, index) { 
+            this.types[index] = newValue;
+        },
+        setFocusToInput(index) {
+            if (this.$refs.inputComponents && this.$refs.inputComponents[index]) {
+                this.$refs.inputComponents[index].focusInput();
+            }
+        },
         initTypes() {
             return this.initialTypes.flat();
         },
@@ -104,6 +113,7 @@ export default {
             let emptyTypeIndexes = [];
 
             this.types.forEach((type, index) => {
+                console.log(type, index);
                 if (!type || type.trim() === '') {
                     emptyTypeIndexes.push(index + 1);
                 }

@@ -5,8 +5,11 @@ import (
 	src "made/src"
 )
 
-func (pm *ProjectManager) CurrentProjectGetItemsTypeSuggestion(input string) []string {
-	return pm.currentProject.GetItemsTypeSuggestion(input)
+func (pm *ProjectManager) CurrentProjectGetItemSuggestion(input string) []string {
+	return pm.currentProject.GetItemSuggestion(input)
+}
+func (pm *ProjectManager) CurrentProjectGetProcessingTypeSuggestion(input string) []string {
+	return pm.currentProject.GetProcessingTypeSuggestion(input)
 }
 func (pm *ProjectManager) CurrentProjectDeleteAction(actionId, filePath string) {
 	pm.currentProject.DeleteAction(actionId, filePath)

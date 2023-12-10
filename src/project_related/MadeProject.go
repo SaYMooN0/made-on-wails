@@ -65,7 +65,7 @@ func NewMadeProject(name, fullPath, pathToFolder, version string, loader src.Loa
 		*minecraft.NewBlockWithName("dirt", "Dirt"),
 		*minecraft.NewBlockWithName("andesite", "Andesite"),
 		*minecraft.NewBlockWithName("sand", "Sand"))
-	minecraftMod.SupportedTypes = append(minecraftMod.SupportedTypes,
+	minecraftMod.ProcessingType = append(minecraftMod.ProcessingType,
 		*minecraft.NewProcessingType("shapeless", "Shapeless crafting", true),
 		*minecraft.NewProcessingType("minecraft:campfire_cooking", "Campfire cooking", true),
 	)
@@ -191,7 +191,7 @@ func (mp *MadeProject) GetAllProcessingTypes() []src.IdNamePair {
 	var results []src.IdNamePair
 	seen := make(map[src.IdNamePair]bool)
 	for _, mod := range mp.Mods {
-		for _, supportedType := range mod.SupportedTypes {
+		for _, supportedType := range mod.ProcessingType {
 			pair := src.IdNamePair{Id: supportedType.Id, InGameName: supportedType.InGameName}
 			if _, exists := seen[pair]; !exists {
 				results = append(results, pair)
@@ -307,25 +307,23 @@ func (mp *MadeProject) GetItemImgInBase64(itemId string) string {
 
 	return base64.StdEncoding.EncodeToString(data)
 }
-func (mp *MadeProject) GetItemsTypeSuggestion(input string) []string {
-	if input == "" {
-		return []string{}
-	}
-
-	if !strings.Contains(input, ":") {
-		var suggestions []string
-		for _, mod := range mp.Mods {
-			if strings.HasPrefix(input, string(TagChar)) {
-				if strings.Contains(mod.Id, strings.TrimPrefix(input, string(TagChar))) {
-					suggestions = append(suggestions, string(TagChar)+mod.Id)
-				}
-			} else {
-				if strings.Contains(mod.Id, input) {
-					suggestions = append(suggestions, mod.Id)
+func (mp *MadeProject) GetProcessingTypeSuggestion(input string) []string {
+	var suggestions []string
+	for _, mod := range mp.Mods {
+		for _, processingType := range mod.ProcessingType {
+			if strings.Contains(strings.ToLower(processingType.Id), strings.ToLower(input)) {
+				suggestion := processingType.Id
+				if suggestion != input {
+					suggestions = append(suggestions, suggestion)
 				}
 			}
 		}
-		return suggestions
+	}
+	return suggestions
+}
+func (mp *MadeProject) GetItemSuggestion(input string) []string {
+	if !strings.Contains(input, ":") {
+		return mp.getSuggestionsForMod(input)
 	}
 
 	mod := getModFromInput(mp.Mods, input)
@@ -334,29 +332,51 @@ func (mp *MadeProject) GetItemsTypeSuggestion(input string) []string {
 	}
 
 	afterModIDString := strings.Split(input, ":")[1]
-
 	if input[0] == TagChar {
-		var tagSuggestions []string
-		for _, tag := range mod.Tags {
-			if strings.Contains(tag.Id, afterModIDString) {
-				tagSuggestions = append(tagSuggestions, string(TagChar)+mod.Id+":"+tag.Id)
-			}
-		}
-		return tagSuggestions
+		return mp.getTagSuggestions(mod, afterModIDString, input)
 	}
+	return mp.getItemAndBlockSuggestions(mod, afterModIDString, input)
+}
 
-	var itemSuggestions []string
+func (mp *MadeProject) getSuggestionsForMod(input string) []string {
+	var suggestions []string
+	for _, mod := range mp.Mods {
+		modPrefix := mod.Id + ":"
+		if strings.HasPrefix(input, string(TagChar)) && strings.Contains(mod.Id, strings.TrimPrefix(input, string(TagChar))) {
+			suggestions = append(suggestions, string(TagChar)+modPrefix)
+		} else if strings.Contains(mod.Id, input) {
+			suggestions = append(suggestions, modPrefix)
+		}
+	}
+	return suggestions
+}
+
+func (mp *MadeProject) getTagSuggestions(mod *minecraft.Mod, searchString, input string) []string {
+	var suggestions []string
+	for _, tag := range mod.Tags {
+		suggestion := string(TagChar) + mod.Id + ":" + tag.Id
+		if strings.Contains(tag.Id, searchString) && suggestion != input {
+			suggestions = append(suggestions, suggestion)
+		}
+	}
+	return suggestions
+}
+
+func (mp *MadeProject) getItemAndBlockSuggestions(mod *minecraft.Mod, searchString, input string) []string {
+	var suggestions []string
 	for _, item := range mod.Items {
-		if strings.Contains(item.Id, afterModIDString) {
-			itemSuggestions = append(itemSuggestions, mod.Id+":"+item.Id)
+		suggestion := mod.Id + ":" + item.Id
+		if strings.Contains(item.Id, searchString) && suggestion != input {
+			suggestions = append(suggestions, suggestion)
 		}
 	}
 	for _, block := range mod.Blocks {
-		if strings.Contains(block.Id, afterModIDString) {
-			itemSuggestions = append(itemSuggestions, mod.Id+":"+block.Id)
+		suggestion := mod.Id + ":" + block.Id
+		if strings.Contains(block.Id, searchString) && suggestion != input {
+			suggestions = append(suggestions, suggestion)
 		}
 	}
-	return itemSuggestions
+	return suggestions
 }
 func getModFromInput(mods []minecraft.Mod, input string) *minecraft.Mod {
 	if len(input) > 0 && input[0] == TagChar {

@@ -2,9 +2,9 @@
   <div>
     <input type="text" class="default-input" @input="handleInput" ref="inputRef"
       @focus="showSuggestions = true; activeIndex = 0" v-model="inputValue" />
-      
+
     <div v-if="showSuggestions && filteredSuggestions && filteredSuggestions.length" class="suggestions-list">
-      <div v-for="(suggestion, index) in filteredSuggestions" :key="suggestion" @click.stop="setActiveSuggestion(index)"
+      <div v-for="(suggestion, index) in filteredSuggestions" :key="index" @click.stop="setActiveSuggestion(index)"
         @dblclick="selectSuggestion(suggestion)" :ref="`suggestion-${index}`"
         :class="{ 'active': activeIndex === index }">
         {{ suggestion }}
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { CurrentProjectGetItemsTypeSuggestion } from "../../../wailsjs/go/projectrelated/ProjectManager";
+import { CurrentProjectGetItemSuggestion, CurrentProjectGetProcessingTypeSuggestion } from "../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
   props: {
     suggestionType: {
@@ -36,61 +36,72 @@ export default {
   },
   watch: {
     inputValue: {
-      handler: function (newValue) {
-        if (newValue === undefined)
-          newValue = "";
+      handler(newValue) {
         this.suggestionItems = [];
-        if (this.suggestionType == "item") {
-          console.log("err",newValue);
-          CurrentProjectGetItemsTypeSuggestion(newValue.toLowerCase()).then((resievedSuggestions) => {
-            this.suggestionItems = resievedSuggestions;
-          });
-        }
-
+        const query = newValue || '';
+        this.fetchSuggestions(this.suggestionType, query);
       },
       immediate: true
     }
   },
   computed: {
     filteredSuggestions() {
-      if (this.suggestionType == "type") {
-        return ["typqdf", "dsdsa", "dsda", "iopjqwdopdsop", "cczxczxc"];
-      }
       return this.suggestionItems;
     }
   },
   methods: {
-    handleInput(event) {
+    fetchSuggestions(suggestionType, query) {
+      let fetchFunction = null;
+      switch (suggestionType) {
+        case 'item':
+          fetchFunction = CurrentProjectGetItemSuggestion;
+          break;
+        case 'type':
+          fetchFunction = CurrentProjectGetProcessingTypeSuggestion;
+          break;
+        default: return;
+      }
+
+      if (fetchFunction && query) {
+        fetchFunction(query.toLowerCase()).then((resievedSuggestions) => {
+          this.suggestionItems = resievedSuggestions || [];
+        });
+      } else {
+        this.suggestionItems = [];
+      }
+    },
+    selectSuggestion(suggestion) {
+      this.showSuggestions = false;
+      this.handleInput(suggestion);
+    },
+    handleInput(input) {
+      const value = typeof input === 'string' ? input : input.target.value;
       this.showSuggestions = true;
-      this.inputValue = event.target.value;
+      this.inputValue = value;
       this.$emit('updateValue', this.inputValue);
     },
     ensureActiveItemVisible() {
-      const activeItem = this.$refs[`suggestion-${this.activeIndex}`][0];
-      if (activeItem) {
-        const list = activeItem.parentElement;
-        const itemTop = activeItem.offsetTop;
-        const itemBottom = itemTop + activeItem.offsetHeight;
+      if (this.$refs[`suggestion-${this.activeIndex}`]) {
+        const activeItem = this.$refs[`suggestion-${this.activeIndex}`][0];
+        if (activeItem) {
+          const list = activeItem.parentElement;
+          const itemTop = activeItem.offsetTop;
+          const itemBottom = itemTop + activeItem.offsetHeight;
 
-        if (itemTop < list.scrollTop) {
-          list.scrollTop = itemTop;
-        } else if (itemBottom > list.scrollTop + list.clientHeight) {
-          list.scrollTop = itemBottom - list.clientHeight;
+          if (itemTop < list.scrollTop) {
+            list.scrollTop = itemTop;
+          } else if (itemBottom > list.scrollTop + list.clientHeight) {
+            list.scrollTop = itemBottom - list.clientHeight;
+          }
         }
       }
     },
     setActiveSuggestion(index) {
       this.activeIndex = index;
     },
-    selectSuggestion(suggestion) {
-      this.showSuggestions = false;
-      this.inputValue = suggestion;
-      this.$emit('updateValue', this.inputValue);
-    },
     handleOutsideClick(event) {
       const inputContains = this.$refs.inputRef && this.$refs.inputRef.contains(event.target);
       const suggestionsContains = this.$refs.suggestionsRef && this.$refs.suggestionsRef.contains(event.target);
-
       if (!inputContains && !suggestionsContains) {
         this.showSuggestions = false;
       }
@@ -133,7 +144,7 @@ export default {
   },
   mounted() {
     document.addEventListener("click", this.handleOutsideClick);
-    document.addEventListener("keydown", this.handleKeydown); 
+    document.addEventListener("keydown", this.handleKeydown);
   },
   beforeDestroy() {
     document.removeEventListener("click", this.handleOutsideClick);
