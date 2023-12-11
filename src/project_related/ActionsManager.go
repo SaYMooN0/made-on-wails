@@ -8,12 +8,12 @@ import (
 	"time"
 )
 
-func HandleActionWithoutId(actionType src.ActionType, arguments map[string]string, projectFolderPath string) *HistoryItem {
+func HandleActionWithoutId(actionType src.ActionType, arguments map[string]string, projectFolderPath, version string) *HistoryItem {
 	actionId := GenerateRecipeId()
-	return HandleAction(actionType, arguments, projectFolderPath, actionId)
+	return HandleAction(actionType, arguments, projectFolderPath, actionId, version)
 }
 
-func HandleAction(actionType src.ActionType, arguments map[string]string, projectFolderPath, actionId string) *HistoryItem {
+func HandleAction(actionType src.ActionType, arguments map[string]string, projectFolderPath, actionId, version string) *HistoryItem {
 	for key, value := range arguments {
 		arguments[key] = strings.Replace(value, "'", "", -1)
 	}
@@ -22,6 +22,8 @@ func HandleAction(actionType src.ActionType, arguments map[string]string, projec
 	var historyItem *HistoryItem
 
 	switch actionType {
+	case src.RecipeRemoved:
+		contentToWrite = fmt.Sprintf("event.remove()")
 	case src.StoneCutterAdd:
 		contentToWrite = fmt.Sprintf("event.stonecutting('%s','%s')", returnItemWithCount(arguments["output"], arguments["outputCount"]), arguments["input"])
 	case src.FurnaceOnlyAdd:
@@ -97,7 +99,7 @@ func HandleAction(actionType src.ActionType, arguments map[string]string, projec
 		return nil
 	}
 
-	src.WriteVanillaRecipe(contentToWrite, projectFolderPath, actionId)
+	src.WriteRecipeEvent(contentToWrite, projectFolderPath, actionId, version)
 	historyItem = NewHistoryItem(arguments, src.GetFullVanillaPath(), actionId, actionType)
 	return historyItem
 }

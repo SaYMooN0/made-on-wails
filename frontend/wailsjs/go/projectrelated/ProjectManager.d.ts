@@ -27,6 +27,8 @@ export function CurrentProjectGetProcessingTypeSuggestion(arg1:string):Promise<A
 
 export function CurrentProjectHistory():Promise<Array<projectrelated.HistoryItem>>;
 
+export function CurrentProjectRemoveRecipe(arg1:{[key: string]: string}):Promise<projectrelated.HistoryItem>;
+
 export function DeleteProjectLink(arg1:string):Promise<string>;
 
 export function DoShowWarningWhenDeletingActionForCurrentProjectHistory():Promise<boolean>;

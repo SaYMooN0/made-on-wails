@@ -50,6 +50,10 @@ export function CurrentProjectHistory() {
   return window['go']['projectrelated']['ProjectManager']['CurrentProjectHistory']();
 }
 
+export function CurrentProjectRemoveRecipe(arg1) {
+  return window['go']['projectrelated']['ProjectManager']['CurrentProjectRemoveRecipe'](arg1);
+}
+
 export function DeleteProjectLink(arg1) {
   return window['go']['projectrelated']['ProjectManager']['DeleteProjectLink'](arg1);
 }

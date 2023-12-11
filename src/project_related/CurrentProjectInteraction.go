@@ -23,13 +23,13 @@ func (pm *ProjectManager) DoShowWarningWhenDeletingActionForCurrentProjectHistor
 func (pm *ProjectManager) SetDoShowWarningWhenDeletingActionForCurrentProjectHistory(doShowWarningWhenDeletingAction bool) {
 	pm.currentProject.Settings.ShowWarningWhenDeletingAction = doShowWarningWhenDeletingAction
 }
+func (pm *ProjectManager) CurrentProjectRemoveRecipe(arguments map[string]string) *HistoryItem {
+	actionType, _ := src.StringToActionType("RecipeRemoved")
+	return pm.currentProject.HandleRecipesChanges(actionType, arguments)
+}
 func (pm *ProjectManager) CurrentProjectAddNewRecipe(actionTypeStr string, arguments map[string]string) *HistoryItem {
-	actionType, err := src.StringToActionType(actionTypeStr)
-	fmt.Println(actionType, actionTypeStr, arguments)
-	if err != nil {
-		fmt.Println("Error converting string to ActionType:", err)
-	}
-	return pm.currentProject.AddNewRecipe(actionType, arguments)
+	actionType, _ := src.StringToActionType(actionTypeStr)
+	return pm.currentProject.HandleRecipesChanges(actionType, arguments)
 }
 func (pm *ProjectManager) CurrentProjectChangeAction(actionId, filePath string, actionTypeStr string, arguments map[string]string) {
 	fmt.Println(actionId, filePath, actionTypeStr, arguments)

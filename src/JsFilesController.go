@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -18,11 +19,11 @@ const (
 	textures           = "textures"
 )
 
-func WriteVanillaRecipe(contentToWrite, projectFolderPath, actionId string) {
+func WriteRecipeEvent(contentToWrite, projectFolderPath, actionId, version string) {
 	fullDirPath := filepath.Join(projectFolderPath, kubejs, serverScripts)
 	os.MkdirAll(fullDirPath, 0755)
 	fullFilePath := filepath.Join(fullDirPath, vanillaRecipesFile+".js")
-	contentToWrite = "\n" + GenerateMadeComment(actionId) + "\n" + WrapInOnEventRecipes(contentToWrite)
+	contentToWrite = "\n" + GenerateMadeComment(actionId) + "\n" + WrapInOnEventRecipes(contentToWrite, version)
 	file, err := os.OpenFile(fullFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
@@ -83,8 +84,16 @@ func GetFullVanillaPath() string {
 func GetFullTextureItemPath() string {
 	return filepath.Join(kubejs, assets, kubejs, textures, "item")
 }
+func WrapInOnEventRecipes(input, version string) string {
+	parts := strings.Split(version, ".")
+	if len(parts) >= 3 {
+		major, err1 := strconv.Atoi(parts[1])
+		minor, err2 := strconv.Atoi(parts[2])
 
-func WrapInOnEventRecipes(input string) string {
+		if err1 == nil && err2 == nil && (major == 19 && minor > 1 || major > 19) {
+			return "onEvent('recipes', event => {" + input + "}); "
+		}
+	}
 	return "onEvent('recipes', event => {" + input + "}); "
 }
 

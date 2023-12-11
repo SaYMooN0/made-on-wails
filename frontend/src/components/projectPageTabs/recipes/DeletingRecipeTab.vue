@@ -1,5 +1,5 @@
 <template>
-    <label class="header-label">Delete recipes for </label>
+    <label class="header-label">Delete recipes with </label>
     <div class="filters-container">
         <DefLine labelText="item:">
             <InputWithSuggestions :value="initialItem" @updateValue="this.itemValue = $event" suggestion-type="item" />
@@ -42,6 +42,7 @@ import DefCheckBox from '../../default/DefCheckBox.vue';
 import InputWithSuggestions from '../../default/InputWithSuggestions.vue';
 import DefSave from '../../default/DefSave.vue';
 import DefLine from '../../default/DefLine.vue';
+import { CurrentProjectRemoveRecipe, CurrentProjectChangeAction } from "../../../../wailsjs/go/projectrelated/ProjectManager";
 export default {
     components:
     {
@@ -67,8 +68,8 @@ export default {
         },
         initialTypes:
         {
-            type: Object,
-            default: () => [],
+            type: Array,
+            default: [],
         },
         isNew: {
             type: Boolean,
@@ -92,7 +93,7 @@ export default {
         }
     },
     methods: {
-        updateTypeValue(newValue, index) { 
+        updateTypeValue(newValue, index) {
             this.types[index] = newValue;
         },
         setFocusToInput(index) {
@@ -113,7 +114,6 @@ export default {
             let emptyTypeIndexes = [];
 
             this.types.forEach((type, index) => {
-                console.log(type, index);
                 if (!type || type.trim() === '') {
                     emptyTypeIndexes.push(index + 1);
                 }
@@ -126,6 +126,43 @@ export default {
             if ((!this.itemValue || this.itemValue.trim() === '') && (this.fromValue || this.toValue)) {
                 this.showNotification("The 'item' field could not be empty if 'input' or 'output' is selected", 1);
                 return;
+            }
+            const deletingTypes = this.types;
+            const deletingItem = this.itemValue;
+            let asInput = this.fromValue;
+            let asOutput = this.toValue;
+            if (deletingItem && !asInput && !asOutput) {
+                asInput = true;
+                asOutput = true;
+            }
+            let deletingArgs = {
+                item: deletingItem,
+                asInput: asInput.toString(),
+                asOutput: asOutput.toString(),
+                types: JSON.stringify(deletingTypes),
+
+            };
+            if (this.isNew) {
+                console.log(deletingArgs);
+                CurrentProjectRemoveRecipe(deletingArgs).then((historyItem) => {
+                 
+                    let properties = {
+                        from: asInput,
+                        to: asOutput,
+                        initialItem: deletingArgs.item,
+                        initialTypes: deletingTypes,
+                        filePath: historyItem.FilePath,
+                        actionId: historyItem.ActionID,
+                        isNew: false
+                    };
+                    this.newStoneCutterRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
+                });
+            }
+            else {
+                console.log("change");
+                // CurrentProjectChangeAction(type, formArgs).then((historyItem) => {
+                //   console.log(historyItem);
+                // });
             }
         }
     },

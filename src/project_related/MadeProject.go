@@ -113,9 +113,9 @@ func NewMadeProjectWithParams(name, fullPath, pathToFolder, version string, load
 		Mods:         mods,
 	}
 }
-func (mp *MadeProject) AddNewRecipe(actionType src.ActionType, arguments map[string]string) *HistoryItem {
+func (mp *MadeProject) HandleRecipesChanges(actionType src.ActionType, arguments map[string]string) *HistoryItem {
 	mp.LastUpdated = time.Now()
-	historyItem := HandleActionWithoutId(actionType, arguments, mp.PathToFolder)
+	historyItem := HandleActionWithoutId(actionType, arguments, mp.PathToFolder, mp.Version)
 	if historyItem != nil {
 		mp.History = append(mp.History, *historyItem)
 	}
@@ -126,7 +126,7 @@ func (mp *MadeProject) AddNewRecipe(actionType src.ActionType, arguments map[str
 func (mp *MadeProject) ChangeAction(actionId, filePath string, actionType src.ActionType, arguments map[string]string) {
 	DeleteAction(actionId, filePath)
 	mp.LastUpdated = time.Now()
-	historyItem := HandleAction(actionType, arguments, mp.PathToFolder, actionId)
+	historyItem := HandleAction(actionType, arguments, mp.PathToFolder, actionId, mp.Version)
 	if historyItem != nil {
 		mp.History = append(mp.History, *historyItem)
 	}
