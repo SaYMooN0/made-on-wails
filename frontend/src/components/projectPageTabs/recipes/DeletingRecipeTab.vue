@@ -155,7 +155,8 @@ export default {
                         actionId: historyItem.ActionID,
                         isNew: false
                     };
-                    this.newStoneCutterRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
+                    console.log(historyItem);
+                    // this.newStoneCutterRecipeSaved(historyItem.ActionID, historyItem.ActionID, "new-recipe", properties);
                 });
             }
             else {

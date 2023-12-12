@@ -91,7 +91,7 @@ func WrapInOnEventRecipes(input, version string) string {
 		minor, err2 := strconv.Atoi(parts[2])
 
 		if err1 == nil && err2 == nil && (major == 19 && minor > 1 || major > 19) {
-			return "onEvent('recipes', event => {" + input + "}); "
+			return "ServerEvents.recipes(event => {" + input + "}); "
 		}
 	}
 	return "onEvent('recipes', event => {" + input + "}); "

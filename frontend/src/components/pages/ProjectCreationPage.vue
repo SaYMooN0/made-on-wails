@@ -101,7 +101,7 @@ export default {
             }
             AnyMadeProjectFilesInFolder(this.folderPath).then((anyProjectInFolder) => {
                 if (anyProjectInFolder) {
-                    this.errDialogText = `Made failed to create file in folder with path:\n${folderPath}\nPlease sure there that the folder with this path exists and there is no .madeProject files. If such a file exists, you can open it by going to the starting actions page, or if you want to create a project from scratch, please delete the previous project in this folder`;
+                    this.errDialogText = `Made failed to create file in folder with path:\n${this.folderPath}\nPlease sure there that the folder with this path exists and there is no .madeProject files. If such a file exists, you can open it by going to the starting actions page, or if you want to create a project from scratch, please delete the previous project in this folder`;
                     this.$refs.errDialog.showDialog();
                     return;
                 }

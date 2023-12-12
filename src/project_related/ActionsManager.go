@@ -23,7 +23,7 @@ func HandleAction(actionType src.ActionType, arguments map[string]string, projec
 
 	switch actionType {
 	case src.RecipeRemoved:
-		contentToWrite = fmt.Sprintf("event.remove()")
+		contentToWrite = contentToWriteForRecipeDeleting(arguments)
 	case src.StoneCutterAdd:
 		contentToWrite = fmt.Sprintf("event.stonecutting('%s','%s')", returnItemWithCount(arguments["output"], arguments["outputCount"]), arguments["input"])
 	case src.FurnaceOnlyAdd:
@@ -117,4 +117,39 @@ func returnItemWithCount(item, itemCount string) string {
 		return item
 	}
 	return fmt.Sprintf("%sx %s", itemCount, item)
+}
+func contentToWriteForRecipeDeleting(arguments map[string]string) string {
+	item, hasItem := arguments["item"]
+	asInput := arguments["asInput"] == "true"
+	asOutput := arguments["asOutput"] == "true"
+	typesStr, hasTypes := arguments["types"]
+
+	var contentToWrite string
+
+	if hasItem {
+		if hasTypes && typesStr != "" {
+			var types []string
+			if err := json.Unmarshal([]byte(typesStr), &types); err == nil {
+				var typeStatements []string
+				for _, t := range types {
+					if asOutput {
+						typeStatements = append(typeStatements, fmt.Sprintf("{ type: '%s', output: '%s' }", t, item))
+					}
+					if asInput {
+						typeStatements = append(typeStatements, fmt.Sprintf("{ type: '%s', input: '%s' }", t, item))
+					}
+				}
+				contentToWrite = fmt.Sprintf("event.remove([%s])", strings.Join(typeStatements, ", "))
+			}
+		} else {
+			if asOutput {
+				contentToWrite = fmt.Sprintf("event.remove({ output: '%s' })", item)
+			}
+			if asInput {
+				contentToWrite = fmt.Sprintf("event.remove({ input: '%s' })", item)
+			}
+		}
+	}
+
+	return contentToWrite
 }

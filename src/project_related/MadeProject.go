@@ -66,8 +66,12 @@ func NewMadeProject(name, fullPath, pathToFolder, version string, loader src.Loa
 		*minecraft.NewBlockWithName("andesite", "Andesite"),
 		*minecraft.NewBlockWithName("sand", "Sand"))
 	minecraftMod.ProcessingType = append(minecraftMod.ProcessingType,
-		*minecraft.NewProcessingType("shapeless", "Shapeless crafting", true),
+		*minecraft.NewProcessingType("minecraft:crafting_shapeless", "Shapeless crafting", true),
+		*minecraft.NewProcessingType("minecraft:crafting_shaped", "Shaped crafting", true),
 		*minecraft.NewProcessingType("minecraft:campfire_cooking", "Campfire cooking", true),
+		*minecraft.NewProcessingType("minecraft:smelting", "Furnace smelting", true),
+		*minecraft.NewProcessingType("minecraft:blasting", "Blastfurnace smelting", true),
+		*minecraft.NewProcessingType("minecraft:smoking", "Smoker cooking", true),
 	)
 
 	modList := []minecraft.Mod{*minecraftMod}
